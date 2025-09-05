@@ -1,0 +1,279 @@
+CRITICAL - 2025-08-15 12:11:46 --> CodeIgniter\Session\Exceptions\SessionException: Session: Configured save path "C:\Users\Warvin\OneDrive\Desktop\My_Files\SportsHub\writable\session" is not writable by the PHP process.
+[Method: GET, Route: auth]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 103.
+ 1 SYSTEMPATH\Session\Handlers\FileHandler.php(103): CodeIgniter\Session\Exceptions\SessionException::forWriteProtectedSavePath('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\writable\\session')
+ 2 [internal function]: CodeIgniter\Session\Handlers\FileHandler->open('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\writable\\session', 'ci_session')
+ 3 SYSTEMPATH\Session\Session.php(896): session_start()
+ 4 SYSTEMPATH\Session\Session.php(242): CodeIgniter\Session\Session->startSession()
+ 5 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 6 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 7 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 8 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 9 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+10 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+11 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+12 SYSTEMPATH\Common.php(973): service('session')
+13 APPPATH\Filters\AlreadyLoggedInFilter.php(13): session()
+14 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AlreadyLoggedInFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+15 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+16 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('auth', 'before')
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+21 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:12:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:14:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:14:00 --> Error: Call to undefined function set_value()
+[Method: GET, Route: auth]
+in APPPATH\Views\auth\login.php on line 50.
+ 1 SYSTEMPATH\View\View.php(224): include()
+ 2 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('auth/login', [], true)
+ 4 APPPATH\Controllers\Home.php(15): view('auth/login', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->auth()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:15:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:15:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:15:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:17:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:18:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:18:27 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "auth/forgot_password.php"
+[Method: GET, Route: forgot-password]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('auth/forgot_password.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('auth/forgot_password', [], true)
+ 3 APPPATH\Controllers\Home.php(24): view('auth/forgot_password', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->forgotPassword()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:18:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:18:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:19:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:19:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:26:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:26:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:26:11 --> Error: Call to undefined function set_value()
+[Method: POST, Route: checkAuth]
+in APPPATH\Views\auth\login.php on line 50.
+ 1 SYSTEMPATH\View\View.php(224): include()
+ 2 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 3 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('auth/login', [], true)
+ 4 APPPATH\Controllers\Auth.php(32): view('auth/login', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->checkAuth()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:27:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:27:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:28:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:32:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:38:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:38:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:40:56 --> ErrorException: Undefined array key "password"
+[Method: POST, Route: checkAuth]
+in APPPATH\Controllers\Auth.php on line 42.
+ 1 APPPATH\Controllers\Auth.php(42): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "password"', 'C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Controllers\\Auth.php', 42)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Auth->checkAuth()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:41:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:41:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:41:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:43:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:43:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:51:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:54:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:54:18 --> ErrorException: Undefined variable $role
+[Method: GET, Route: dashboard]
+in APPPATH\Views\main\templates\sidebar.php on line 102.
+ 1 APPPATH\Views\main\templates\sidebar.php(102): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $role', 'C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\templates\\sidebar.php', 102)
+ 2 SYSTEMPATH\View\View.php(224): include('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\templates\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/templates/sidebar', [], true)
+ 5 APPPATH\Views\main\index.php(3): view('main/templates/sidebar')
+ 6 SYSTEMPATH\View\View.php(224): include('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\index.php')
+ 7 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/index', [], true)
+ 9 APPPATH\Controllers\Home.php(33): view('main/index', [...])
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->dashboard()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:55:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 12:55:51 --> ErrorException: Undefined variable $role
+[Method: GET, Route: dashboard]
+in APPPATH\Views\main\templates\sidebar.php on line 102.
+ 1 APPPATH\Views\main\templates\sidebar.php(102): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $role', 'C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\templates\\sidebar.php', 102)
+ 2 SYSTEMPATH\View\View.php(224): include('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\templates\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/templates/sidebar', [], true)
+ 5 APPPATH\Views\main\index.php(3): view('main/templates/sidebar')
+ 6 SYSTEMPATH\View\View.php(224): include('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\app\\Views\\main\\index.php')
+ 7 SYSTEMPATH\View\View.php(227): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/index', [], true)
+ 9 APPPATH\Controllers\Home.php(33): view('main/index', [...])
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->dashboard()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 12:58:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:58:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 12:59:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:00:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:00:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:01:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:02:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:02:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:03:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:07:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:08:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:10:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:11:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:12:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:15:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:16:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:17:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:19:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:20:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:20:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:20:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:20:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:20:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 13:22:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:01:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:02:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:02:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:02:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:02:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:03:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:03:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:06:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:20:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:20:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:20:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:20:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 14:21:17 --> CodeIgniter\Session\Exceptions\SessionException: Session: Configured save path "session" is not writable by the PHP process.
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 103.
+ 1 SYSTEMPATH\Session\Handlers\FileHandler.php(103): CodeIgniter\Session\Exceptions\SessionException::forWriteProtectedSavePath('session')
+ 2 [internal function]: CodeIgniter\Session\Handlers\FileHandler->open('session', 'ci_session')
+ 3 SYSTEMPATH\Session\Session.php(896): session_start()
+ 4 SYSTEMPATH\Session\Session.php(242): CodeIgniter\Session\Session->startSession()
+ 5 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 6 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 7 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 8 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 9 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+10 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+11 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+12 SYSTEMPATH\Common.php(973): service('session')
+13 APPPATH\Filters\AuthCheckFilter.php(14): session()
+14 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AuthCheckFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+15 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+16 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('dashboard', 'before')
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+21 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+CRITICAL - 2025-08-15 14:21:38 --> CodeIgniter\Session\Exceptions\SessionException: Session: Configured save path "session" is not writable by the PHP process.
+[Method: GET, Route: auth]
+in SYSTEMPATH\Session\Handlers\FileHandler.php on line 103.
+ 1 SYSTEMPATH\Session\Handlers\FileHandler.php(103): CodeIgniter\Session\Exceptions\SessionException::forWriteProtectedSavePath('session')
+ 2 [internal function]: CodeIgniter\Session\Handlers\FileHandler->open('session', 'ci_session')
+ 3 SYSTEMPATH\Session\Session.php(896): session_start()
+ 4 SYSTEMPATH\Session\Session.php(242): CodeIgniter\Session\Session->startSession()
+ 5 SYSTEMPATH\Config\Services.php(710): CodeIgniter\Session\Session->start()
+ 6 SYSTEMPATH\Config\BaseService.php(312): CodeIgniter\Config\Services::session(Object(Config\Session), false)
+ 7 SYSTEMPATH\Config\BaseService.php(251): CodeIgniter\Config\BaseService::__callStatic('session', [...])
+ 8 SYSTEMPATH\Config\Services.php(668): CodeIgniter\Config\BaseService::getSharedInstance('session', null)
+ 9 SYSTEMPATH\Config\BaseService.php(321): CodeIgniter\Config\Services::session()
+10 SYSTEMPATH\Config\BaseService.php(202): CodeIgniter\Config\BaseService::__callStatic('session', [])
+11 SYSTEMPATH\Common.php(1000): CodeIgniter\Config\BaseService::get('session')
+12 SYSTEMPATH\Common.php(973): service('session')
+13 APPPATH\Filters\AlreadyLoggedInFilter.php(13): session()
+14 SYSTEMPATH\Filters\Filters.php(241): App\Filters\AlreadyLoggedInFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+15 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+16 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('auth', 'before')
+17 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+18 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+19 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+20 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+21 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 14:22:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:23:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:23:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:23:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:33:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 14:33:43 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "main/shops/index.php"
+[Method: GET, Route: shops]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('main/shops/index.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/shops/index', [], true)
+ 3 APPPATH\Controllers\Home.php(103): view('main/shops/index', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->shops()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 14:34:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 14:34:01 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "main/shops/index.php"
+[Method: GET, Route: shops]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('main/shops/index.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/shops/index', [], true)
+ 3 APPPATH\Controllers\Home.php(103): view('main/shops/index', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->shops()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 14:34:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-08-15 14:34:05 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "main/shops/index.php"
+[Method: GET, Route: shops]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(212): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('main/shops/index.php')
+ 2 SYSTEMPATH\Common.php(1173): CodeIgniter\View\View->render('main/shops/index', [], true)
+ 3 APPPATH\Controllers\Home.php(103): view('main/shops/index', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->shops()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\Warvin\\OneDrive\\Desktop\\My_Files\\SportsHub\\public\\index.php')
+DEBUG - 2025-08-15 14:34:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:34:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:34:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:34:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:36:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:36:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:36:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-08-15 14:36:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

@@ -1,0 +1,37 @@
+.dropzone {
+    width: 100%;
+    max-width: 600px;
+    height: 200px;
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #f8f9fa;
+    transition: background-color 0.3s, border 0.3s;
+}
+
+.dropzone p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.dropzone:hover {
+    border-color: #0056b3;
+    background-color: #e9ecef;
+}
+
+.dropzone.dragover {
+    background-color: #cce5ff;
+    border-color: #0056b3;
+}
+
+input[type="file"] {
+    display: none;
+    /* Hide the default file input */
+}
+
+.dropzone:active {
+    background-color: #cce5ff;
+}
