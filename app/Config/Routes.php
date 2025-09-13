@@ -7,11 +7,31 @@ use CodeIgniter\Router\RouteCollection;
  */
 //public pages
 $routes->get('/', 'Home::index');
+$routes->get('latest-videos','Home::latestVideos');
+$routes->get('latest-news','Home::latestNews');
+$routes->get('latest-events','Home::latestEvents');
+$routes->get('shop-near-me','Home::shopNearMe');
+$routes->get('contact-us','Home::contactUs');
+$routes->get('success/(:any)','User::successLink/$1');
+$routes->get('resend/(:any)','User::resend/$1');
+$routes->get('activate/(:any)','User::activateAccount/$1');
+//users
 $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 {
     $routes->get('sign-up','User::signUp');
     $routes->get('sign-in','User::signIn');
+    $routes->get('reset-password','User::resetPassword'); 
 });
+
+$routes->group('',['filter'=>'UserCheck'],function($routes)
+{
+    $routes->get('profile','User::profile');
+});
+$routes->post('register','User::registerUser');
+$routes->post('checkUser','User::checkUser');
+$routes->get('sign-out','User::signOut');
+$routes->post('new-password','User::newPassword');
+$routes->post('account-security','User::accountSecurity');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

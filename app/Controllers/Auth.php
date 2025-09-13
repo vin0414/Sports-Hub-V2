@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
-
+use Config\Email;
 class Auth extends BaseController
 {
     public function __construct()
@@ -103,9 +103,12 @@ class Auth extends BaseController
             $data = ['Password'=>Hash::make($password)];
             $accountModel->update($account['accountID'],$data);
             //send the new password
+            $emailConfig = new Email();
+            $fromEmail = $emailConfig->fromEmail;
+            $fromName  = $emailConfig->fromName;
             $email = \Config\Services::email();
             $email->setTo($account['Email']);
-            $email->setFrom("vinmogate@gmail.com","Digital Sports Hub");
+            $email->setFrom($fromEmail,$fromName);
             $imgURL = "assets/images/logo.jpg";
             $email->attach($imgURL);
             $cid = $email->setAttachmentCID($imgURL);

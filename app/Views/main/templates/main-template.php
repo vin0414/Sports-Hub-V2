@@ -18,7 +18,7 @@
             <?php if(empty(session()->get('User'))): ?>
             <div class="nav-item d-none d-md-flex me-3">
                 <div class="btn-list">
-                    <a href="<?=site_url('sign-up')?>" class="btn btn-5" target="_blank" rel="noreferrer">
+                    <a href="<?=site_url('sign-up')?>" class="btn btn-5" rel="noreferrer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="icon icon-tabler icons-tabler-outline icon-tabler-user-plus">
@@ -30,7 +30,7 @@
                         </svg>
                         Sign Up
                     </a>
-                    <a href="<?=site_url('sign-in')?>" class="btn btn-6" target="_blank" rel="noreferrer">
+                    <a href="<?=site_url('sign-in')?>" class="btn btn-6" rel="noreferrer">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                             class="icon icon-tabler icons-tabler-outline icon-tabler-login-2">
@@ -74,17 +74,13 @@
                     <span class="avatar avatar-sm"
                         style="background-image: url(<?=base_url('assets/images/avatar.jpg')?>)"> </span>
                     <div class="d-none d-xl-block ps-2">
-                        <div>Kellie Skingley</div>
-                        <div class="mt-1 small text-secondary">Teacher</div>
+                        <div><?=session()->get('fullname')?></div>
+                        <div class="mt-1 small text-secondary"><?=session()->get('email')?></div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="#" class="dropdown-item">Status</a>
-                    <a href="./profile.html" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item">Feedback</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="./settings.html" class="dropdown-item">Settings</a>
-                    <a href="./sign-in.html" class="dropdown-item">Logout</a>
+                    <a href="<?=site_url('profile')?>" class="dropdown-item">Profile</a>
+                    <a href="<?=site_url('sign-out')?>" class="dropdown-item">Sign out</a>
                 </div>
             </div>
             <?php endif; ?>
@@ -99,67 +95,100 @@
                     <div class="col">
                         <!-- BEGIN NAVBAR MENU -->
                         <ul class="navbar-nav">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="./#">
+                            <li class="nav-item <?=$title=='Home' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('/')?>">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path
-                                                d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
                                         </svg>
                                     </span>
-                                    <span class="nav-link-title"> First </span>
+                                    <span class="nav-link-title"> Home </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./#">
+                            <li class="nav-item <?=$title=='Videos' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('latest-videos')?>">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                            <path
-                                                d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-brand-parsinta">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M12 3a9 9 0 1 0 9 9" />
+                                            <path d="M21 12a9 9 0 0 0 -9 -9" opacity=".5" />
+                                            <path d="M10 9v6l5 -3z" />
                                         </svg>
                                     </span>
-                                    <span class="nav-link-title"> Second </span>
-                                    <span class="badge badge-sm bg-red text-red-fg">2</span>
+                                    <span class="nav-link-title"> Videos </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#navbar-third" data-bs-toggle="dropdown"
-                                    data-bs-auto-close="outside" role="button" aria-expanded="false">
+                            <li class="nav-item <?=$title=='Events' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('latest-events')?>">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                            viewBox="0 0 24 24" fill="currentColor"
+                                            class="icon icon-tabler icons-tabler-filled icon-tabler-calendar-event">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path
-                                                d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                                                d="M16 2a1 1 0 0 1 .993 .883l.007 .117v1h1a3 3 0 0 1 2.995 2.824l.005 .176v12a3 3 0 0 1 -2.824 2.995l-.176 .005h-12a3 3 0 0 1 -2.995 -2.824l-.005 -.176v-12a3 3 0 0 1 2.824 -2.995l.176 -.005h1v-1a1 1 0 0 1 1.993 -.117l.007 .117v1h6v-1a1 1 0 0 1 1 -1m3 7h-14v9.625c0 .705 .386 1.286 .883 1.366l.117 .009h12c.513 0 .936 -.53 .993 -1.215l.007 -.16z" />
+                                            <path d="M8 14h2v2h-2z" />
                                         </svg>
                                     </span>
-                                    <span class="nav-link-title"> Third </span>
+                                    <span class="nav-link-title"> Events </span>
                                 </a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="./#"> First </a>
-                                    <a class="dropdown-item" href="./#"> Second </a>
-                                    <a class="dropdown-item" href="./#"> Third </a>
-                                </div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link disabled" href="./#">
+                            <li class="nav-item <?=$title=='News' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('latest-news')?>">
                                     <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                        <!-- Download SVG icon from http://tabler.io/icons/icon/star -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-news">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                                             <path
-                                                d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z" />
+                                                d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11" />
+                                            <path d="M8 8l4 0" />
+                                            <path d="M8 12l4 0" />
+                                            <path d="M8 16l4 0" />
                                         </svg>
                                     </span>
-                                    <span class="nav-link-title"> Disabled </span>
+                                    <span class="nav-link-title"> News </span>
+                                </a>
+                            </li>
+                            <li class="nav-item <?=$title=='Shop' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('shop-near-me')?>">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-bag">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304z" />
+                                            <path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title"> Shop </span>
+                                </a>
+                            </li>
+                            <li class="nav-item <?=$title=='Contact Us' ? 'active': ''?>">
+                                <a class="nav-link" href="<?=site_url('contact-us')?>">
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-phone">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title"> Contact Us </span>
                                 </a>
                             </li>
                         </ul>

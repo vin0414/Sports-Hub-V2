@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="apple-touch-icon" href="<?=base_url('assets/images/logo.jpg')?>">
     <link rel="shortcut icon" type="image/x-icon" href="<?=base_url('assets/images/logo.jpg')?>">
-    <title><?=$title?></title>
+    <title>Digital Sports Hub - <?=$title?></title>
     <link href="<?=base_url('assets/css/tabler.min.css')?>" rel="stylesheet" />
     <link href="<?=base_url('assets/css/demo.min.css')?>" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />

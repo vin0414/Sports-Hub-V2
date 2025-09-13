@@ -13,9 +13,44 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        $title = "Digital Sports Hub - Home";
+        $title = "Home";
         $data = ['title'=>$title];
         return view('welcome_message',$data);
+    }
+
+    public function latestVideos()
+    {
+        $title = "Videos";
+        $data = ['title'=>$title];
+        return view('latest-videos',$data);
+    }
+
+    public function latestNews()
+    {
+        $title = "News";
+        $data = ['title'=>$title];
+        return view('latest-news',$data);
+    }
+
+    public function latestEvents()
+    {
+        $title = "Events";
+        $data = ['title'=>$title];
+        return view('latest-events',$data);
+    }
+
+    public function shopNearMe()
+    {
+        $title = "Shop";
+        $data = ['title'=>$title];
+        return view('shop-near-me',$data);
+    }
+
+    public function contactUs()
+    {
+        $title = "Contact Us";
+        $data = ['title'=>$title];
+        return view('contact-us',$data);
     }
 
     //admin
