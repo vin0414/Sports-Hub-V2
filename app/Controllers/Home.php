@@ -13,7 +13,9 @@ class Home extends BaseController
     }
     public function index(): string
     {
-        return view('welcome_message');
+        $title = "Digital Sports Hub - Home";
+        $data = ['title'=>$title];
+        return view('welcome_message',$data);
     }
 
     //admin
@@ -1692,6 +1694,62 @@ class Home extends BaseController
         }
         // Return the response as JSON
         return $this->response->setJSON($response);
+    }
+
+    public function myAccount()
+    {
+        $title = 'My Account';
+        $accountModel = new \App\Models\AccountModel();
+        $user = session()->get('loggedUser');
+        $account = $accountModel->WHERE('accountID',$user)->first();
+        $data = [
+            'title' => $title,
+            'account'=>$account
+        ];
+        return view('main/my-account', $data);
+    }
+
+    public function changePassword()
+    {
+        $accountModel = new \App\Models\AccountModel();
+        $user = session()->get('loggedUser');
+        $validation = $this->validate([
+            'current_password'=>'required|min_length[8]|max_length[12]|regex_match[/[A-Z]/]|regex_match[/[a-z]/]|regex_match[/[0-9]/]',
+            'new_password'=>'required|min_length[8]|max_length[12]|regex_match[/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W]).+$/]',
+            'confirm_password'=>'required|matches[new_password]',
+        ]);
+        if(!$validation)
+        {
+            return $this->response->SetJSON(['error' => $this->validator->getErrors()]);
+        }
+        else
+        {
+            $oldpassword = $this->request->getPost('current_password');
+            $newpassword = $this->request->getPost('new_password');
+
+            $account = $accountModel->WHERE('accountID',$user)->first();
+            $checkPassword = Hash::check($oldpassword,$account['Password']);
+            if(!$checkPassword||empty($checkPassword))
+            {
+                $error = ['current_password'=>'Password mismatched. Please try again'];
+                return $this->response->SetJSON(['error' => $error]);
+            }
+            else
+            {
+                if(($oldpassword==$newpassword))
+                {
+                    $error = ['new_password'=>'The new password cannot be the same as the current password.'];
+                    return $this->response->SetJSON(['error' => $error]);
+                }
+                else
+                {
+                    $HashPassword = Hash::make($newpassword);
+                    $data = ['Password'=>$HashPassword];
+                    $accountModel->update($user,$data);
+                    return $this->response->setJSON(['success' => 'Successfully submitted']);
+                }
+            }
+        }
     }
 
 }

@@ -1,4 +1,3 @@
 <?=view('main/templates/header')?>
-<?=view('main/templates/main-template')?>
 <?= view('main/templates/footer')?>
 <?= view('main/templates/closing')?>

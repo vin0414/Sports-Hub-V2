@@ -23,7 +23,7 @@
 
 <body>
     <!-- BEGIN DEMO THEME SCRIPT -->
-    <script src="<?=base_url('admin/js/demo-theme.min.js')?>"></script>
+    <script src="<?=base_url('assets/js/demo-theme.min.js')?>"></script>
     <!-- END DEMO THEME SCRIPT -->
     <div class="page page-center">
         <div class="container container-tight py-4">

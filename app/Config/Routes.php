@@ -5,11 +5,18 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-//user pages
+//public pages
 $routes->get('/', 'Home::index');
+$routes->group('',['filter'=>'UserLoggedIn'],function($routes)
+{
+    $routes->get('sign-up','User::signUp');
+    $routes->get('sign-in','User::signIn');
+});
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
+$routes->post('request-new-password','Auth::requestNewPassword');
+$routes->post('change-password','Home::changePassword');
 //news
 $routes->post('save-post','Home::savePost');
 $routes->post('modify-post','Home::modifyPost');
@@ -89,4 +96,6 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('accounts','Home::accounts');
     $routes->get('accounts/create','Home::createAccount');
     $routes->get('accounts/edit/(:any)','Home::editAccount/$1');
+    //my account
+    $routes->get('my-account','Home::myAccount');
 });

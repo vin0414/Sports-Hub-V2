@@ -36,6 +36,8 @@ class Filters extends BaseFilters
         'performance'   => PerformanceMetrics::class,
         'AuthCheck' => \App\Filters\AuthCheckFilter::class,
         'AlreadyLoggedIn' => \App\Filters\AlreadyLoggedInFilter::class,
+        'UserCheck' => \App\Filters\UserCheckFilter::class,
+        'UserLoggedIn' => \App\Filters\UserLoggedInFilter::class,
     ];
 
     /**
