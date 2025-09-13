@@ -72,12 +72,12 @@
                             </div>
                         </form>
                         <br />
-                        <div class="row row-cards">
+                        <div class="row row-deck">
                             <div class="space-y">
                                 <?php if(empty($news)){ ?>
                                 <div class="alert alert-warning" role="alert">No Post(s) Has Been Added Yet</div>
                                 <?php }else { ?>
-                                <div class="row row-cards" id="results">
+                                <div class="row row-deck" id="results">
                                     <?php foreach($news as $row): ?>
                                     <div class="col-sm-6 col-lg-3">
                                         <div class="card card-sm">

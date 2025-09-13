@@ -27,9 +27,30 @@ class Home extends BaseController
 
     public function latestNews()
     {
-        $title = "News";
-        $data = ['title'=>$title];
+        $newsModel = new \App\Models\newsModel();
+        $data['page'] = (int) ($this->request->getGet('page') ?? 1);
+        $data['perPage'] = 4;
+
+        // Retrieve total count and filtered data
+        $data['total'] = $newsModel->where('status', 1)->countAllResults();
+
+        $data['news'] = $newsModel->where('status', 1)
+                            ->orderBy('news_id', 'DESC')
+                            ->paginate($data['perPage'], 'default', $data['page']);
+
+        $data['pager'] = $newsModel->pager;
+        //headlines
+        $data['headlines'] = $newsModel->WHERE('headline',1)->findAll();
+        $data['title'] = "News";
         return view('latest-news',$data);
+    }
+
+    public function stories($id)
+    {
+        $data['title']='News';
+        $model = new \App\Models\newsModel();
+        $data['story']= $model->where('topic',$id)->first();
+        return view('story',$data);
     }
 
     public function latestEvents()
@@ -558,7 +579,7 @@ class Home extends BaseController
                 $file = $this->request->getFile('file');
                 $originalName = date('YmdHis').$file->getClientName();
                 //save the logo
-                $file->move('admin/images/news/',$originalName);
+                $file->move('assets/images/news/',$originalName);
                 $details = str_replace('""','',$this->request->getPost('details'));
 
                 $data = ['date'=>$this->request->getPost('date'),
@@ -577,7 +598,7 @@ class Home extends BaseController
                 $file = $this->request->getFile('file');
                 $originalName = date('YmdHis').$file->getClientName();
                 //save the logo
-                $file->move('admin/images/news/',$originalName);
+                $file->move('assets/images/news/',$originalName);
                 $details = str_replace('""','',$this->request->getPost('details'));
 
                 $data = ['date'=>$this->request->getPost('date'),
@@ -633,7 +654,7 @@ class Home extends BaseController
                 //save the logo
                 if(!empty($file->getClientName()))
                 {
-                    $file->move('admin/images/news/',$originalName);
+                    $file->move('assets/images/news/',$originalName);
                     $data = [
                                 'date'=>$this->request->getPost('date'),
                                 'author'=>$this->request->getPost('author'),
@@ -664,7 +685,7 @@ class Home extends BaseController
             {
                 if(!empty($file->getClientName()))
                 {
-                    $file->move('admin/images/news/',$originalName);
+                    $file->move('assets/images/news/',$originalName);
                     $data = [
                                 'date'=>$this->request->getPost('date'),
                                 'author'=>$this->request->getPost('author'),
@@ -721,7 +742,7 @@ class Home extends BaseController
                 //save the logo
                 if(!empty($file->getClientName()))
                 {
-                    $file->move('admin/images/news/',$originalName);
+                    $file->move('assets/images/news/',$originalName);
                     $data = [
                                 'date'=>$this->request->getPost('date'),
                                 'author'=>$this->request->getPost('author'),
@@ -754,7 +775,7 @@ class Home extends BaseController
             {
                 if(!empty($file->getClientName()))
                 {
-                    $file->move('admin/images/news/',$originalName);
+                    $file->move('assets/images/news/',$originalName);
                     $data = [
                                 'date'=>$this->request->getPost('date'),
                                 'author'=>$this->request->getPost('author'),
@@ -801,7 +822,7 @@ class Home extends BaseController
 <div class="col-sm-6 col-lg-3">
     <div class="card card-sm">
         <a href="<?=site_url('news/topic/')?><?=$row['topic'] ?>">
-            <img src="<?=base_url('admin/images/news/')?><?=$row['image']?>" class="card-img-top"
+            <img src="<?=base_url('assets/images/news/')?><?=$row['image']?>" class="card-img-top"
                 style="width: 100%; height: 200px;" />
         </a>
         <div class="card-body">
@@ -849,7 +870,7 @@ class Home extends BaseController
 <div class="col-sm-6 col-lg-3">
     <div class="card card-sm">
         <a href="<?=site_url('news/topic/')?><?=$row['topic'] ?>">
-            <img src="<?=base_url('admin/images/news/')?><?=$row['image']?>" class="card-img-top"
+            <img src="<?=base_url('assets/images/news/')?><?=$row['image']?>" class="card-img-top"
                 style="width: 100%; height: 200px;" />
         </a>
         <div class="card-body">
@@ -897,7 +918,7 @@ class Home extends BaseController
 <div class="col-sm-6 col-lg-3">
     <div class="card card-sm">
         <a href="<?=site_url('news/topic/')?><?=$row['topic'] ?>">
-            <img src="<?=base_url('admin/images/news/')?><?=$row['image']?>" class="card-img-top"
+            <img src="<?=base_url('assets/images/news/')?><?=$row['image']?>" class="card-img-top"
                 style="width: 100%; height: 200px;" />
         </a>
         <div class="card-body">

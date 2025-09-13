@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('latest-videos','Home::latestVideos');
 $routes->get('latest-news','Home::latestNews');
+$routes->get('latest-news/stories/(:any)','Home::stories/$1');
 $routes->get('latest-events','Home::latestEvents');
 $routes->get('shop-near-me','Home::shopNearMe');
 $routes->get('contact-us','Home::contactUs');
