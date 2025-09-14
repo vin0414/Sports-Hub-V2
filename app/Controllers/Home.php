@@ -36,6 +36,39 @@ class Home extends BaseController
         return view('latest-videos',$data);
     }
 
+    public function watch($id)
+    {
+        $data['title']='Videos';
+        $model = new \App\Models\videoModel();
+        $data['video']= $model->where('Token',$id)->first();
+        return view('watch',$data);
+    }
+
+    public function incrementViews($id)
+    {
+        if ($this->request->isAJAX()) {
+            $ipAddress = $this->request->getIPAddress();
+            $viewsModel = new \App\Models\viewsModel();
+            $data = ['video_id'=>$id,'total_view'=>1,'date'=>date('Y-m-d'),'ip_address'=>$ipAddress];
+            $viewsModel->save($data);
+
+            return $this->response->setJSON(['status' => 'success']);
+        }
+        return $this->response->setStatusCode(403);
+    }
+
+    public function saveWatchTime()
+    {
+        $data = $this->request->getJSON(true);
+        $viewsModel = new \App\Models\viewsModel();
+        $ipAddress = $this->request->getIPAddress();
+        //get the id
+        $views = $viewsModel->WHERE('video_id',$data['video_id'])->WHERE('ip_address',$ipAddress)->first();
+        $record = ['watched_seconds'=>$data['watched_seconds']];
+        $viewsModel->update($views['view_id'],$record);
+        return $this->response->setStatusCode(200);
+    }
+
     public function latestNews()
     {
         $newsModel = new \App\Models\newsModel();
@@ -66,9 +99,28 @@ class Home extends BaseController
 
     public function latestEvents()
     {
-        $title = "Events";
-        $data = ['title'=>$title];
+        $data['title'] = "Events";
+        $model = new \App\Models\eventModel();
+        $data['page'] = (int) ($this->request->getGet('page') ?? 1);
+        $data['perPage'] = 4;
+
+        // Retrieve total count and filtered data
+        $data['total'] = $model->where('status', 1)->countAllResults();
+
+        $data['events'] = $model->where('status', 1)
+                            ->orderBy('event_id', 'DESC')
+                            ->paginate($data['perPage'], 'default', $data['page']);
+
+        $data['pager'] = $model->pager;
         return view('latest-events',$data);
+    }
+
+    public function details($id)
+    {
+        $data['title'] = "Events";
+        $model = new \App\Models\eventModel();
+        $data['event']= $model->where('event_title',$id)->first();
+        return view('details',$data);
     }
 
     public function shopNearMe()

@@ -8,9 +8,13 @@ use CodeIgniter\Router\RouteCollection;
 //public pages
 $routes->get('/', 'Home::index');
 $routes->get('latest-videos','Home::latestVideos');
+$routes->get('latest-videos/watch/(:any)','Home::watch/$1');
+$routes->post('incrementViews/(:num)', 'Home::incrementViews/$1');
+$routes->post('save_watch_time','Home::saveWatchTime');
 $routes->get('latest-news','Home::latestNews');
 $routes->get('latest-news/stories/(:any)','Home::stories/$1');
 $routes->get('latest-events','Home::latestEvents');
+$routes->get('latest-events/details/(:any)','Home::details/$1');
 $routes->get('shop-near-me','Home::shopNearMe');
 $routes->get('contact-us','Home::contactUs');
 $routes->get('success/(:any)','User::successLink/$1');
