@@ -1,5 +1,9 @@
 <?=view('main/templates/header')?>
 <?=view('main/templates/main-template')?>
+<?php  
+$accountModel = new \App\Models\AccountModel();
+$account = $accountModel->find($story['accountID']);
+?>
 <div class="page-wrapper">
     <div class="page-header d-print-none">
         <div class="container-xl">
@@ -18,6 +22,9 @@
                         </svg>
                         <?=$story['topic']?>
                     </h2>
+                    <p class="text-secondary">
+                        Published by : <?=$account['Fullname']?>&nbsp;|&nbsp;Category : <?=$story['news_type']?>
+                    </p>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
@@ -37,10 +44,6 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="row g-1">
-                <?php  
-                $accountModel = new \App\Models\AccountModel();
-                $account = $accountModel->find($story['accountID']);
-                ?>
                 <div class="col-lg-12">
                     <div class="card">
                         <!-- Photo -->
@@ -48,9 +51,6 @@
                             style="background-image: url(<?=base_url('assets/images/news/')?><?=$story['image']?>)">
                         </div>
                         <div class="card-body">
-                            <p class="text-secondary">
-                                Published by : <?=$account['Fullname']?>&nbsp;|&nbsp;Category : <?=$story['news_type']?>
-                            </p>
                             <div><?=$story['details']?></div>
                         </div>
                     </div>

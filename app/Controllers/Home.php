@@ -20,8 +20,19 @@ class Home extends BaseController
 
     public function latestVideos()
     {
-        $title = "Videos";
-        $data = ['title'=>$title];
+        $model = new \App\Models\videoModel();
+        $data['page'] = (int) ($this->request->getGet('page') ?? 1);
+        $data['perPage'] = 4;
+
+        // Retrieve total count and filtered data
+        $data['total'] = $model->where('status', 1)->countAllResults();
+
+        $data['videos'] = $model->where('status', 1)
+                            ->orderBy('video_id', 'DESC')
+                            ->paginate($data['perPage'], 'default', $data['page']);
+
+        $data['pager'] = $model->pager;
+        $data['title']='Videos';
         return view('latest-videos',$data);
     }
 
