@@ -14,7 +14,9 @@ class Home extends BaseController
     public function index(): string
     {
         $title = "Home";
-        $data = ['title'=>$title];
+        $model = new \App\Models\eventModel();
+        $recent = $model->orderBy('event_id','DESC')->limit(5)->findAll();
+        $data = ['title'=>$title,'recent'=>$recent];
         return view('welcome_message',$data);
     }
 
