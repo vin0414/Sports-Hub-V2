@@ -320,6 +320,22 @@ class Home extends BaseController
         return redirect()->back();
     }
 
+    //registration
+    public function rosterRegistration()
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['roster']==1)
+        {
+            $title = 'Registration';
+            $data = [
+                'title' => $title
+            ];
+            return view('main/roster/registration', $data);     
+        }
+        return redirect()->back();
+    }
+
     //videos
     public function videos()
     {

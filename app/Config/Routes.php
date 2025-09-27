@@ -38,6 +38,7 @@ $routes->post('checkUser','User::checkUser');
 $routes->get('sign-out','User::signOut');
 $routes->post('new-password','User::newPassword');
 $routes->post('account-security','User::accountSecurity');
+$routes->post('submit','User::submitForm');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
@@ -97,14 +98,18 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('matches/create','Home::createMatch');
     $routes->get('matches/edit/(:num)','Home::editMatch/$1');
     //teams
-    $routes->get('teams','Home::teams');
-    $routes->get('teams/create','Home::createTeam');
-    $routes->get('teams/edit/(:num)','Home::editTeam/$1');
+    $routes->get('roster/teams','Home::teams');
+    $routes->get('roster/teams/create','Home::createTeam');
+    $routes->get('roster/teams/edit/(:num)','Home::editTeam/$1');
     //players
-    $routes->get('players','Home::players');
-    $routes->get('players/create','Home::createPlayer');
-    $routes->get('players/edit/(:num)','Home::editPlayer/$1');
-    $routes->get('players/profile/(:num)','Home::playersProfile/$1');
+    $routes->get('roster/players','Home::players');
+    $routes->get('roster/players/create','Home::createPlayer');
+    $routes->get('roster/players/edit/(:num)','Home::editPlayer/$1');
+    $routes->get('roster/players/profile/(:num)','Home::playersProfile/$1');
+    //registration
+    $routes->get('roster/registration','Home::rosterRegistration');
+    //api
+    $routes->get('roster/pending','Roster::getPendingList');
     //videos
     $routes->get('videos','Home::videos');
     $routes->get('videos/upload','Home::uploadVideo');

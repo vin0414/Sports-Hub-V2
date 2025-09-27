@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
-use CodeIgniter\CLI\Console;
 use Config\Email;
+use DateTime;
 
 class User extends BaseController
 {
@@ -310,6 +310,80 @@ class User extends BaseController
     public function join()
     {
         $data['title']='Join';
+        $data['validation'] = \Config\Services::validation();
         return view('users/join',$data);
+    }
+
+    public function submitForm()
+    {
+        $model = new \App\Models\registerModel();
+        $validation = $this->validate([
+            'user'=>[
+                'rules'=>'required|numeric|is_unique[registration.user_id]',
+                'errors'=>[
+                    'required'=>'User ID is required',
+                    'numeric'=>'Invalid user token',
+                    'is_unique'=>'User ID already registered'
+                ]
+            ],
+            'application'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Please select role'
+                    ]
+            ],
+            'phone'=>['rules'=>'required|numeric',
+                      'errors'=>[
+                        'required'=>'Enter contact number',
+                        'numeric'=>'Enter valid number'
+                                ]
+                     ],
+            'birth_date'=>[
+                'rules'=>'required|valid_date[Y-m-d]',
+                'errors'=>[
+                    'required'=>'Enter birth date',
+                    'valid_date'=>'Enter valid date'
+                    ]
+                ],
+            'address'=>[
+                'rules'=>'required',
+                'errors'=>['required'=>'Enter complete address']
+            ]
+        ]);
+
+        if(!$validation)
+        {
+            return view('users/join',['validation'=>$this->validator,'title'=>'Join']);
+        }
+        else
+        {
+            //check the age based on the date
+            $birthDate = new DateTime($this->request->getPost('birth_date'));
+            $currentDate = new DateTime();
+            $age = $currentDate->diff($birthDate);
+            if($age->y<18)
+            {
+                session()->setFlashdata("fail","Invalid! You must be 18 years or older to join.");
+                return redirect()->to('join')->withInput();
+            }  
+            else
+            {
+                $data = [
+                        'application_type'=>$this->request->getPost('application'),
+                        'user_id'=>session()->get('User'),
+                        'fullname'=>session()->get('fullname'),
+                        'email'=>session()->get('email'),
+                        'phone'=>$this->request->getPost('phone'),
+                        'birth_date'=>$this->request->getPost('birth_date'),
+                        'address'=>$this->request->getPost('address'),
+                        'status'=>0,
+                        'remarks'=>'',
+                        'datecreated'=>date('Y-m-d')
+                    ];
+                $model->save($data);
+                session()->setFlashdata("success","Great! Successfully submitted");
+                return redirect()->to('join')->withInput();
+            }
+        }
     }
 }

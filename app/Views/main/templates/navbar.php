@@ -111,11 +111,14 @@ $role = $permissionModel->where('role',session()->get('role'))->first();
                             <span class="nav-link-title">&nbsp;Roster</span>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="<?=site_url('teams')?>">
+                            <a class="dropdown-item" href="<?=site_url('roster/teams')?>">
                                 <i class="ti ti-users-group"></i>&nbsp;Manage Teams
                             </a>
-                            <a class="dropdown-item" href="<?=site_url('players')?>">
+                            <a class="dropdown-item" href="<?=site_url('roster/players')?>">
                                 <i class="ti ti-users"></i>&nbsp;Manage Players
+                            </a>
+                            <a class="dropdown-item" href="<?=site_url('roster/registration')?>">
+                                <i class="ti ti-list-check"></i>&nbsp;Registration
                             </a>
                         </div>
                     </li>

@@ -35,7 +35,7 @@
                                 <path d="M16 19h6" />
                                 <path d="M19 16v6" />
                             </svg>
-                            Join
+                            Become a Player or Coach
                         </a>
                         <a href="<?=site_url('join')?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"

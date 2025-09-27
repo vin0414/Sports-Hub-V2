@@ -38,9 +38,21 @@
                         </a>
                         <!-- END NAVBAR LOGO -->
                     </div>
-                    <h4 class="text-center mb-4">Sign up for the team</h4>
+                    <h4 class="text-center">Become a Player or Coach</h4>
+                    <div class="text-center mb-2" style="margin-top:-20px;"><small>Sign up to Join</small></div>
+                    <?php if(!empty(session()->getFlashdata('success'))) : ?>
+                    <div class="alert alert-important alert-success alert-dismissible" role="alert">
+                        <?= session()->getFlashdata('success'); ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if(!empty(session()->getFlashdata('fail'))) : ?>
+                    <div class="alert alert-important alert-danger alert-dismissible" role="alert">
+                        <?= session()->getFlashdata('fail'); ?>
+                    </div>
+                    <?php endif; ?>
                     <form action="<?=base_url('submit')?>" method="POST" autocomplete="off" novalidate>
                         <?=csrf_field();?>
+                        <input type="hidden" name="user" value="<?=session()->get('User')?>" />
                         <div class="mb-3">
                             <label class="form-label">Complete Name</label>
                             <p class="form-control"><?=session()->get('fullname')?></p>
@@ -49,24 +61,37 @@
                             <label class="form-label">Email address</label>
                             <p class="form-control"><?=session()->get('email')?></p>
                         </div>
+                        <div class="text-danger">
+                            <small><?= $validation->getError('user'); ?></small>
+                        </div>
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-lg-6">
                                     <label class="form-label">Contact Number</label>
                                     <input type="phone" class="form-control" minlength="11" maxlength="11"
                                         name="phone" />
+                                    <div class="text-danger">
+                                        <small><?= $validation->getError('phone'); ?></small>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <label class="form-label">Birth Date</label>
                                     <input type="date" class="form-control" name="birth_date" />
+                                    <div class="text-danger">
+                                        <small><?= $validation->getError('birth_date'); ?></small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Complete Address</label>
                             <textarea name="address" class="form-control" style="height: 100px;"></textarea>
+                            <div class="text-danger">
+                                <small><?= $validation->getError('address'); ?></small>
+                            </div>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">Role</label>
                             <div class="form-selectgroup-boxes row mb-3">
                                 <div class="col-lg-6">
                                     <label class="form-selectgroup-item">
@@ -96,6 +121,9 @@
                                         </span>
                                     </label>
                                 </div>
+                            </div>
+                            <div class="text-danger">
+                                <small><?= $validation->getError('application'); ?></small>
                             </div>
                         </div>
                         <div class="form-footer">
