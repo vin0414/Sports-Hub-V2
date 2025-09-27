@@ -14,9 +14,52 @@ class Home extends BaseController
     public function index(): string
     {
         $title = "Home";
-        $model = new \App\Models\eventModel();
-        $recent = $model->orderBy('event_id','DESC')->limit(5)->findAll();
-        $data = ['title'=>$title,'recent'=>$recent];
+        $newsModel = new \App\Models\newsModel();
+        $videoModel = new \App\Models\videoModel();
+        $eventModel = new \App\Models\eventModel();
+        
+        $videos = array_map(function($v) {
+            return [
+                'type' => 'video',
+                'title' => $v['file_name'],
+                'content' => substr($v['description'],0,300),
+                'timestamp' => strtotime($v['date']),
+                'media'=> 'assets/videos/',$v['file'],
+                'link'=>'latest-videos/watch/'.$v['Token']
+            ];
+        }, $videoModel->findAll());
+
+        $events = array_map(function($e) {
+            return [
+                'type' => 'event',
+                'title' => $e['event_title'],
+                'content' => substr($e['event_description'],0,300),
+                'timestamp' => strtotime($e['start_date']),
+                'media'=> 'assets/images/logo.jpg',
+                'link'=>'latest-events/details/'.$e['event_title']
+            ];
+        }, $eventModel->findAll());
+
+        $news = array_map(function($n) {
+            return [
+                'type' => 'news',
+                'title' => $n['topic'],
+                'content' => substr($n['details'],0,300),
+                'timestamp' => strtotime($n['date']),
+                'media'=>'assets/images/news/'.$n['image'],
+                'link'=>'latest-news/stories/'.$n['topic']
+            ];
+        }, $newsModel->findAll());
+
+        // Merge and sort by timestamp descending
+        $feed = array_merge($videos, $events, $news);
+        usort($feed, fn($a, $b) => $b['timestamp'] <=> $a['timestamp']);
+        //live
+        $liveCodeModel = new \App\Models\liveCodeModel();
+        $code = $liveCodeModel->first();
+        //recent
+        $recent = $newsModel->WHERE('headline',1)->findAll();
+        $data = ['title'=>$title,'recent'=>$recent,'feed'=>$feed,'code'=>$code];
         return view('welcome_message',$data);
     }
 

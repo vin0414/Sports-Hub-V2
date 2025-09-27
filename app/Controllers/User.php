@@ -306,4 +306,10 @@ class User extends BaseController
             }
         }
     }
+
+    public function join()
+    {
+        $data['title']='Join';
+        return view('users/join',$data);
+    }
 }

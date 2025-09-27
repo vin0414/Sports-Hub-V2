@@ -31,6 +31,7 @@ $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 $routes->group('',['filter'=>'UserCheck'],function($routes)
 {
     $routes->get('profile','User::profile');
+    $routes->get('join','User::join');
 });
 $routes->post('register','User::registerUser');
 $routes->post('checkUser','User::checkUser');

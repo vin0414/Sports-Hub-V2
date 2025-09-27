@@ -8,22 +8,49 @@
                     <h2 class="page-title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="icon icon-tabler icons-tabler-outline icon-tabler-home">
+                            class="icon icon-tabler icons-tabler-outline icon-tabler-template">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                            <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
-                            <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
-                            <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                            <path d="M4 4m0 1a1 1 0 0 1 1 -1h14a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1z" />
+                            <path d="M4 12m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                            <path d="M14 12l6 0" />
+                            <path d="M14 16l6 0" />
+                            <path d="M14 20l6 0" />
                         </svg>
-                        <?=$title?>
+                        Recent Feeds
                     </h2>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
-                        <a href="" class="btn btn-primary btn-5 d-none d-sm-inline-block">
-                            <i class="ti ti-arrow-left"></i>&nbsp;Apply
+                        <a href="<?=site_url('join')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-world-plus">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20.985 12.518a9 9 0 1 0 -8.45 8.466" />
+                                <path d="M3.6 9h16.8" />
+                                <path d="M3.6 15h11.4" />
+                                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                <path d="M12.5 3a16.998 16.998 0 0 1 2.283 12.157" />
+                                <path d="M16 19h6" />
+                                <path d="M19 16v6" />
+                            </svg>
+                            Join
                         </a>
-                        <a href="" class="btn btn-primary btn-6 d-sm-none btn-icon">
-                            <i class="ti ti-arrow-left"></i>
+                        <a href="<?=site_url('join')?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-world-plus">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M20.985 12.518a9 9 0 1 0 -8.45 8.466" />
+                                <path d="M3.6 9h16.8" />
+                                <path d="M3.6 15h11.4" />
+                                <path d="M11.5 3a17 17 0 0 0 0 18" />
+                                <path d="M12.5 3a16.998 16.998 0 0 1 2.283 12.157" />
+                                <path d="M16 19h6" />
+                                <path d="M19 16v6" />
+                            </svg>
                         </a>
                     </div>
                     <!-- BEGIN MODAL -->
@@ -36,31 +63,91 @@
         <div class="container-xl">
             <div class="row g-3">
                 <div class="col-lg-9">
-                    <div class="space-y">
-
+                    <div class="row row-cards mb-4">
+                        <div class="space-y">
+                            <?php foreach ($feed as $item): ?>
+                            <div class="card mb-3">
+                                <?php 
+                                $extension = pathinfo($item['media'], PATHINFO_EXTENSION); 
+                                if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif', 'webp'])){?>
+                                <div class="img-responsive img-responsive-21x9 card-img-top"
+                                    style="background-image: url(<?=$item['media']?>)">
+                                </div>
+                                <?php }else{ ?>
+                                <video id="video-preview" class="card-img-top" width="100%" height="250px" controls>
+                                    <source src="<?=$item['media']?>" type="video/mp4">
+                                    <source src="<?=$item['media']?>" type="video/webm">
+                                    Your browser does not support the video tag.
+                                </video>
+                                <?php } ?>
+                                <div class="card-body">
+                                    <div class="card-title"><?= ucfirst($item['title']) ?></div>
+                                    <div><?= $item['content'] ?>...</div>
+                                    <a href="<?=$item['link']?>">Read more</a> |
+                                    <small class="text-muted"><?= date('M d, Y H:i', $item['timestamp']) ?></small>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-3">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-satellite">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M3.707 6.293l2.586 -2.586a1 1 0 0 1 1.414 0l5.586 5.586a1 1 0 0 1 0 1.414l-2.586 2.586a1 1 0 0 1 -1.414 0l-5.586 -5.586a1 1 0 0 1 0 -1.414z" />
+                                    <path d="M6 10l-3 3l3 3l3 -3" />
+                                    <path d="M10 6l3 -3l3 3l-3 3" />
+                                    <path d="M12 12l1.5 1.5" />
+                                    <path d="M14.5 17a2.5 2.5 0 0 0 2.5 -2.5" />
+                                    <path d="M15 21a6 6 0 0 0 6 -6" />
+                                </svg>
+                                Live Streaming
+                            </div>
+                            <iframe
+                                src="https://player.livepush.io/live/<?=!empty($code['code']) ? $code['code'] : ''?>"
+                                width="100%" allowFullScreen="1" frameBorder="0">
+                            </iframe>
+                        </div>
+                    </div>
                     <div class="card">
                         <div class="card-header">
-                            Upcoming Events
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-speakerphone">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path d="M18 8a3 3 0 0 1 0 6" />
+                                    <path d="M10 8v11a1 1 0 0 1 -1 1h-1a1 1 0 0 1 -1 -1v-5" />
+                                    <path
+                                        d="M12 8h0l4.524 -3.77a.9 .9 0 0 1 1.476 .692v12.156a.9 .9 0 0 1 -1.476 .692l-4.524 -3.77h-8a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h8" />
+                                </svg>
+                                Headlines
+                            </div>
                         </div>
                         <div class="list-group list-group-flush">
                             <?php foreach($recent as $row):?>
                             <div class="list-group-item">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <a href="<?=site_url('latest-events/details/')?><?=$row['event_title']?>">
+                                        <a href="<?=site_url('latest-news/stories/')?><?=$row['topic']?>">
                                             <span class="avatar avatar-1"
-                                                style="background-image: url(<?=base_url('assets/images/logo.jpg')?>)">
+                                                style="background-image: url(<?=base_url('assets/images/news/')?><?=$row['image']?>)">
                                             </span>
                                         </a>
                                     </div>
                                     <div class="col text-truncate">
-                                        <a href="<?=site_url('latest-events/details/')?><?=$row['event_title']?>"
-                                            class="text-reset d-block"><?=$row['event_title']?></a>
+                                        <a href="<?=site_url('latest-news/stories/')?><?=$row['topic']?>"
+                                            class="text-reset d-block"><?=$row['topic']?></a>
                                         <div class="d-block text-secondary text-truncate mt-n1">
-                                            <?=$row['event_type']?>
+                                            <?=$row['news_type']?>
                                         </div>
                                     </div>
                                 </div>
