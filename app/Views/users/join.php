@@ -55,11 +55,11 @@
                         <input type="hidden" name="user" value="<?=session()->get('User')?>" />
                         <div class="mb-3">
                             <label class="form-label">Complete Name</label>
-                            <p class="form-control"><?=session()->get('fullname')?></p>
+                            <p class="form-control"><?=session()->get('user_fullname')?></p>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Email address</label>
-                            <p class="form-control"><?=session()->get('email')?></p>
+                            <p class="form-control"><?=session()->get('user_email')?></p>
                         </div>
                         <div class="text-danger">
                             <small><?= $validation->getError('user'); ?></small>

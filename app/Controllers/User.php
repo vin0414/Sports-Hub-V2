@@ -128,8 +128,8 @@ class User extends BaseController
             else
             {
                 session()->set('User', $user['user_id']);
-                session()->set('fullname', $user['Fullname']);
-                session()->set('email',$user['Email']);
+                session()->set('user_fullname', $user['Fullname']);
+                session()->set('user_email',$user['Email']);
                 session()->set('is_logged_in',true);
                 return redirect()->to('/');
             }
@@ -371,8 +371,8 @@ class User extends BaseController
                 $data = [
                         'application_type'=>$this->request->getPost('application'),
                         'user_id'=>session()->get('User'),
-                        'fullname'=>session()->get('fullname'),
-                        'email'=>session()->get('email'),
+                        'fullname'=>session()->get('user_fullname'),
+                        'email'=>session()->get('user_email'),
                         'phone'=>$this->request->getPost('phone'),
                         'birth_date'=>$this->request->getPost('birth_date'),
                         'address'=>$this->request->getPost('address'),

@@ -47,7 +47,7 @@
                         <div class="tab-content">
                             <div class="tab-pane fade active show" id="tabs-pending-8">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped" id="table1">
                                         <thead>
                                             <th>#</th>
                                             <th>Complete Name</th>
@@ -66,7 +66,7 @@
                             </div>
                             <div class="tab-pane fade" id="tabs-approved-8">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped" id="table2">
                                         <thead>
                                             <th>Complete Name</th>
                                             <th>Email</th>
@@ -74,9 +74,8 @@
                                             <th>Contact #</th>
                                             <th>Age</th>
                                             <th>Status</th>
-                                            <th>Action</th>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="approve">
 
                                         </tbody>
                                     </table>
@@ -94,29 +93,121 @@
 </div>
 <?= view('main/templates/footer')?>
 <script>
-fetch('/roster/pending')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const tbody = document.getElementById('pending');
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${data.register_id}</td>
-          <td>${data.fullname}</td>
-          <td>${data.email}</td>
-          <td>${data.application_type}</td>
-          <td>${data.phone}</td>
-          <td>${data.birth_date}</td>
-          <td>${data.address}</td>
-          <td></td>
-        `;
+window.addEventListener('DOMContentLoaded', () => {
+    pending();
+    approve();
+});
 
-        tbody.appendChild(row);
-    })
-    .catch(error => console.error('There was a problem with your fetch operation:', error));
+function calculateAge(birthDateString) {
+    const birthDate = new Date(birthDateString);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    // Adjust if birthday hasn't occurred yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+}
+
+$(document).on('click', '.approve', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to continue?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const value = $(this).val();
+            $.ajax({
+                url: "/roster/confirmation",
+                method: "POST",
+                data: {
+                    value: value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        pending();
+                        approve();
+                    } else {
+                        alert(response);
+                    }
+                }
+            });
+        }
+    });
+});
+
+function approve() {
+    fetch('/roster/approve')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tbody = document.getElementById('approve');
+            data.approve.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${item.fullname}</td>
+            <td>${item.email}</td>
+            <td>${item.application_type}</td>
+            <td>${item.phone}</td>
+            <td>${calculateAge(item.birth_date)}</td>
+            <td>${item.remarks}</td>
+        `;
+                tbody.appendChild(row);
+            });
+
+            // Initialize or reinitialize DataTable
+            if ($.fn.DataTable.isDataTable('#table2')) {
+                $('#table2').DataTable().clear().destroy();
+            }
+            $('#table2').DataTable();
+        })
+        .catch(error => console.error('There was a problem with your fetch operation:', error));
+}
+
+function pending() {
+    fetch('/roster/pending')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tbody = document.getElementById('pending');
+            data.pending.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${item.register_id}</td>
+            <td>${item.fullname}</td>
+            <td>${item.email}</td>
+            <td>${item.application_type}</td>
+            <td>${item.phone}</td>
+            <td>${calculateAge(item.birth_date)}</td>
+            <td>${item.address}</td>
+            <td><button type="button" class="btn btn-primary approve" value="${item.register_id}">Accept</button></td>
+        `;
+                tbody.appendChild(row);
+            });
+
+            // Initialize or reinitialize DataTable
+            if ($.fn.DataTable.isDataTable('#table1')) {
+                $('#table1').DataTable().clear().destroy();
+            }
+            $('#table1').DataTable();
+        })
+        .catch(error => console.error('There was a problem with your fetch operation:', error));
+}
 </script>
 <?= view('main/templates/closing')?>

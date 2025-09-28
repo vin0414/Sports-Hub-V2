@@ -80,8 +80,8 @@
                         <span class="avatar avatar-sm"
                             style="background-image: url(<?=base_url('assets/images/avatar.jpg')?>)"> </span>
                         <div class="d-none d-xl-block ps-2">
-                            <div><?=session()->get('fullname')?></div>
-                            <div class="mt-1 small text-secondary"><?=session()->get('email')?></div>
+                            <div><?=session()->get('user_fullname')?></div>
+                            <div class="mt-1 small text-secondary"><?=session()->get('user_email')?></div>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">

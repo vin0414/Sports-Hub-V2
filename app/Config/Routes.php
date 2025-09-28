@@ -110,6 +110,8 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('roster/registration','Home::rosterRegistration');
     //api
     $routes->get('roster/pending','Roster::getPendingList');
+    $routes->get('roster/approve','Roster::getApproveList');
+    $routes->post('roster/confirmation','Roster::confirmation');
     //videos
     $routes->get('videos','Home::videos');
     $routes->get('videos/upload','Home::uploadVideo');
