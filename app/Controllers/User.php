@@ -386,4 +386,15 @@ class User extends BaseController
             }
         }
     }
+
+    public function searchTeam()
+    {
+        $data['title']="Search a Team";
+        return view('users/search-team',$data);
+    }
+
+    public function createTeam()
+    {
+        return view('users/create-team');
+    }
 }

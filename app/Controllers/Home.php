@@ -17,6 +17,7 @@ class Home extends BaseController
         $newsModel = new \App\Models\newsModel();
         $videoModel = new \App\Models\videoModel();
         $eventModel = new \App\Models\eventModel();
+        $registerModel = new \App\Models\registerModel();
         
         $videos = array_map(function($v) {
             return [
@@ -59,7 +60,10 @@ class Home extends BaseController
         $code = $liveCodeModel->first();
         //recent
         $recent = $newsModel->WHERE('headline',1)->findAll();
-        $data = ['title'=>$title,'recent'=>$recent,'feed'=>$feed,'code'=>$code];
+        //register
+        $register = $registerModel->where('user_id',session()->get('User'))
+                 ->where('status',1)->first() ?? '';
+        $data = ['title'=>$title,'recent'=>$recent,'feed'=>$feed,'code'=>$code,'register'=>$register];
         return view('welcome_message',$data);
     }
 

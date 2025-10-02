@@ -20,7 +20,9 @@
                     </h2>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
+                    <?php if(!empty($register)):?>
                     <div class="btn-list">
+                        <?php if($register['status']==0) :?>
                         <a href="<?=site_url('join')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -52,7 +54,63 @@
                                 <path d="M19 16v6" />
                             </svg>
                         </a>
+                        <?php else: ?>
+                        <?php if($register['application_type']==="Player"): ?>
+                        <a href="<?=site_url('search')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                <path d="M21 21l-6 -6" />
+                            </svg>
+                            Search for a Team
+                        </a>
+                        <a href="<?=site_url('search')?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                <path d="M21 21l-6 -6" />
+                            </svg>
+                        </a>
+                        <?php else :?>
+                        <a href="<?=site_url('create-a-team')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
+                                <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M17 10h2a2 2 0 0 1 2 2v1" />
+                                <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
+                            </svg>
+                            Create a Team
+                        </a>
+                        <a href="<?=site_url('create-a-team')?>" class="btn btn-primary btn-6 d-sm-none btn-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-users-group">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" />
+                                <path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M17 10h2a2 2 0 0 1 2 2v1" />
+                                <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+                                <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
+                            </svg>
+                        </a>
+                        <?php endif;?>
+                        <?php endif?>
                     </div>
+                    <?php endif; ?>
                     <!-- BEGIN MODAL -->
                     <!-- END MODAL -->
                 </div>
@@ -92,6 +150,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3">
+                    <?php if(!empty(session()->get('User'))): ?>
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="card-title">
@@ -116,7 +175,8 @@
                             </iframe>
                         </div>
                     </div>
-                    <div class="card">
+                    <?php endif;?>
+                    <div class="card mb-3">
                         <div class="card-header">
                             <div class="card-title">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -153,6 +213,32 @@
                                 </div>
                             </div>
                             <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="icon icon-tabler icons-tabler-outline icon-tabler-scoreboard">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                    <path
+                                        d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+                                    <path d="M12 5v2" />
+                                    <path d="M12 10v1" />
+                                    <path d="M12 14v1" />
+                                    <path d="M12 18v1" />
+                                    <path d="M7 3v2" />
+                                    <path d="M17 3v2" />
+                                    <path d="M15 10.5v3a1.5 1.5 0 0 0 3 0v-3a1.5 1.5 0 0 0 -3 0z" />
+                                    <path d="M6 9h1.5a1.5 1.5 0 0 1 0 3h-.5h.5a1.5 1.5 0 0 1 0 3h-1.5" />
+                                </svg>
+                                Upcoming Matches
+                            </div>
+                        </div>
+                        <div class="list-group list-group-flush">
+
                         </div>
                     </div>
                 </div>
