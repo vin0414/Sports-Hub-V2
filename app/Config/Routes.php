@@ -41,6 +41,7 @@ $routes->get('sign-out','User::signOut');
 $routes->post('new-password','User::newPassword');
 $routes->post('account-security','User::accountSecurity');
 $routes->post('submit','User::submitForm');
+$routes->post('team-registration','User::teamRegistration');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

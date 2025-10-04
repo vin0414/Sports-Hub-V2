@@ -250,7 +250,9 @@ class User extends BaseController
         $values = ['Status'=>1];
         $userModel->update($user['user_id'],$values);
         session()->set('User', $user['user_id']);
-        session()->set('fullname', $user['Fullname']);
+        session()->set('user_fullname', $user['Fullname']);
+        session()->set('user_email', $user['Email']);
+        session()->set('is_logged_in',true);
         return $this->response->redirect(site_url('/'));
     }
 
@@ -393,12 +395,93 @@ class User extends BaseController
         $model = new \App\Models\sportsModel();
         $data['category']=$model->findAll();
         $team = new \App\Models\teamModel();
-        $data['team'] = $team->findAll();
+        $data['team'] = $team->where('status',1)->findAll();
         return view('users/search-team',$data);
     }
 
     public function createTeam()
     {
-        return view('users/create-team');
+        $data['title']="Create a Team";
+        $model = new \App\Models\sportsModel();
+        $data['category']=$model->findAll();
+        return view('users/create-team',$data);
+    }
+
+    public function teamRegistration()
+    {
+        $model = new \App\Models\teamModel();
+        $validation = $this->validate([
+            'team_name'=>[
+                'rules'=>'required|is_unique[teams.team_name]',
+                'errors'=>[
+                    'required'=>'Name of team is required',
+                    'is_unique'=>'Name of team is already exist. Please try again'
+                ]
+            ],
+            'category'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Select category'
+                ]
+            ],
+            'organization'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Name of organization is required'
+                ]
+            ],
+            'school_barangay'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Enter name of school or barangay'
+                ]
+            ],
+            'file'=>[
+                'rules'=>'uploaded[file]|max_size[file,2048]|is_image[file]|mime_in[file,image/png,image/jpeg,image/jpg]',
+                'errors'=>[
+                    'uploaded' => 'Team logo or image is required.',
+                    'max_size' => 'The image must not exceed 2MB.',
+                    'is_image' => 'The uploaded file must be an image.',
+                    'mime_in' => 'Only PNG and JPEG formats are allowed.'
+                ]
+            ],
+            'agreement'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'You must agree to the terms and conditions to proceed.'
+                ]
+            ],
+        ]);
+
+        if(!$validation)
+        {
+            return $this->response->SetJSON(['error' => $this->validator->getErrors()]);
+        }
+        else
+        {
+            $file = $this->request->getFile('file');
+            $originalName = date('YmdHis').$file->getClientName();
+            // Define the target directory
+            $targetDir = 'assets/images/team/';
+            // Create the directory if it doesn't exist
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0755, true); // 0755 permissions, recursive creation
+            }
+            // Move the uploaded file
+            $file->move($targetDir, $originalName);
+
+            $data = [
+                    'team_name'=>$this->request->getPost('team_name'),
+                    'coach_name'=>session()->get('user_fullname'),
+                    'user_id'=>session()->get('User'),
+                    'sportsID'=>$this->request->getPost('category'),
+                    'school_barangay'=>$this->request->getPost('school_barangay'),
+                    'image'=>$originalName,
+                    'organization'=>$this->request->getPost('organization'),
+                    'status'=>0
+                ];
+            $model->save($data);
+            return $this->response->SetJSON(['success'=>'Successfully submitted']);
+        }
     }
 }

@@ -20,9 +20,8 @@
                     </h2>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
-                    <?php if(!empty($register)):?>
                     <div class="btn-list">
-                        <?php if($register['status']==0) :?>
+                        <?php if(empty($register)) :?>
                         <a href="<?=site_url('join')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -110,7 +109,6 @@
                         <?php endif;?>
                         <?php endif?>
                     </div>
-                    <?php endif; ?>
                     <!-- BEGIN MODAL -->
                     <!-- END MODAL -->
                 </div>

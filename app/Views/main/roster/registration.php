@@ -133,8 +133,7 @@ $(document).on('click', '.approve', function() {
                 },
                 success: function(response) {
                     if (response.success) {
-                        pending();
-                        approve();
+                        location.reload();
                     } else {
                         alert(response);
                     }
