@@ -32,7 +32,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
 {
     $routes->get('profile','User::profile');
     $routes->get('join','User::join');
-    $routes->get('search','User::searchTeam');
+    $routes->match(['get','post'],'search','User::searchTeam');
     $routes->get('create-a-team','User::createTeam');
 });
 $routes->post('register','User::registerUser');

@@ -390,6 +390,10 @@ class User extends BaseController
     public function searchTeam()
     {
         $data['title']="Search a Team";
+        $model = new \App\Models\sportsModel();
+        $data['category']=$model->findAll();
+        $team = new \App\Models\teamModel();
+        $data['team'] = $team->findAll();
         return view('users/search-team',$data);
     }
 
