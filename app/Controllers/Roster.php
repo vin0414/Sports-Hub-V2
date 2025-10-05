@@ -8,6 +8,12 @@ use \App\Models\playerModel;
 
 class Roster extends BaseController
 {
+    private $db;
+    public function __construct()
+    {
+        helper(['url','form','text']);
+        $this->db = \Config\Database::connect();
+    }
     public function getPendingList()
     {
         if(empty(session()->get('loggedUser')))
@@ -107,5 +113,19 @@ class Roster extends BaseController
             $model->save($data);
             return response()->setJSON(['success'=>'Successfully submitted']);
         }
+    }
+
+    public function playerList()
+    {
+        $val = $this->request->getGet('teamId');
+        //get the list of players
+        $data = $this->db->table('players as a')
+                ->select('a.*,b.Fullname,c.roleName')
+                ->join('users as b','b.user_id=a.user_id')
+                ->join('player_role as c','c.roleID=a.roleID')
+                ->where('a.team_id',$val)
+                ->where('a.status',1);
+        $players = $data->get()->getResult();
+        return response()->setJSON(['players'=>$players]);
     }
 }

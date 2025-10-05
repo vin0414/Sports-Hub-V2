@@ -74,7 +74,7 @@
                             <div id="agreement-error" class="error-message text-danger text-sm"></div>
                         </div>
                         <div class="col-lg-12">
-                            <button type="submit" class="btn btn-primary">Submit to Register</button>
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">Submit to Register</button>
                         </div>
                     </form>
                 </div>
@@ -82,12 +82,27 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modal-loading" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="mb-2">
+                    <dotlottie-wc src="https://lottie.host/ed13f8d5-bc3f-4786-bbb8-36d06a21a6cb/XMPpTra572.lottie"
+                        style="width: 100%;height: auto;" autoplay loop></dotlottie-wc>
+                </div>
+                <div>Loading</div>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
 $('#frmCreate').on('submit', function(e) {
     e.preventDefault();
     $('.error-message').html('');
     let data = $(this).serialize();
+    $('#modal-loading').modal('show');
     $.ajax({
         url: "<?=site_url('team-registration')?>",
         method: "POST",
@@ -96,6 +111,7 @@ $('#frmCreate').on('submit', function(e) {
         cache: false,
         processData: false,
         success: function(response) {
+            $('#modal-loading').modal('hide');
             if (response.success) {
                 $('#frmCreate')[0].reset();
                 Swal.fire({

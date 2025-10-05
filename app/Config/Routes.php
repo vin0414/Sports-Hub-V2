@@ -35,6 +35,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->match(['get','post'],'search','User::searchTeam');
     $routes->get('create-a-team','User::createTeam');
     $routes->get('my-team/(:any)','User::myTeam/$1');
+    $routes->get('roster/player-list','Roster::playerList');
 });
 $routes->post('register','User::registerUser');
 $routes->post('checkUser','User::checkUser');

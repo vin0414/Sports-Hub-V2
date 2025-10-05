@@ -176,7 +176,7 @@ $(document).on('click', '.approveTeam', function() {
                 },
                 success: function(response) {
                     if (response.success) {
-                        location.reload();
+                        team();
                     } else {
                         alert(response);
                     }

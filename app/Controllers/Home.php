@@ -65,12 +65,11 @@ class Home extends BaseController
         $register = $registerModel->where('user_id',session()->get('User'))
                  ->where('status',1)->first() ?? '';
         //team for coach
-        $team = $teamModel->where('user_id',session()->get('User'))
-                ->where('status',1)->findAll();
+        $team = $teamModel->where('user_id',session()->get('User'))->findAll();
         //player
         $player  = $this->db->table('players as a')
-                    ->select('b.team_name,b.organization,b.image,a.status')
-                    ->join('teams as b','b.team_id=a.team_id')
+                    ->select('b.team_name,b.school_barangay,b.image,a.status')
+                    ->join('teams as b','b.team_id=a.team_id')->where('a.status',1)
                     ->where('a.user_id',session()->get('User'));
         $playerData = $player->get()->getResult();
         $data = [

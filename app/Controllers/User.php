@@ -505,7 +505,9 @@ class User extends BaseController
     public function myTeam($id)
     {
         $data['title']="My Team";
-        $data['team'] = $id;
+        //load the team data
+        $model = new \App\Models\teamModel();
+        $data['team']=$model->where('team_name',$id)->first();
         return view('users/my-team',$data);
     }
 }

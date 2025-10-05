@@ -225,7 +225,7 @@
                                         <a href="<?=site_url('my-team/')?><?=$row->team_name?>"
                                             class="text-reset d-block"><?=$row->team_name?></a>
                                         <div class="d-block text-secondary text-truncate mt-n1">
-                                            <?=$row->organization?>
+                                            <?=$row->school_barangay?>
                                         </div>
                                     </div>
                                 </div>
@@ -290,7 +290,7 @@
                                         <a href="<?=site_url('my-team/')?><?=$row['team_name']?>"
                                             class="text-reset d-block"><?=$row['team_name']?></a>
                                         <div class="d-block text-secondary text-truncate mt-n1">
-                                            <?=$row['organization']?>
+                                            <?=$row['school_barangay']?>
                                         </div>
                                     </div>
                                 </div>
