@@ -128,4 +128,18 @@ class Roster extends BaseController
         $players = $data->get()->getResult();
         return response()->setJSON(['players'=>$players]);
     }
+    
+
+    public function newPlayers()
+    {
+        $val = $this->request->getGet('teamId');
+        //get the list of players
+        $data = $this->db->table('players as a')
+                ->select('a.player_id,b.fullname,b.email,b.phone,b.birth_date,b.address')
+                ->join('registration as b','b.user_id=a.user_id')
+                ->where('a.team_id',$val)
+                ->where('a.status',0);
+        $list = $data->get()->getResult();
+        return response()->setJSON(['list'=>$list]);
+    }
 }

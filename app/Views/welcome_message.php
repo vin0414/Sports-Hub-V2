@@ -215,14 +215,14 @@
                             <div class="list-group-item">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <a href="<?=site_url('my-team/')?><?=$row->team_name?>">
+                                        <a href="<?=site_url('me/')?><?=$row->team_name?>">
                                             <span class="avatar avatar-1"
                                                 style="background-image: url(<?=base_url('assets/images/team/')?><?=$row->image?>)">
                                             </span>
                                         </a>
                                     </div>
                                     <div class="col text-truncate">
-                                        <a href="<?=site_url('my-team/')?><?=$row->team_name?>"
+                                        <a href="<?=site_url('me/')?><?=$row->team_name?>"
                                             class="text-reset d-block"><?=$row->team_name?></a>
                                         <div class="d-block text-secondary text-truncate mt-n1">
                                             <?=$row->school_barangay?>

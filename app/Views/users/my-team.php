@@ -34,8 +34,23 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="#tabs-new-8" class="nav-link" data-bs-toggle="tab">
+                                <i class="ti ti-user-plus"></i>&nbsp;Application
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#tabs-calendar-8" class="nav-link" data-bs-toggle="tab">
-                                <i class="ti ti-calendar"></i>&nbsp;Schedules
+                                <i class="ti ti-calendar-plus"></i>&nbsp;Schedules
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tabs-matches-8" class="nav-link" data-bs-toggle="tab">
+                                <i class="ti ti-calendar"></i>&nbsp;Upcoming Matches
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tabs-stats-8" class="nav-link" data-bs-toggle="tab">
+                                <i class="ti ti-scoreboard"></i>&nbsp;Team Stats
                             </a>
                         </li>
                     </ul>
@@ -57,7 +72,28 @@
                                 </table>
                             </div>
                         </div>
+                        <div class="tab-pane fade" id="tabs-new-8">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="table2">
+                                    <thead>
+                                        <th>Fullname</th>
+                                        <th>Email</th>
+                                        <th>Contact #</th>
+                                        <th>Age</th>
+                                        <th>Address</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody id="list"></tbody>
+                                </table>
+                            </div>
+                        </div>
                         <div class="tab-pane fade" id="tabs-calendar-8">
+
+                        </div>
+                        <div class="tab-pane fade" id="tabs-matches-8">
+
+                        </div>
+                        <div class="tab-pane fade" id="tabs-stats-8">
 
                         </div>
                     </div>
@@ -66,15 +102,46 @@
         </div>
     </div>
 </div>
+<div class="modal" id="modal-loading" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="mb-2">
+                    <dotlottie-wc src="https://lottie.host/ed13f8d5-bc3f-4786-bbb8-36d06a21a6cb/XMPpTra572.lottie"
+                        style="width: 100%;height: auto;" autoplay loop></dotlottie-wc>
+                </div>
+                <div>Loading</div>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
 window.addEventListener('DOMContentLoaded', () => {
     players();
+    newPlayer();
 });
+
+function calculateAge(birthDateString) {
+    const birthDate = new Date(birthDateString);
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    const dayDiff = today.getDate() - birthDate.getDate();
+
+    // Adjust if birthday hasn't occurred yet this year
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+}
 
 function players() {
     const teamId = <?= json_encode($team['team_id']) ?>;
-    fetch('/roster/player-list?teamId=${teamId}')
+    fetch('/roster/player-list?teamId=' + teamId)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -92,7 +159,11 @@ function players() {
                 <td>${item.roleName}</td>
                 <td>${item.height}</td>
                 <td>${item.weight}</td>
-                <td><button type="button" class="btn btn-primary approveTeam" value="${item.player_id}">Edit</button></td>
+                <td>
+                    <button type="button" class="btn btn-primary approveTeam" value="${item.player_id}">
+                    <i class='ti ti-edit'></i>&nbsp;Edit
+                    </button>
+                </td>
             `;
                 tbody.appendChild(row);
             });
@@ -102,6 +173,44 @@ function players() {
                 $('#table1').DataTable().clear().destroy();
             }
             $('#table1').DataTable();
+        })
+        .catch(error => console.error('There was a problem with your fetch operation:', error));
+}
+
+function newPlayer() {
+    const teamId = <?= json_encode($team['team_id']) ?>;
+    fetch('/roster/new-players?teamId=' + teamId)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            const tbody = document.getElementById('list');
+            data.list.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${item.fullname}</td>
+                <td>${item.email}</td>
+                <td>${item.phone}</td>
+                <td>${calculateAge(item.birth_date)}</td>
+                <td>${item.address}</td>
+                <td>
+                    <button type="button" class="btn btn-primary recruite" value="${item.player_id}">
+                        <i class='ti ti-circle-check'></i>&nbsp;Recruite
+                    </button>
+                </td>
+            `;
+                tbody.appendChild(row);
+            });
+
+            // Initialize or reinitialize DataTable
+            if ($.fn.DataTable.isDataTable('#table2')) {
+                $('#table2').DataTable().clear().destroy();
+            }
+            $('#table2').DataTable();
         })
         .catch(error => console.error('There was a problem with your fetch operation:', error));
 }
