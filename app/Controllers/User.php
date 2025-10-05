@@ -501,4 +501,11 @@ class User extends BaseController
             return $this->response->SetJSON(['success'=>'Successfully submitted']);
         }
     }
+
+    public function myTeam($id)
+    {
+        $data['title']="My Team";
+        $data['team'] = $id;
+        return view('users/my-team',$data);
+    }
 }
