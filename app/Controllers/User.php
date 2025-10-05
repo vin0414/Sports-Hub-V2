@@ -394,8 +394,25 @@ class User extends BaseController
         $data['title']="Search a Team";
         $model = new \App\Models\sportsModel();
         $data['category']=$model->findAll();
+        //team
+        $cat = $this->request->getGet('category');
         $team = new \App\Models\teamModel();
-        $data['team'] = $team->where('status',1)->findAll();
+        $page = (int) ($this->request->getGet('page') ?? 1);
+        $perPage = 6;
+
+        // Build query
+        if ($cat) {
+            if ($cat) $team->whereIn('sportsID', (array)$cat);
+        }
+        $team->where('status', 1)->orderBy('team_id', 'DESC');
+        $list = $team->paginate($perPage, 'default', $page);
+        $total = $team->where('status',1)->countAllResults();       
+        $pager = $team->pager;
+        $data['team']=$list;
+        $data['page']=$page;
+        $data['perPage']=$perPage;
+        $data['total']=$total;
+        $data['pager']=$pager;
         return view('users/search-team',$data);
     }
 

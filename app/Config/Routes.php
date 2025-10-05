@@ -42,6 +42,7 @@ $routes->post('new-password','User::newPassword');
 $routes->post('account-security','User::accountSecurity');
 $routes->post('submit','User::submitForm');
 $routes->post('team-registration','User::teamRegistration');
+$routes->post('roster/join-now','Roster::joinTeam');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
@@ -114,7 +115,9 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     //api
     $routes->get('roster/pending','Roster::getPendingList');
     $routes->get('roster/approve','Roster::getApproveList');
+    $routes->get('roster/team','Roster::fetchTeam');
     $routes->post('roster/confirmation','Roster::confirmation');
+    $routes->post('roster/verify','Roster::teamVerify');
     //videos
     $routes->get('videos','Home::videos');
     $routes->get('videos/upload','Home::uploadVideo');

@@ -298,7 +298,7 @@
                             <?php foreach($team as $list): ?>
                             <div class="col-lg-4">
                                 <div class="card">
-                                    <div class="img-responsive img-responsive-21x9 card-img-top"
+                                    <div class="img-responsive img-responsive-21x15 card-img-top"
                                         style="background-image: url(<?=base_url('assets/images/team/')?><?=$list['image']?>)">
                                     </div>
                                     <div class="card-body text-center">
@@ -308,15 +308,32 @@
                                                 <?=$list['school_barangay']?><br />
                                                 <small>School/University/Barangay</small>
                                             </div>
-                                            <div class="col-lg-12">
-                                                <?=$list['coach_name']?><br />
-                                                <small>Coach</small>
-                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="d-flex">
+                                        <?php
+                                        $playerModel = new \App\Models\playerModel();
+                                        $player = $playerModel->where('user_id',session()->get('User'))
+                                                              ->where('team_id',$list['team_id'])
+                                                              ->first();
+                                        if(empty($player)):
+                                        ?>
+                                        <button type="button" value="<?=$list['team_id']?>" class="btn card-btn join">
+                                            <i class="ti ti-circle-plus"></i>&nbsp;Join
+                                        </button>
+                                        <?php else: ?>
+                                        <a href="javascript:void(0);" class="btn card-btn">
+                                            <i class="ti ti-circle-check"></i>&nbsp;Joined
+                                        </a>
+                                        <?php endif; ?>
+                                        <a href="" class="btn card-btn">
+                                            <i class="ti ti-zoom-scan"></i>&nbsp;View
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                             <?php endforeach; ?>
+                            <?= $pager->makeLinks($page, $perPage, $total, 'custom_view') ?>
                             <?php endif;?>
                         </div>
                     </div>
@@ -326,4 +343,34 @@
     </div>
 </div>
 <?= view('main/templates/footer')?>
+<script>
+$(document).on('click', '.join', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to continue?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const value = $(this).val();
+            $.ajax({
+                url: "/roster/join-now",
+                method: "POST",
+                data: {
+                    value: value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response);
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
 <?= view('main/templates/closing')?>

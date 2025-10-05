@@ -18,6 +18,7 @@ class Home extends BaseController
         $videoModel = new \App\Models\videoModel();
         $eventModel = new \App\Models\eventModel();
         $registerModel = new \App\Models\registerModel();
+        $teamModel = new \App\Models\teamModel();
         
         $videos = array_map(function($v) {
             return [
@@ -63,7 +64,20 @@ class Home extends BaseController
         //register
         $register = $registerModel->where('user_id',session()->get('User'))
                  ->where('status',1)->first() ?? '';
-        $data = ['title'=>$title,'recent'=>$recent,'feed'=>$feed,'code'=>$code,'register'=>$register];
+        //team for coach
+        $team = $teamModel->where('user_id',session()->get('User'))
+                ->where('status',1)->findAll();
+        //player
+        $player  = $this->db->table('players as a')
+                    ->select('b.team_name,b.organization,b.image,a.status')
+                    ->join('teams as b','b.team_id=a.team_id')
+                    ->where('a.user_id',session()->get('User'));
+        $playerData = $player->get()->getResult();
+        $data = [
+            'title'=>$title,'recent'=>$recent,'feed'=>$feed,
+            'code'=>$code,'register'=>$register,'team'=>$team,
+            'player'=>$playerData
+        ];
         return view('welcome_message',$data);
     }
 

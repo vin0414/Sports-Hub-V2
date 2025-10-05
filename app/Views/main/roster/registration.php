@@ -82,7 +82,20 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="tabs-new-8">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="table3">
+                                        <thead>
+                                            <th>Name of Team</th>
+                                            <th>Organization</th>
+                                            <th>School/Barangay</th>
+                                            <th>Coach</th>
+                                            <th>Action</th>
+                                        </thead>
+                                        <tbody id="team">
 
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -96,6 +109,7 @@
 window.addEventListener('DOMContentLoaded', () => {
     pending();
     approve();
+    team();
 });
 
 function calculateAge(birthDateString) {
@@ -142,6 +156,67 @@ $(document).on('click', '.approve', function() {
         }
     });
 });
+
+$(document).on('click', '.approveTeam', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to continue?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const value = $(this).val();
+            $.ajax({
+                url: "/roster/verify",
+                method: "POST",
+                data: {
+                    value: value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response);
+                    }
+                }
+            });
+        }
+    });
+});
+
+function team() {
+    fetch('/roster/team')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tbody = document.getElementById('team');
+            data.team.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+            <td>${item.team_name}</td>
+            <td>${item.organization}</td>
+            <td>${item.school_barangay}</td>
+            <td>${item.coach_name}</td>
+            <td><button type="button" class="btn btn-primary approveTeam" value="${item.team_id}">Accept</button></td>
+        `;
+                tbody.appendChild(row);
+            });
+
+            // Initialize or reinitialize DataTable
+            if ($.fn.DataTable.isDataTable('#table3')) {
+                $('#table3').DataTable().clear().destroy();
+            }
+            $('#table3').DataTable();
+        })
+        .catch(error => console.error('There was a problem with your fetch operation:', error));
+}
+
 
 function approve() {
     fetch('/roster/approve')
