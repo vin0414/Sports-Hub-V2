@@ -173,6 +173,7 @@
                             </iframe>
                         </div>
                     </div>
+                    <?php else: ?>
                     <?php if($register['application_type']==="Player"): ?>
                     <div class="card mb-3">
                         <div class="card-header">
