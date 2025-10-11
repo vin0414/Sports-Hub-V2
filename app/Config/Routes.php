@@ -37,6 +37,10 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('my-team/(:any)','User::myTeam/$1');
     $routes->get('roster/player-list','Roster::playerList');
     $routes->get('roster/new-players','Roster::newPlayers');
+    $routes->get('roster/schedules','Roster::schedules');
+    $routes->get('roster/schedules/fetch','Roster::fetchSchedules');
+    $routes->get('roster/matches','Roster::matches');
+    $routes->get('roster/stats','Roster::stats');
 });
 $routes->post('register','User::registerUser');
 $routes->post('checkUser','User::checkUser');
@@ -46,6 +50,8 @@ $routes->post('account-security','User::accountSecurity');
 $routes->post('submit','User::submitForm');
 $routes->post('team-registration','User::teamRegistration');
 $routes->post('roster/join-now','Roster::joinTeam');
+$routes->post('roster/schedules/create','Roster::createSchedule');
+$routes->post('roster/schedules/edit','Roster::editSchedule');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

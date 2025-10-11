@@ -5,6 +5,10 @@ use Config\App;
 use \App\Models\registerModel;
 use \App\Models\teamModel;
 use \App\Models\playerModel;
+use \App\Models\scheduleModel;
+use \App\Models\matchModel;
+use \App\Models\performanceModel;
+use Config\Email;
 
 class Roster extends BaseController
 {
@@ -141,5 +145,122 @@ class Roster extends BaseController
                 ->where('a.status',0);
         $list = $data->get()->getResult();
         return response()->setJSON(['list'=>$list]);
+    }
+
+    public function schedules()
+    {
+        $val = $this->request->getGet('teamId');
+        $model = new scheduleModel();
+        $schedules = $model->where('team_id',$val)->findAll();
+        return response()->setJSON(['schedules'=>$schedules]);
+    }
+
+    public function createSchedule()
+    {
+        $model = new scheduleModel();
+        $validation = $this->validate([
+            'date' => 'required',
+            'time' => 'required',
+            'location' => 'required'
+        ]);
+        if(!$validation)
+        {
+            return response()->setJSON(['error'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+           
+            $db = \Config\Database::connect();
+            $db->transStart(); 
+            $data = [
+                'team_id' => $this->request->getPost('team_id'),
+                'date' => $this->request->getPost('date'),
+                'time' => $this->request->getPost('time'),
+                'location' => $this->request->getPost('location'),
+                'status' => $this->request->getPost('status')
+            ];
+            $model->save($data);
+            //get all the new players email
+            $players = $this->db->table('players as a')
+                        ->select('b.email')
+                        ->join('registration as b','b.user_id=a.user_id')
+                        ->where('a.team_id',$this->request->getPost('team_id'))
+                        ->where('a.status',0)
+                        ->get()->getResult();
+            foreach($players as $player)
+            {
+                //send email to all new players
+                $emailConfig = new Email();
+                $fromEmail = $emailConfig->fromEmail;
+                $fromName  = $emailConfig->fromName;
+                $email = \Config\Services::email();
+                $email->setTo($player->email);
+                $email->setFrom($fromEmail, $fromName); 
+                $email->setSubject('New Schedule Created');
+                $email->setMessage('A new schedule has been created. Please check your team roster for more details.');
+                $email->send();
+            }
+            $db->transComplete();
+            if ($db->transStatus() === false) {
+                // Transaction failed: rollback occurred
+                return $this->response->setJSON(['error'=>'Transaction failed']);
+            } else {
+                // Transaction successful: commit occurred
+                return $this->response->setJSON(['success'=>'Successfully added']);
+            }
+        }
+    }
+
+    public function fetchSchedules()
+    {
+        $val = $this->request->getGet('scheduleId');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {
+            $model = new scheduleModel();
+            $data = $model->where('schedule_id',$val)->first();
+            return response()->setJSON(['schedule'=>$data]);
+        }
+    }
+
+    public function editSchedule()
+    {
+        $model = new scheduleModel();
+        $validation = $this->validate([
+            'date' => 'required',
+            'time' => 'required',
+            'location' => 'required'
+        ]);
+        if(!$validation)
+        {
+            return response()->setJSON(['error'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'date' => $this->request->getPost('date'),
+                'time' => $this->request->getPost('time'),
+                'location' => $this->request->getPost('location'),
+                'status' => $this->request->getPost('status')
+            ];
+            $model->update($this->request->getPost('schedule_id'),$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
+    public function matches()
+    {
+        $val = $this->request->getGet('teamId');   
+        $model = new matchModel();
+        $matches = $model->where('team1_id',$val)->orWhere('team2_id',$val)->findAll();
+        return response()->setJSON(['matches'=>$matches]);
+    }
+
+    public function stats()
+    {
+        $val = $this->request->getGet('teamId');
     }
 }

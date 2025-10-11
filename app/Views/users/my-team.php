@@ -20,6 +20,19 @@
                         <?=$team['team_name']?>
                     </h2>
                 </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <a href="javascript:void(0);" class="btn btn-primary d-none d-sm-inline-block"
+                            data-bs-toggle="modal" data-bs-target="#modal-large">
+                            <i class="ti ti-calendar-plus"></i>
+                            Create Schedule
+                        </a>
+                        <a href="javascript:void(0);" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal"
+                            data-bs-target="#modal-large" aria-label="Create Schedule">
+                            <i class="ti ti-calendar-plus"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -88,13 +101,48 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="tabs-calendar-8">
-
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="table3">
+                                    <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody id="schedules"></tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="tabs-matches-8">
-
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="table4">
+                                    <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Opponent</th>
+                                        <th>Location</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody id="matches"></tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="tab-pane fade" id="tabs-stats-8">
-
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="table5">
+                                    <thead>
+                                        <th>Player</th>
+                                        <th>Games Played</th>
+                                        <th>Points Scored</th>
+                                        <th>Assists</th>
+                                        <th>Rebounds</th>
+                                        <th>Steals</th>
+                                        <th>Blocks</th>
+                                    </thead>
+                                    <tbody id="stats"></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -115,13 +163,105 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="modal-large" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="frmCreate">
+                    <?=csrf_field()?>
+                    <input type="hidden" name="team_id" value="<?=$team['team_id']?>" />
+                    <div class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label" for="date">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" />
+                                <div id="date-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label" for="time">Time</label>
+                                <input type="time" class="form-control" id="time" name="time" />
+                                <div id="time-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="location">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" />
+                        <div id="location-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="1">OPEN</option>
+                            <option value="0">CLOSE</option>
+                        </select>
+                        <div id="status-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Schedule</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="frmEdit">
+                    <input type="hidden" name="schedule_id" id="schedule_id" />
+                    <div class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label" for="date">Date</label>
+                                <input type="date" class="form-control" id="date" name="date" />
+                                <div id="date-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label" for="time">Time</label>
+                                <input type="time" class="form-control" id="time" name="time" />
+                                <div id="time-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="location">Location</label>
+                        <input type="text" class="form-control" id="location" name="location" />
+                        <div id="location-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="1">OPEN</option>
+                            <option value="0">CLOSE</option>
+                        </select>
+                        <div id="status-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
-window.addEventListener('DOMContentLoaded', () => {
-    players();
-    newPlayer();
-});
+let table3;
+let table1;
+let table2;
+let table4;
+let table5;
 
 function calculateAge(birthDateString) {
     const birthDate = new Date(birthDateString);
@@ -138,81 +278,251 @@ function calculateAge(birthDateString) {
 
     return age;
 }
+$(document).ready(function() {
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    dateInput.setAttribute('min', today);
 
-function players() {
     const teamId = <?= json_encode($team['team_id']) ?>;
-    fetch('/roster/player-list?teamId=' + teamId)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+    table1 = $('#table1').DataTable({
+        ajax: {
+            url: '/roster/player-list',
+            data: {
+                teamId: teamId
+            },
+            dataSrc: 'players'
+        },
+        columns: [{
+                data: 'jersey_num'
+            },
+            {
+                data: 'Fullname'
+            },
+            {
+                data: 'roleName'
+            },
+            {
+                data: 'height'
+            },
+            {
+                data: 'weight'
+            },
+            {
+                data: 'player_id',
+                render: function(id) {
+                    return `
+                        <a href="<?=site_url('roster/players/edit/')?>${id}" class="btn btn-primary approveTeam">
+                            <i class='ti ti-edit'></i>&nbsp;Edit
+                        </a>
+                    `;
+                }
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            const tbody = document.getElementById('players');
-            data.players.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${item.jersey_num}</td>
-                <td>${item.Fullname}</td>
-                <td>${item.roleName}</td>
-                <td>${item.height}</td>
-                <td>${item.weight}</td>
-                <td>
-                    <button type="button" class="btn btn-primary approveTeam" value="${item.player_id}">
-                    <i class='ti ti-edit'></i>&nbsp;Edit
-                    </button>
-                </td>
-            `;
-                tbody.appendChild(row);
+        ]
+    });
+
+    table2 = $('#table2').DataTable({
+        ajax: {
+            url: '/roster/new-players',
+            data: {
+                teamId: teamId
+            },
+            dataSrc: 'list'
+        },
+        columns: [{
+                data: 'fullname'
+            },
+            {
+                data: 'email'
+            },
+            {
+                data: 'phone'
+            },
+            {
+                data: 'birth_date',
+                render: function(date) {
+                    return calculateAge(date);
+                }
+            },
+            {
+                data: 'address'
+            },
+            {
+                data: 'player_id',
+                render: function(id) {
+                    return `
+                        <button type="button" class="btn btn-primary recruite" value="${id}">
+                            <i class='ti ti-circle-check'></i>&nbsp;Recruite
+                        </button>
+                    `;
+                }
+            }
+        ]
+    });
+
+    table3 = $('#table3').DataTable({
+        ajax: {
+            url: '/roster/schedules',
+            data: {
+                teamId: teamId
+            },
+            dataSrc: 'schedules'
+        },
+        columns: [{
+                data: 'date',
+                render: function(date) {
+                    return new Date(date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: '2-digit'
+                    });
+                }
+            },
+            {
+                data: 'time'
+            },
+            {
+                data: 'location'
+            },
+            {
+                data: 'status',
+                render: function(status) {
+                    return status == 1 ? 'OPEN' : 'CLOSE';
+                }
+            },
+            {
+                data: 'schedule_id',
+                render: function(id) {
+                    return `
+                        <button type="button" class="btn btn-primary editSchedule" value="${id}">
+                            <i class='ti ti-edit'></i>&nbsp;Edit
+                        </button>
+                    `;
+                }
+            }
+        ]
+    });
+});
+
+$(document).on('click', '.editSchedule', function() {
+    const scheduleId = $(this).val();
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: '<?=site_url('roster/schedules/fetch')?>',
+        method: 'GET',
+        data: {
+            scheduleId: scheduleId
+        },
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.schedule) {
+                const schedule = response.schedule;
+                $('#frmEdit input[name="schedule_id"]').val(schedule.schedule_id);
+                $('#frmEdit input[name="date"]').val(schedule.date);
+                $('#frmEdit input[name="time"]').val(schedule.time);
+                $('#frmEdit input[name="location"]').val(schedule.location);
+                $('#frmEdit select[name="status"]').val(schedule.status);
+                $('#editModal').modal('show');
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to fetch schedule details.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function() {
+            $('#modal-loading').modal('hide');
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while fetching schedule details.',
+                icon: 'error',
+                confirmButtonText: 'OK'
             });
+        }
+    });
+});
 
-            // Initialize or reinitialize DataTable
-            if ($.fn.DataTable.isDataTable('#table1')) {
-                $('#table1').DataTable().clear().destroy();
+$('#frmEdit').on('submit', function(e) {
+    e.preventDefault();
+    $('.error-message').html('');
+    let data = $(this).serialize();
+    $('#editModal').modal('hide');
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: "<?=site_url('roster/schedules/edit')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.success) {
+                $('#frmEdit')[0].reset();
+                Swal.fire({
+                    title: 'Great!',
+                    text: "Successfully updated",
+                    icon: 'success',
+                    confirmButtonText: 'Continue'
+                }).then((result) => {
+                    // Action based on user's choice
+                    if (result.isConfirmed) {
+                        // Perform some action when "Yes" is clicked
+                        table3.ajax.reload();
+                    }
+                });
+            } else {
+                $('#editModal').modal('show');
+                var errors = response.error;
+                // Iterate over each error and display it under the corresponding input field
+                for (var field in errors) {
+                    $('#' + field + '-error').html('<p>' + errors[field] +
+                        '</p>'); // Show the first error message
+                    $('#' + field).addClass(
+                        'text-danger'); // Highlight the input field with an error
+                }
             }
-            $('#table1').DataTable();
-        })
-        .catch(error => console.error('There was a problem with your fetch operation:', error));
-}
+        }
+    });
+});
 
-function newPlayer() {
-    const teamId = <?= json_encode($team['team_id']) ?>;
-    fetch('/roster/new-players?teamId=' + teamId)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+$('#frmCreate').on('submit', function(e) {
+    e.preventDefault();
+    $('.error-message').html('');
+    let data = $(this).serialize();
+    $('#modal-large').modal('hide');
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: "<?=site_url('roster/schedules/create')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.success) {
+                $('#frmCreate')[0].reset();
+                Swal.fire({
+                    title: 'Great!',
+                    text: "Successfully submitted",
+                    icon: 'success',
+                    confirmButtonText: 'Continue'
+                }).then((result) => {
+                    // Action based on user's choice
+                    if (result.isConfirmed) {
+                        // Perform some action when "Yes" is clicked
+                        table3.ajax.reload();
+                    }
+                });
+            } else {
+                $('#modal-large').modal('show');
+                var errors = response.error;
+                // Iterate over each error and display it under the corresponding input field
+                for (var field in errors) {
+                    $('#' + field + '-error').html('<p>' + errors[field] +
+                        '</p>'); // Show the first error message
+                    $('#' + field).addClass(
+                        'text-danger'); // Highlight the input field with an error
+                }
             }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            const tbody = document.getElementById('list');
-            data.list.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                <td>${item.fullname}</td>
-                <td>${item.email}</td>
-                <td>${item.phone}</td>
-                <td>${calculateAge(item.birth_date)}</td>
-                <td>${item.address}</td>
-                <td>
-                    <button type="button" class="btn btn-primary recruite" value="${item.player_id}">
-                        <i class='ti ti-circle-check'></i>&nbsp;Recruite
-                    </button>
-                </td>
-            `;
-                tbody.appendChild(row);
-            });
-
-            // Initialize or reinitialize DataTable
-            if ($.fn.DataTable.isDataTable('#table2')) {
-                $('#table2').DataTable().clear().destroy();
-            }
-            $('#table2').DataTable();
-        })
-        .catch(error => console.error('There was a problem with your fetch operation:', error));
-}
+        }
+    });
+});
 </script>
 <?= view('main/templates/closing')?>
