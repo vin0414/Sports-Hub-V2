@@ -6,8 +6,6 @@ use \App\Models\registerModel;
 use \App\Models\teamModel;
 use \App\Models\playerModel;
 use \App\Models\scheduleModel;
-use \App\Models\matchModel;
-use \App\Models\performanceModel;
 use Config\Email;
 
 class Roster extends BaseController
@@ -254,13 +252,30 @@ class Roster extends BaseController
     public function matches()
     {
         $val = $this->request->getGet('teamId');   
-        $model = new matchModel();
-        $matches = $model->where('team1_id',$val)->orWhere('team2_id',$val)->findAll();
+        $builder = $this->db->table('matches as a')
+                    ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,c.team_name")
+                    ->join('teams as b','b.team_id=a.team1_id')
+                    ->join('teams as c','c.team_id=a.team2_id')
+                    ->where('a.team1_id',$val)
+                    ->orWhere('a.team2_id',$val);
+        $matches = $builder->get()->getResult();
         return response()->setJSON(['matches'=>$matches]);
     }
 
     public function stats()
     {
         $val = $this->request->getGet('teamId');
+        $stats = $this->db->table('player_performance as a')
+                        ->select("SUM(CASE WHEN a.stat_type='PTS' THEN stat_value ELSE 0 END)points,
+                        c.fullname,d.date,d.time,d.location,CONCAT('VS ',f.team_name)team_name")
+                        ->join('players as b','b.player_id=a.player_id')  
+                        ->join('registration as c','c.user_id=b.user_id') 
+                        ->join('matches as d','d.match_id=a.match_id') 
+                        ->join('teams as e','d.team1_id=e.team_id')
+                        ->join('teams as f','d.team2_id=f.team_id')
+                        ->where('a.team_id',$val)
+                        ->groupBy('a.player_id,a.match_id')
+                        ->get()->getResult();
+        return response()->setJSON(['stats'=>$stats]);
     }
 }

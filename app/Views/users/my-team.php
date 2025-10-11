@@ -122,7 +122,6 @@
                                         <th>Time</th>
                                         <th>Opponent</th>
                                         <th>Location</th>
-                                        <th>Action</th>
                                     </thead>
                                     <tbody id="matches"></tbody>
                                 </table>
@@ -132,13 +131,12 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="table5">
                                     <thead>
+                                        <th>Date</th>
+                                        <th>Time</th>
                                         <th>Player</th>
                                         <th>Games Played</th>
+                                        <th>Location</th>
                                         <th>Points Scored</th>
-                                        <th>Assists</th>
-                                        <th>Rebounds</th>
-                                        <th>Steals</th>
-                                        <th>Blocks</th>
                                     </thead>
                                     <tbody id="stats"></tbody>
                                 </table>
@@ -314,6 +312,9 @@ $(document).ready(function() {
                         <a href="<?=site_url('roster/players/edit/')?>${id}" class="btn btn-primary approveTeam">
                             <i class='ti ti-edit'></i>&nbsp;Edit
                         </a>
+                        <button type="button" value="${id}" class="btn btn-danger withdraw">
+                            <i class='ti ti-edit'></i>&nbsp;Withdraw
+                        </button>
                     `;
                 }
             }
@@ -398,6 +399,72 @@ $(document).ready(function() {
                         </button>
                     `;
                 }
+            }
+        ]
+    });
+
+    table4 = $('#table4').DataTable({
+        ajax: {
+            url: '/roster/matches',
+            data: {
+                teamId: teamId
+            },
+            dataSrc: 'matches'
+        },
+        columns: [{
+                data: 'date',
+                render: function(date) {
+                    return new Date(date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: '2-digit'
+                    });
+                }
+            },
+            {
+                data: 'time'
+            },
+            {
+                data: 'team_name'
+            },
+            {
+                data: 'location'
+            }
+        ]
+    });
+
+    table5 = $('#table5').DataTable({
+        ajax: {
+            url: '/roster/stats',
+            data: {
+                teamId: teamId
+            },
+            dataSrc: 'stats'
+        },
+        columns: [{
+                data: 'date',
+                render: function(date) {
+                    return new Date(date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: '2-digit'
+                    });
+                }
+            },
+            {
+                data: 'time'
+            },
+            {
+                data: 'fullname'
+            },
+            {
+                data: 'team_name'
+            },
+            {
+                data: 'location'
+            },
+            {
+                data: 'points'
             }
         ]
     });
