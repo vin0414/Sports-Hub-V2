@@ -72,10 +72,23 @@ class Home extends BaseController
                     ->join('teams as b','b.team_id=a.team_id')->where('a.status',1)
                     ->where('a.user_id',session()->get('User'));
         $playerData = $player->get()->getResult();
+        //schedules
+        $schedules = $this->db->table('schedules')
+                    ->select('schedules.*')
+                    ->join('teams', 'teams.team_id = schedules.team_id')
+                    ->join('players', 'players.team_id = teams.team_id')
+                    ->where('players.user_id', session()->get('User'))
+                    ->where('schedules.status', 1)
+                    ->where('players.status <>', 2)
+                    ->orderBy('schedules.date', 'ASC')
+                    ->get()
+                    ->getResult();
+
+
         $data = [
             'title'=>$title,'recent'=>$recent,'feed'=>$feed,
             'code'=>$code,'register'=>$register,'team'=>$team,
-            'player'=>$playerData
+            'player'=>$playerData,'schedules'=>$schedules
         ];
         return view('welcome_message',$data);
     }

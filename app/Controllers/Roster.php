@@ -275,8 +275,37 @@ class Roster extends BaseController
                 $email = \Config\Services::email();
                 $email->setTo($player->email);
                 $email->setFrom($fromEmail, $fromName); 
-                $email->setSubject('New Schedule Created');
-                $email->setMessage('A new schedule has been created. Please check your team roster for more details.');
+                $email->setSubject('Welcome to the Team! Upcoming Tryouts Info Inside');
+                $email->setMessage("
+                    Dear Players,
+
+                    Welcome aboard! We’re thrilled to have you as part of our growing team. As a newly recruited player, you’re invited to participate in our upcoming team tryouts, where we’ll assess skills, build chemistry, and finalize our roster for the season.
+
+                    📅 Tryout Details:
+                    - Date: {$this->request->getPost('date')}
+                    - Time: {$this->request->getPost('time')}
+                    - Location: {$this->request->getPost('location')}
+                    - Attire: Sportswear, team jersey (if available), and proper footwear
+
+                    What to Expect:
+                    - Skill drills and position evaluations
+                    - Team-building exercises
+                    - Brief orientation with coaches and staff
+
+                    Please bring:
+                    - Valid ID
+                    - Water bottle
+                    - Any medical clearance (if required)
+
+                    We encourage you to arrive at least 30 minutes early for registration and warm-up. If you have any questions or need assistance, feel free to reply to this email or contact us.
+
+                    Let’s make this season unforgettable. See you on the court!
+
+                    Warm regards,
+                    
+                    Digital Sports Hub Team
+                ");
+
                 $email->send();
             }
             $db->transComplete();

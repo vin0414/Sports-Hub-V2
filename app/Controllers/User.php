@@ -416,6 +416,15 @@ class User extends BaseController
         return view('users/search-team',$data);
     }
 
+    public function me($id)
+    {
+        $data['title']="My Team";
+        $teamModel = new \App\Models\teamModel();
+        $team = $teamModel->where('team_name',$id)->first();
+        $data['team']=$team;
+        return view('users/player-team',$data);
+    }
+
     public function createTeam()
     {
         $data['title']="Create a Team";
