@@ -418,10 +418,23 @@ class User extends BaseController
 
     public function me($id)
     {
-        $data['title']="My Team";
+        $data['title']="Personal Information";
+        //team
         $teamModel = new \App\Models\teamModel();
         $team = $teamModel->where('team_name',$id)->first();
         $data['team']=$team;
+        //performance
+        $playerModel = new \App\Models\playerModel();
+        $player = $playerModel->where('user_id',session()->get('User'))
+                              ->where('team_id',$team['team_id'])
+                              ->first();
+        $data['player']=$player;
+        $performanceModel = new \App\Models\performanceModel();
+        $performance = $performanceModel->where('player_id',$player['player_id'])
+                       ->where('team_id',$team['team_id'])
+                       ->groupBy('stat_type')->findAll();
+        $data['performance']=$performance;
+                       
         return view('users/player-team',$data);
     }
 

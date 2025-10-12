@@ -363,7 +363,7 @@ class Roster extends BaseController
     {
         $val = $this->request->getGet('teamId');   
         $builder = $this->db->table('matches as a')
-                    ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,c.team_name")
+                    ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,CONCAT(b.team_name,' VS ',c.team_name)team_name")
                     ->join('teams as b','b.team_id=a.team1_id')
                     ->join('teams as c','c.team_id=a.team2_id')
                     ->where('a.team1_id',$val)

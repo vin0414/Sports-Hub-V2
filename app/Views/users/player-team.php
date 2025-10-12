@@ -41,6 +41,42 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title"><i class="ti ti-user"></i>&nbsp;Personal Information</div>
+                            <div id="panorama"></div>
+                            <div class="row g-1">
+                                <div class="col-lg-12">
+                                    <label class="form-label">Email</label>
+                                    <p class="form-control"><?=$player['email']?></p>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="row g-3">
+                                        <div class="col-lg-4">
+                                            <label class="form-label">Date of Birth</label>
+                                            <p class="form-control"><?=$player['date_of_birth']?></p>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="form-label">Gender</label>
+                                            <p class="form-control"><?=$player['gender']?></p>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="form-label">Jersey No</label>
+                                            <p class="form-control"><?=$player['jersey_num']?></p>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="form-label">Height (cm)</label>
+                                            <p class="form-control"><?=$player['height']?></p>
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <label class="form-label">Weight (kg)</label>
+                                            <p class="form-control"><?=$player['weight']?></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <label class="form-label">Address</label>
+                                    <textarea class="form-control" style="height: 100px;"
+                                        disabled><?=$player['address']?></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -48,11 +84,47 @@
                     <div class="card mb-3">
                         <div class="card-body">
                             <div class="card-title"><i class="ti ti-scoreboard"></i>&nbsp;Team Stats</div>
+                            <div class="row g-3">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="card-title">WIN</div>
+                                            <h1>0</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="card-title">LOSE</div>
+                                            <h1>0</h1>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-header">
                             <div class="card-title"><i class="ti ti-scoreboard"></i>&nbsp;Personal Stats</div>
+                        </div>
+                        <div class="position-relative">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <?php if(!empty($performance) && is_array($performance)):?>
+                                    <?php foreach($performance as $perf):?>
+                                    <tr>
+                                        <th><?=$perf['stat_type']?></th>
+                                        <td class="text-center"><?=$perf['stat_value']?></td>
+                                    </tr>
+                                    <?php endforeach;?>
+                                    <?php else:?>
+                                    <tr>
+                                        <td colspan="2">No stats available</td>
+                                    </tr>
+                                    <?php endif;?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -76,9 +148,13 @@ $(document).ready(function() {
     // Custom JS can be added here
     matches();
 });
+pannellum.viewer('panorama', {
+    "type": "equirectangular",
+    "panorama": "<?=base_url('assets/images/players/')?><?=$player['image']?>"
+});
 
 function matches() {
-    fetch('/roster/matches?team_id=<?=$team['team_id']?>')
+    fetch('/roster/matches?teamId=<?=$team['team_id']?>')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -86,7 +162,43 @@ function matches() {
             return response.json();
         })
         .then(data => {
-            console.log(data);
+            const listGroup = document.querySelector('.list-group');
+            listGroup.innerHTML = ''; // Clear existing content
+
+            if (!data.matches || data.matches.length === 0) {
+                const noMatchItem = document.createElement('div');
+                noMatchItem.className = 'list-group-item';
+                noMatchItem.textContent = 'No upcoming matches';
+                listGroup.appendChild(noMatchItem);
+            } else {
+                data.matches.forEach(match => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-group-item';
+
+                    const row = document.createElement('div');
+                    row.className = 'row';
+
+                    const col = document.createElement('div');
+                    col.className = 'col';
+
+                    const dateTime = document.createElement('div');
+                    dateTime.className = 'text-muted';
+                    dateTime.textContent = `${match.date} at ${match.time}`;
+
+                    const teamName = document.createElement('div');
+                    teamName.className = 'fw-bold';
+                    teamName.textContent = match.team_name;
+
+                    const venue = document.createElement('div');
+                    venue.className = 'text-muted';
+                    venue.textContent = `Venue: ${match.location}`;
+
+                    col.append(dateTime, teamName, venue);
+                    row.appendChild(col);
+                    listItem.appendChild(row);
+                    listGroup.appendChild(listItem);
+                });
+            }
         })
         .catch(error => console.error('There was a problem with your fetch operation:', error));
 }
