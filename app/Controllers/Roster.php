@@ -126,11 +126,76 @@ class Roster extends BaseController
                 ->join('users as b','b.user_id=a.user_id')
                 ->join('player_role as c','c.roleID=a.roleID')
                 ->where('a.team_id',$val)
-                ->where('a.status',1);
+                ->whereIN('a.status',[1,2]);
         $players = $data->get()->getResult();
         return response()->setJSON(['players'=>$players]);
     }
-    
+
+    public function editPlayerInfo()
+    {
+        $model = new playerModel();
+        $validation = $this->validate([
+            'email' => 'required|valid_email',
+            'birth_date' => 'required|valid_date',
+            'position' => 'required|numeric',
+            'jersey_number' => 'required|numeric',
+            'height' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'status' => 'required|numeric',
+            'image' => [
+                'uploaded[image]',
+                'mime_in[image,image/jpg,image/jpeg,image/png]',
+                'max_size[image,2048]',
+            ]
+        ]);
+        if(!$validation)
+        {
+            return response()->setJSON(['error'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'email' => $this->request->getPost('email'),
+                'date_of_birth' => $this->request->getPost('birth_date'),
+                'roleID' => $this->request->getPost('position'),
+                'jersey_num' => $this->request->getPost('jersey_number'),
+                'height' => $this->request->getPost('height'),
+                'weight' => $this->request->getPost('weight'),
+                'status' => $this->request->getPost('status')
+            ];
+            //check if image is uploaded
+            if($imagefile = $this->request->getFile('image'))
+            {
+                if($imagefile->isValid() && !$imagefile->hasMoved())
+                {
+                    //generate a random name
+                    $newName = $imagefile->getRandomName();
+                    //move the file to the designated folder
+                    $imagefile->move(ROOTPATH.'public/assets/images/players/',$newName);
+                    //add the image name to the data array
+                    $data['image'] = $newName;
+                }
+            }
+            $model->update($this->request->getPost('player_id'),$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
+    public function withdrawRequest()
+    {
+        $val = $this->request->getPost('player_id');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {   
+            $model = new playerModel();
+            $data = ['status'=>2];
+            $model->update($val,$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
 
     public function newPlayers()
     {
@@ -143,6 +208,22 @@ class Roster extends BaseController
                 ->where('a.status',0);
         $list = $data->get()->getResult();
         return response()->setJSON(['list'=>$list]);
+    }
+
+    public function recruitePlayer()
+    {
+        $val = $this->request->getPost('player_id');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {   
+            $model = new playerModel();
+            $data = ['status'=>1];
+            $model->update($val,$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
     }
 
     public function schedules()

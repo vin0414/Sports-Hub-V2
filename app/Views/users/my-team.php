@@ -74,11 +74,13 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="table1">
                                     <thead>
+                                        <th>Image</th>
                                         <th>Jersey #</th>
                                         <th>Name of Players</th>
                                         <th>Role</th>
                                         <th>Height</th>
                                         <th>Weight</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </thead>
                                     <tbody id="players"></tbody>
@@ -280,7 +282,7 @@ $(document).ready(function() {
     const dateInput = document.getElementById('date');
     const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
     dateInput.setAttribute('min', today);
-
+    const baseEditUrl = "<?= site_url('roster/players/edit/') ?>";
     const teamId = <?= json_encode($team['team_id']) ?>;
     table1 = $('#table1').DataTable({
         ajax: {
@@ -291,6 +293,16 @@ $(document).ready(function() {
             dataSrc: 'players'
         },
         columns: [{
+                data: 'image',
+                render: function(image) {
+                    if (image) {
+                        return `<img src="/assets/images/players/${image}" alt="Player Image" width="50" height="50" style="object-fit:cover; border-radius:50%;">`;
+                    } else {
+                        return `<img src="/assets/images/players/default.png" alt="Default Image" width="50" height="50" style="object-fit:cover; border-radius:50%;">`;
+                    }
+                }
+            },
+            {
                 data: 'jersey_num'
             },
             {
@@ -306,16 +318,48 @@ $(document).ready(function() {
                 data: 'weight'
             },
             {
+                data: 'status',
+                render: function(status) {
+                    return status == 1 ? 'ACTIVE' : 'INACTIVE';
+                }
+            },
+            {
                 data: 'player_id',
-                render: function(id) {
-                    return `
-                        <a href="<?=site_url('roster/players/edit/')?>${id}" class="btn btn-primary approveTeam">
-                            <i class='ti ti-edit'></i>&nbsp;Edit
-                        </a>
-                        <button type="button" value="${id}" class="btn btn-danger withdraw">
-                            <i class='ti ti-edit'></i>&nbsp;Withdraw
+                render: function(data, type, row) {
+                    const player_status = row.status;
+                    const id = row.player_id;
+
+                    let dropdown = `
+                        <button type="button" class="btn dropdown-toggle"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            role="button">
+                            <span>Action</span>
                         </button>
                     `;
+
+                    if (player_status == 1) {
+                        dropdown += `
+                            <div class="dropdown-menu">
+                                <a href="${baseEditUrl}${id}" class="dropdown-item">
+                                    <i class='ti ti-edit'></i>&nbsp;Edit
+                                </a>
+                                <button type="button" value="${id}" class="dropdown-item withdraw">
+                                    <i class="ti ti-logout-2"></i>&nbsp;Withdraw
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        dropdown += `
+                            <div class="dropdown-menu">
+                                <a href="${baseEditUrl}${id}" class="dropdown-item approveTeam">
+                                    <i class='ti ti-edit'></i>&nbsp;Edit
+                                </a>
+                            </div>
+                        `;
+                    }
+
+                    return dropdown;
+
                 }
             }
         ]
@@ -588,6 +632,105 @@ $('#frmCreate').on('submit', function(e) {
                         'text-danger'); // Highlight the input field with an error
                 }
             }
+        }
+    });
+});
+
+$(document).on('click', '.withdraw', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to withdraw this player!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, withdraw it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('roster/withdraw')?>',
+                method: 'POST',
+                data: {
+                    player_id: playerId
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Withdrawn!',
+                            'Player has been withdrawn.',
+                            'success'
+                        );
+                        table1.ajax.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to withdraw the player.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.recruite', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to recruite this player!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, recruite it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('roster/recruite')?>',
+                method: 'POST',
+                data: {
+                    player_id: playerId,
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Recruited!',
+                            'Player has been recruited.',
+                            'success'
+                        );
+                        table2.ajax.reload();
+                        table1.ajax.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to recruite the player.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
         }
     });
 });

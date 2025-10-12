@@ -305,7 +305,7 @@
                                         <div class="card-title"><?=$list['team_name']?></div>
                                         <div class="row g-2">
                                             <div class="col-lg-12">
-                                                <?=$list['school_barangay']?><br />
+                                                <b><?=$list['school_barangay']?></b><br />
                                                 <small>School/University/Barangay</small>
                                             </div>
                                         </div>

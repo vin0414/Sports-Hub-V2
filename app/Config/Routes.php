@@ -36,6 +36,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('create-a-team','User::createTeam');
     $routes->get('my-team/(:any)','User::myTeam/$1');
     $routes->get('roster/player-list','Roster::playerList');
+    $routes->get('roster/players/edit/(:any)','User::editPlayer/$1');
     $routes->get('roster/new-players','Roster::newPlayers');
     $routes->get('roster/schedules','Roster::schedules');
     $routes->get('roster/schedules/fetch','Roster::fetchSchedules');
@@ -52,6 +53,9 @@ $routes->post('team-registration','User::teamRegistration');
 $routes->post('roster/join-now','Roster::joinTeam');
 $routes->post('roster/schedules/create','Roster::createSchedule');
 $routes->post('roster/schedules/edit','Roster::editSchedule');
+$routes->post('roster/players/edit','Roster::editPlayerInfo');
+$routes->post('roster/withdraw','Roster::withdrawRequest');
+$routes->post('roster/recruite','Roster::recruitePlayer');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
@@ -112,12 +116,8 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('matches/edit/(:num)','Home::editMatch/$1');
     //teams
     $routes->get('roster/teams','Home::teams');
-    $routes->get('roster/teams/create','Home::createTeam');
-    $routes->get('roster/teams/edit/(:num)','Home::editTeam/$1');
     //players
     $routes->get('roster/players','Home::players');
-    $routes->get('roster/players/create','Home::createPlayer');
-    $routes->get('roster/players/edit/(:num)','Home::editPlayer/$1');
     $routes->get('roster/players/profile/(:num)','Home::playersProfile/$1');
     //registration
     $routes->get('roster/registration','Home::rosterRegistration');

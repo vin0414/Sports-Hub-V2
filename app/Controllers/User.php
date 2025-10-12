@@ -510,4 +510,26 @@ class User extends BaseController
         $data['team']=$model->where('team_name',$id)->first();
         return view('users/my-team',$data);
     }
+
+    public function editPlayer($id)
+    {
+        if(!is_numeric($id))
+        {
+            return redirect()->back();
+        }
+        $model = new \App\Models\playerModel();
+        $player = $model->where('player_id',$id)->first();
+        //get the registratio
+        $registerModel = new \App\Models\registerModel();
+        $registration = $registerModel->where('user_id',$player['user_id'])->first();
+        //types of sports
+        $sportsModel = new \App\Models\sportsModel();
+        $sports = $sportsModel->where('sportsID',$player['sportsID'])->first();
+        //get the roles
+        $roleModel = new \App\Models\roleModel();
+        $roles = $roleModel->where('sportsName',$sports['Name'])->findAll();
+        //display the page
+        $data = ['title'=>'Edit Player','player'=>$player,'registration'=>$registration,'roles'=>$roles];
+        return view('users/edit-player',$data);
+    }
 }
