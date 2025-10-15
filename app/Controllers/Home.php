@@ -326,10 +326,56 @@ class Home extends BaseController
         if($role['roster']==1)
         {
             $title = 'Teams';
+            $data['title'] = $title;
+            //team
+            $val = $this->request->getGet('search');
+            $team = new \App\Models\teamModel();
+            $page = (int) ($this->request->getGet('page') ?? 1);
+            $perPage = 8;
+            // Build query
+            if ($val) {
+                if ($val) $team->LIKE('team_name', $val);
+            }
+            $team->orderBy('team_id', 'DESC');
+            $list = $team->paginate($perPage, 'default', $page);
+            $total = $team->countAllResults();       
+            $pager = $team->pager;
+            $data['team']=$list;
+            $data['page']=$page;
+            $data['perPage']=$perPage;
+            $data['total']=$total;
+            $data['pager']=$pager;
+            return view('main/roster/teams/index', $data);
+        }
+        return redirect()->back();     
+    }
+
+    public function viewTeam()
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['roster']==1)
+        {
+            $title = 'Teams';
             $data = [
                 'title' => $title
             ];
-            return view('main/roster/teams/index', $data);
+            return view('main/roster/teams/view', $data);
+        }
+        return redirect()->back();     
+    }
+
+    public function editTeam($id)
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['roster']==1)
+        {
+            $title = 'Teams';
+            $data = [
+                'title' => $title
+            ];
+            return view('main/roster/teams/edit-team', $data);
         }
         return redirect()->back();     
     }
@@ -342,9 +388,28 @@ class Home extends BaseController
         if($role['roster']==1)
         {
             $title = 'Players';
-            $data = [
-                'title' => $title
-            ];
+            $data['title'] = $title;
+            //team
+            $val = $this->request->getGet('search');
+            $playerModel = new \App\Models\playerModel();
+            $player = $playerModel->select('users.Fullname,players.*')
+                                  ->join('users','players.user_id=users.user_id','LEFT');
+                                
+            $page = (int) ($this->request->getGet('page') ?? 1);
+            $perPage = 8;
+            // Build query
+            if ($val) {
+                if ($val) $player->LIKE('users.Fullname', $val);
+            }
+            $player->orderBy('player_id', 'DESC');
+            $list = $player->paginate($perPage, 'default', $page);
+            $total = $player->countAllResults();       
+            $pager = $player->pager;
+            $data['player']=$list;
+            $data['page']=$page;
+            $data['perPage']=$perPage;
+            $data['total']=$total;
+            $data['pager']=$pager;
             return view('main/roster/players/index', $data);     
         }
         return redirect()->back();

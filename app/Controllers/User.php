@@ -434,6 +434,10 @@ class User extends BaseController
                        ->where('team_id',$team['team_id'])
                        ->groupBy('stat_type')->findAll();
         $data['performance']=$performance;
+        //role
+        $roleModel = new \App\Models\roleModel();
+        $role = $roleModel->where('roleID',$player['roleID'])->first();
+        $data['role']=$role;
                        
         return view('users/player-team',$data);
     }

@@ -37,11 +37,10 @@
     <div class="page-body">
         <div class="container-xl">
             <div class="row g-3">
-                <div class="col-lg-6">
+                <div class="col-lg-4">
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title"><i class="ti ti-user"></i>&nbsp;Personal Information</div>
-                            <div id="panorama"></div>
                             <div class="row g-1">
                                 <div class="col-lg-12">
                                     <label class="form-label">Email</label>
@@ -49,23 +48,27 @@
                                 </div>
                                 <div class="col-lg-12">
                                     <div class="row g-3">
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-6">
                                             <label class="form-label">Date of Birth</label>
                                             <p class="form-control"><?=$player['date_of_birth']?></p>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-6">
                                             <label class="form-label">Gender</label>
                                             <p class="form-control"><?=$player['gender']?></p>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-12">
+                                            <label class="form-label">Position</label>
+                                            <p class="form-control"><?=$role['roleName']?></p>
+                                        </div>
+                                        <div class="col-lg-4">
                                             <label class="form-label">Jersey No</label>
                                             <p class="form-control"><?=$player['jersey_num']?></p>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-4">
                                             <label class="form-label">Height (cm)</label>
                                             <p class="form-control"><?=$player['height']?></p>
                                         </div>
-                                        <div class="col-lg-2">
+                                        <div class="col-lg-4">
                                             <label class="form-label">Weight (kg)</label>
                                             <p class="form-control"><?=$player['weight']?></p>
                                         </div>
@@ -77,6 +80,13 @@
                                         disabled><?=$player['address']?></textarea>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="panorama"></div>
                         </div>
                     </div>
                 </div>
@@ -104,7 +114,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card mb-3">
                         <div class="card-header">
                             <div class="card-title"><i class="ti ti-scoreboard"></i>&nbsp;Personal Stats</div>
                         </div>
@@ -127,8 +137,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3">
                     <div class="card">
                         <div class="card-header">
                             <div class="card-title"><i class="ti ti-calendar"></i>&nbsp;Upcoming Matches</div>

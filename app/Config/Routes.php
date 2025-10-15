@@ -116,10 +116,13 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('matches/create','Home::createMatch');
     $routes->get('matches/edit/(:num)','Home::editMatch/$1');
     //teams
-    $routes->get('roster/teams','Home::teams');
+    $routes->match(['get','post'],'roster/teams','Home::teams');
+    $routes->get('roster/teams/view/(:num)','Home::viewTeam/$1');
+    $routes->get('roster/teams/edit/(:num)','Home::editTeam/$1');
     //players
-    $routes->get('roster/players','Home::players');
-    $routes->get('roster/players/profile/(:num)','Home::playersProfile/$1');
+    $routes->match(['get','post'],'roster/players','Home::players');
+    $routes->get('roster/players/view/(:num)','Home::viewProfile/$1');
+    $routes->get('roster/players/change/(:num)','Home::editProfile/$1');
     //registration
     $routes->get('roster/registration','Home::rosterRegistration');
     //api

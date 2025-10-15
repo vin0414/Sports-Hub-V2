@@ -27,8 +27,8 @@
     @import url("https://rsms.me/inter/inter.css");
 
     #panorama {
-        width: 200px;
-        height: 250px;
+        width: 100%;
+        height: 500px;
     }
     </style>
 </head>
