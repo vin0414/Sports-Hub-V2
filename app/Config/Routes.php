@@ -30,6 +30,7 @@ $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 
 $routes->group('',['filter'=>'UserCheck'],function($routes)
 {
+    $routes->get('live', 'Home::live');
     $routes->get('profile','User::profile');
     $routes->get('join','User::join');
     $routes->match(['get','post'],'search','User::searchTeam');

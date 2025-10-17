@@ -56,9 +56,6 @@ class Home extends BaseController
         // Merge and sort by timestamp descending
         $feed = array_merge($videos, $events, $news);
         usort($feed, fn($a, $b) => $b['timestamp'] <=> $a['timestamp']);
-        //live
-        $liveCodeModel = new \App\Models\liveCodeModel();
-        $code = $liveCodeModel->first();
         //recent
         $recent = $newsModel->WHERE('headline',1)->findAll();
         //register
@@ -72,23 +69,21 @@ class Home extends BaseController
                     ->join('teams as b','b.team_id=a.team_id')->where('a.status',1)
                     ->where('a.user_id',session()->get('User'));
         $playerData = $player->get()->getResult();
-        //schedules
-        $schedules = $this->db->table('schedules')
-                    ->select('schedules.*')
-                    ->join('teams', 'teams.team_id = schedules.team_id')
-                    ->join('players', 'players.team_id = teams.team_id')
-                    ->where('players.user_id', session()->get('User'))
-                    ->where('schedules.status', 1)
-                    ->where('players.status <>', 2)
-                    ->orderBy('schedules.date', 'ASC')
-                    ->get()
-                    ->getResult();
-
+        //matches   
+        $builder = $this->db->table('matches as a')
+                    ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,CONCAT(b.team_name,' VS ',c.team_name)team_name")
+                    ->join('teams as b','b.team_id=a.team1_id')
+                    ->join('teams as c','c.team_id=a.team2_id')
+                    ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
+                    ->where('a.date >=',date('Y-m-d'))
+                    ->where('a.status',1)
+                    ->groupBy('a.match_id');
+        $matches = $builder->get()->getResult();
 
         $data = [
             'title'=>$title,'recent'=>$recent,'feed'=>$feed,
-            'code'=>$code,'register'=>$register,'team'=>$team,
-            'player'=>$playerData,'schedules'=>$schedules
+            'register'=>$register,'team'=>$team,
+            'player'=>$playerData,'matches'=>$matches
         ];
         return view('welcome_message',$data);
     }
@@ -117,6 +112,27 @@ class Home extends BaseController
         $model = new \App\Models\videoModel();
         $data['video']= $model->where('Token',$id)->first();
         return view('watch',$data);
+    }
+
+    public function live()
+    {
+        $data['title'] = "Live";
+        $liveCodeModel = new \App\Models\liveCodeModel();
+        $code = $liveCodeModel->first();
+        $data['code']= $code;
+        //live matches
+        $builder = $this->db->table('matches as a')
+                    ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,
+                        CONCAT(b.team_name,' - ',a.team1_score,' | ',c.team_name,' - ',a.team2_score)team_name")
+                    ->join('teams as b','b.team_id=a.team1_id')
+                    ->join('teams as c','c.team_id=a.team2_id')
+                    ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
+                    ->where('a.date >=',date('Y-m-d'))
+                    ->where('a.status',1)
+                    ->groupBy('a.match_id');
+        $matches = $builder->get()->getResult();
+        $data['matches']=$matches;
+        return view('live',$data);
     }
 
     public function incrementViews($id)

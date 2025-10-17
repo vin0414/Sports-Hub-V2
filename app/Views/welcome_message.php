@@ -40,6 +40,18 @@
                         </a>
                         <?php elseif(isset($register)): ?>
                         <?php if($register['application_type']==="Player"): ?>
+                        <a class="btn btn-danger" href="<?=site_url('live')?>">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-video">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                    d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" />
+                                <path
+                                    d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+                            </svg>
+                            Live
+                        </a>
                         <a href="<?=site_url('search')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -110,30 +122,6 @@
                 </div>
                 <div class="col-lg-3">
                     <?php if(!empty(session()->get('User'))): ?>
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="card-title">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    class="icon icon-tabler icons-tabler-outline icon-tabler-satellite">
-                                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                    <path
-                                        d="M3.707 6.293l2.586 -2.586a1 1 0 0 1 1.414 0l5.586 5.586a1 1 0 0 1 0 1.414l-2.586 2.586a1 1 0 0 1 -1.414 0l-5.586 -5.586a1 1 0 0 1 0 -1.414z" />
-                                    <path d="M6 10l-3 3l3 3l3 -3" />
-                                    <path d="M10 6l3 -3l3 3l-3 3" />
-                                    <path d="M12 12l1.5 1.5" />
-                                    <path d="M14.5 17a2.5 2.5 0 0 0 2.5 -2.5" />
-                                    <path d="M15 21a6 6 0 0 0 6 -6" />
-                                </svg>
-                                Live Streaming
-                            </div>
-                            <iframe
-                                src="https://player.livepush.io/live/<?=!empty($code['code']) ? $code['code'] : ''?>"
-                                width="100%" allowFullScreen="1" frameBorder="0">
-                            </iframe>
-                        </div>
-                    </div>
                     <?php if(!empty($register)): ?>
                     <?php if($register['application_type']==="Player"): ?>
                     <?= view('users/roles/player-menu', ['player' => $player]) ?>
@@ -204,7 +192,32 @@
                             </div>
                         </div>
                         <div class="list-group list-group-flush">
-
+                            <?php if(empty($matches)): ?>
+                            <div class="list-group-item">
+                                <div class="text-center text-muted py-3">
+                                    No upcoming matches scheduled.
+                                </div>
+                            </div>
+                            <?php else: ?>
+                            <?php foreach($matches as $match): ?>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col text-truncate">
+                                            <a href="<?=site_url('match-details/')?><?=$match->match_id?>"
+                                                class="text-reset d-block"><?=$match->team_name?>
+                                            </a>
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                <?=date('M d, Y', strtotime($match->date))?>
+                                                &nbsp;|&nbsp; <?=$match->time?><br />
+                                                <?=$match->location?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php endforeach; ?>
+                            <?php endif;?>
                         </div>
                     </div>
                 </div>
