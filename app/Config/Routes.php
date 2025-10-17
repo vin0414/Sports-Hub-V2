@@ -34,6 +34,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('profile','User::profile');
     $routes->get('join','User::join');
     $routes->match(['get','post'],'search','User::searchTeam');
+    $routes->get('view-team-info','User::teamInfo');
     $routes->get('create-a-team','User::createTeam');
     $routes->get('my-team/(:any)','User::myTeam/$1');
     $routes->get('me/(:any)','User::me/$1');
@@ -73,6 +74,14 @@ $routes->post('save-video','Home::saveVideo');
 $routes->post('edit-video','Home::modifyVideo');
 $routes->get('filter-videos','Home::filterVideos');
 $routes->post('save-code','Home::saveCode');
+//live stream
+$routes->post('add-score-team-1','Home::addScore1');
+$routes->post('minus-score-team-1','Home::minusScore1');
+$routes->post('add-score-team-2','Home::addScore2');
+$routes->post('minus-score-team-2','Home::minusScore2');
+$routes->get('team1-score','Home::teamHome');
+$routes->get('team2-score','Home::teamGuest');
+$routes->post('end-game','Home::endGame');
 //shops
 $routes->get('shop-location','Home::shopLocation');
 $routes->post('save-shop','Home::saveShop');

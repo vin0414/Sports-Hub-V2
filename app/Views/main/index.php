@@ -130,29 +130,25 @@
                     <div class="col-lg-3">
                         <div class="card">
                             <div class="card-header">
-                                <div class="card-title"><i class="ti ti-calendar-week"></i>&nbsp;Incoming Events
+                                <div class="card-title">
+                                    <i class="ti ti-chart-arrows-vertical"></i>&nbsp;Outstanding
                                 </div>
                             </div>
                             <div class="position-relative">
                                 <div class="card-table table-responsive">
                                     <table class="table table-vcenter">
+                                        <thead>
+                                            <th>Team</th>
+                                            <th>Wins</th>
+                                            <th>Losses</th>
                                         <tbody>
-                                            <?php if(empty($event)){ ?>
+                                            <?php foreach($outstanding as $row): ?>
                                             <tr>
-                                                <td>
-                                                    <center><span>No Event(s) found</span></center>
-                                                </td>
-                                            </tr>
-                                            <?php }else { ?>
-                                            <?php foreach($event as $row): ?>
-                                            <tr>
-                                                <td>
-                                                    <b><?php echo $row['event_title'] ?></b><br />
-                                                    <small><?php echo substr($row['event_description'],0,50) ?>...</small>
-                                                </td>
+                                                <td><?=$row->team_name?></td>
+                                                <td><?=$row->wins ?? 0 ?></td>
+                                                <td><?=$row->losses ?? 0?></td>
                                             </tr>
                                             <?php endforeach; ?>
-                                            <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>

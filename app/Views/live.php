@@ -77,17 +77,15 @@
                             </div>
                             <?php else: ?>
                             <?php foreach($matches as $match): ?>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col text-truncate">
-                                            <a href="<?=site_url('match-details/')?><?=$match->match_id?>"
-                                                class="text-reset d-block"><?=$match->team_name?>
-                                            </a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">
-                                                <?=date('M d, Y', strtotime($match->date))?>
-                                                &nbsp;|&nbsp; <?=$match->time?>
-                                            </div>
+                            <div class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col text-truncate">
+                                        <a href="<?=site_url('match-details/')?><?=$match->match_id?>"
+                                            class="text-reset d-block"><?=$match->team_name?>
+                                        </a>
+                                        <div class="d-block text-secondary text-truncate mt-n1">
+                                            <?=date('M d, Y', strtotime($match->date))?>
+                                            &nbsp;|&nbsp; <?=$match->time?>
                                         </div>
                                     </div>
                                 </div>

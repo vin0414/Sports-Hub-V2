@@ -76,7 +76,6 @@ class Home extends BaseController
                     ->join('teams as c','c.team_id=a.team2_id')
                     ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
                     ->where('a.date >=',date('Y-m-d'))
-                    ->where('a.status',1)
                     ->groupBy('a.match_id');
         $matches = $builder->get()->getResult();
 
@@ -123,12 +122,11 @@ class Home extends BaseController
         //live matches
         $builder = $this->db->table('matches as a')
                     ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,
-                        CONCAT(b.team_name,' - ',a.team1_score,' | ',c.team_name,' - ',a.team2_score)team_name")
+                        CONCAT(b.team_name,' - ',a.team1_score,' <br/> ',c.team_name,' - ',a.team2_score)team_name")
                     ->join('teams as b','b.team_id=a.team1_id')
                     ->join('teams as c','c.team_id=a.team2_id')
                     ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
                     ->where('a.date >=',date('Y-m-d'))
-                    ->where('a.status',1)
                     ->groupBy('a.match_id');
         $matches = $builder->get()->getResult();
         $data['matches']=$matches;
@@ -256,7 +254,6 @@ class Home extends BaseController
         $shop = $shopModel->countAllResults();
         //events
         $eventModel = new \App\Models\eventModel();
-        $event = $eventModel->WHERE('status',1)->ORDERBY('event_id','DESC')->limit(5)->findAll();
         //count all approved events
         $totalEvents = $eventModel->WHERE('status',1)->countAllResults();
         //videos
@@ -279,9 +276,15 @@ class Home extends BaseController
         $builder->join('(select video_id,SUM(total_view)total, AVG(watched_seconds)ave_total from views group by video_id)b','b.video_id=a.video_id','LEFT');
         $builder->groupBy('a.video_id');
         $trends = $builder->get()->getResult();
+        //outstanding
+        $builder = $this->db->table('teams a');
+        $builder->select('a.team_name,sum(b.wins)as wins,sum(b.losses)as losses');
+        $builder->join('team_stats b','b.team_id=a.team_id','LEFT');
+        $builder->groupBy('a.team_id');
+        $outstanding = $builder->get()->getResult();
 
         $data = ['title'=>$title,'total'=>$account,'player'=>$player,
-                'team'=>$team,'shop'=>$shop,'event'=>$event,
+                'team'=>$team,'shop'=>$shop,'outstanding'=>$outstanding,
                 'total_event'=>$totalEvents,'video'=>$video,
                 'video_view'=>$video_view,'views'=>$views,'trends'=>$trends];
         return view('main/index',$data);
@@ -653,6 +656,165 @@ class Home extends BaseController
             $liveCodeModel->update($liveCode['code_id'],$data);
         }
         return redirect()->back();
+    }
+
+    public function addScore1()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getPost('match');
+        $team_id = $this->request->getPost('team');
+        //get the primary ID
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team1_id',$team_id)->first();
+        $newScore = $match['team1_score']+1;
+        $data = ['team1_score'=>$newScore];
+        $matchModel->update($match['match_id'],$data);
+        return $this->response->SetJSON(['success' => 'Successfully added']);
+    }
+
+    public function addScore2()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getPost('match');
+        $team_id = $this->request->getPost('team');
+        //get the primary ID
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team2_id',$team_id)->first();
+        $newScore = $match['team2_score']+1;
+        $data = ['team2_score'=>$newScore];
+        $matchModel->update($match['match_id'],$data);
+        return $this->response->SetJSON(['success' => 'Successfully added']);
+    }
+
+    public function minusScore1()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getPost('match');
+        $team_id = $this->request->getPost('team');
+        //get the primary ID
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team1_id',$team_id)->first();
+        $newScore = $match['team1_score']-1;
+        $data = ['team1_score'=>$newScore];
+        $matchModel->update($match['match_id'],$data);
+        return $this->response->SetJSON(['success' => 'Successfully added']);
+    }
+
+    public function minusScore2()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getPost('match');
+        $team_id = $this->request->getPost('team');
+        //get the primary ID
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team2_id',$team_id)->first();
+        $newScore = $match['team2_score']-1;
+        $data = ['team2_score'=>$newScore];
+        $matchModel->update($match['match_id'],$data);
+        return $this->response->SetJSON(['success' => 'Successfully added']);
+    }
+
+    public function teamHome()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getGet('match');
+        $team_id = $this->request->getGet('team');
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team1_id',$team_id)->first();
+        echo !empty($match['team1_score']) ? $match['team1_score'] : 0;
+    }
+
+    public function teamGuest()
+    {
+        $matchModel = new \App\Models\matchModel();
+        $match_id = $this->request->getGet('match');
+        $team_id = $this->request->getGet('team');
+        $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team2_id',$team_id)->first();
+        echo !empty($match['team2_score']) ? $match['team2_score'] : 0;
+    }
+
+    public function endGame()
+    {
+        $teamStatsModel = new \App\Models\teamStatsModel();
+        $matchModel = new \App\Models\matchModel();
+        $teamModel = new \App\Models\teamModel();
+        $match_id = $this->request->getPost('match');
+        $match = $matchModel->WHERE('match_id',$match_id)->first();
+        //compare
+        if($match['team1_score']>$match['team2_score'])
+        {
+            //team1 win
+            $team1 = $teamModel->WHERE('team_id',$match['team1_id'])->first();
+            $data = ['result'=>$team1['team_name'].' wins','status'=>0];
+            $matchModel->update($match_id,$data);
+            //team 1 stats
+            $data = ['team_id'=>$match['team1_id'],
+                    'wins'=>1,
+                    'losses'=>0,
+                    'draws'=>0,
+                    'score'=>$match['team1_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team1['accountID']];
+            $teamStatsModel->save($data);
+            //team 2
+            $team2 = $teamModel->WHERE('team_id',$match['team2_id'])->first();
+            $data = ['team_id'=>$match['team2_id'],
+                    'wins'=>0,
+                    'losses'=>1,
+                    'draws'=>0,
+                    'score'=>$match['team2_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team2['user_id']];
+            $teamStatsModel->save($data);
+        }
+        else if($match['team1_score']<$match['team2_score'])
+        {
+            //team win
+            $team2 = $teamModel->WHERE('team_id',$match['team2_id'])->first();
+            $data = ['result'=>$team2['team_name'].' wins','status'=>0];
+            $matchModel->update($match_id,$data);
+            //team 2 stats
+            $data = ['team_id'=>$match['team2_id'],
+                    'wins'=>1,
+                    'losses'=>0,
+                    'draws'=>0,
+                    'score'=>$match['team2_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team2['user_id']];
+            $teamStatsModel->save($data);
+            //team 1
+            $team1 = $teamModel->WHERE('team_id',$match['team1_id'])->first();
+            $data = ['team_id'=>$match['team1_id'],
+                    'wins'=>0,
+                    'losses'=>1,
+                    'draws'=>0,
+                    'score'=>$match['team1_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team1['user_id']];
+            $teamStatsModel->save($data);
+        }
+        else
+        {
+            //draw
+            $data = ['result'=>'Draw','status'=>0];
+            $matchModel->update($match_id,$data);
+            $team2 = $teamModel->WHERE('team_id',$match['team2_id'])->first();
+            //team 2 stats
+            $data = ['team_id'=>$match['team2_id'],
+                    'wins'=>0,
+                    'losses'=>0,
+                    'draws'=>1,
+                    'score'=>$match['team1_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team2['user_id']];
+            $teamStatsModel->save($data);
+            //team 1
+            $team1 = $teamModel->WHERE('team_id',$match['team1_id'])->first();
+            $data = ['team_id'=>$match['team1_id'],
+                    'wins'=>0,
+                    'losses'=>0,
+                    'draws'=>1,
+                    'score'=>$match['team1_score'],
+                    'match_id'=>$match_id,
+                    'coachID'=>$team1['user_id']];
+            $teamStatsModel->save($data);
+        }
+        return $this->response->SetJSON(['success' => 'Successfully ended']);
     }
 
     public function filterVideos()

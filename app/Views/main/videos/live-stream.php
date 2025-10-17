@@ -120,7 +120,7 @@
                             <div class="card-header">
                                 <div class="card-title">Current Match</div>
                             </div>
-                            <div class="position-relative">
+                            <div class="card-body">
                                 <?php if(empty($game)): ?>
                                 <div style="padding:5px;margin:5px;">No Current Match(es) Yet</div>
                                 <?php else : ?>
@@ -203,7 +203,6 @@ $(document).on('click', '.endGame', function() {
         confirmButtonText: "Yes!"
     }).then((result) => {
         if (result.isConfirmed) {
-            stopStream();
             let match = <?= isset($game['match_id']) ? $game['match_id'] : 0; ?>;
             $.ajax({
                 url: "<?=site_url('end-game')?>",

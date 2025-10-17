@@ -296,7 +296,7 @@
                             </div>
                             <?php else: ?>
                             <?php foreach($team as $list): ?>
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
                                 <div class="card">
                                     <div class="img-responsive img-responsive-21x15 card-img-top"
                                         style="background-image: url(<?=base_url('assets/images/team/')?><?=$list['image']?>)">
@@ -326,9 +326,9 @@
                                             <i class="ti ti-circle-check"></i>&nbsp;Joined
                                         </a>
                                         <?php endif; ?>
-                                        <a href="" class="btn card-btn">
+                                        <button type="button" value="<?=$list['team_id']?>" class="btn card-btn view">
                                             <i class="ti ti-zoom-scan"></i>&nbsp;View
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -342,7 +342,36 @@
         </div>
     </div>
 </div>
+
+<div class="modal" id="modal-loading" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="mb-2">
+                    <dotlottie-wc src="https://lottie.host/ed13f8d5-bc3f-4786-bbb8-36d06a21a6cb/XMPpTra572.lottie"
+                        style="width: 100%;height: auto;" autoplay loop></dotlottie-wc>
+                </div>
+                <div>Loading</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Digital Sports Hub</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="output"></div>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
 $(document).on('click', '.join', function() {
     Swal.fire({
@@ -369,6 +398,23 @@ $(document).on('click', '.join', function() {
                     }
                 }
             });
+        }
+    });
+});
+
+$(document).on('click', '.view', function() {
+    let value = $(this).val();
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: "<?=site_url('view-team-info')?>",
+        method: "GET",
+        data: {
+            value: value
+        },
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            $('#viewModal').modal('show');
+            $('#output').html(response);
         }
     });
 });

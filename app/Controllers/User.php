@@ -7,8 +7,10 @@ use DateTime;
 
 class User extends BaseController
 {
+    private $db;
     public function __construct()
     {
+        $this->db = db_connect();
         helper(['url','form','text']);
     }
 
@@ -414,6 +416,70 @@ class User extends BaseController
         $data['total']=$total;
         $data['pager']=$pager;
         return view('users/search-team',$data);
+    }
+
+    public function teamInfo()
+    {
+        $val = $this->request->getGet('value');
+        $output='';
+        if(!is_numeric($val))
+        {
+            echo "Invalid! Please try again";
+        }
+        else
+        {
+            $teamModel = new \App\Models\teamModel();
+            $team = $teamModel->where('team_id',$val)->first();
+            //get the total stats
+            $statModel = $this->db->table('team_stats')
+                    ->select('SUM(wins)wins,SUM(losses)loss,SUM(draws)draw')
+                    ->where('team_id',$val)->groupBy('team_id');
+            $stats = $statModel->get()->getRow();
+
+            $output.='<div class="row g-2">
+                        <div class="col-lg-8">
+                            <div class="row g-1">
+                                <div class="col-lg-12">Team : '.$team['team_name'].'</div>
+                                <div class="col-lg-12">School/University/Brgy : '.$team['school_barangay'].'</div>
+                                <div class="col-lg-12">Organization : '.$team['organization'].'</div>
+                                <div class="col-lg-12 mb-1">Coach : '.$team['coach_name'].'</div>
+                                <div class="col-lg-12">
+                                    <div class="row g-3">
+                                        <div class="col-lg-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="card-title">Wins</div>
+                                                    <h1><center>'.($stats->wins ?? 0).'</center></h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="card-title">Losses</div>
+                                                    <h1><center>'.($stats->loss ?? 0).'</center></h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="card-title">Draws</div>
+                                                    <h1><center>'.($stats->draw ?? 0).'</center></h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <img src="/assets/images/team/'.$team['image'].'" style="border-radius: 5px 5px;height:200px;width:250px;"/>
+                        </div>
+                    </div>
+                     ';
+            echo $output;
+        }
     }
 
     public function me($id)
