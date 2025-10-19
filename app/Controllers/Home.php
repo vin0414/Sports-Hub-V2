@@ -337,6 +337,24 @@ class Home extends BaseController
         return redirect()->back();
     }
 
+    public function createMatch()
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['matches']==1)
+        {
+            $data['title'] = "Create Match";
+            $sportModel = new \App\Models\sportsModel();
+            $data['sports'] = $sportModel->findAll();
+            //active team
+            $teamModel = new \App\Models\teamModel();
+            $data['team'] = $teamModel->where('status',1)->findAll();
+            
+            return view('main/matches/create', $data);
+        }
+        return redirect()->back();
+    }
+
     //teams
     public function teams()
     {
@@ -369,16 +387,39 @@ class Home extends BaseController
         return redirect()->back();     
     }
 
-    public function viewTeam()
+    public function viewTeam($id)
     {
         $permissionModel = new \App\Models\user_permission();
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['roster']==1)
         {
-            $title = 'Teams';
-            $data = [
-                'title' => $title
-            ];
+            $teamModel = new \App\Models\teamModel();
+            $team = $teamModel->where('team_id',$id)->first();
+            $data['title'] = $team['team_name'];
+            $data['team']=$team;
+            //players
+            $playerModel = new \App\Models\playerModel();
+            $player = $playerModel->where('team_id',$id)->findAll();
+            $data['player'] = $player;
+            //sports
+            $sportsModel = new \App\Models\sportsModel();
+            $data['sports'] = $sportsModel->where('sportsID',$team['sportsID'])->first();
+            //stats
+            $builder = $this->db->table('team_stats')
+                        ->select('SUM(wins)wins,SUM(losses)loss,SUM(draws)draw')
+                        ->where('team_id',$id)->groupBy('team_id');
+            $data['stats'] = $builder->get()->getRow();
+            //matches  
+            $builder = $this->db->table('matches as a')
+                        ->select("a.*,TIME_FORMAT(a.time, '%h:%i:%s %p') as time,CONCAT(b.team_name,' VS ',c.team_name)team_name")
+                        ->join('teams as b','b.team_id=a.team1_id')
+                        ->join('teams as c','c.team_id=a.team2_id')
+                        ->where('a.team1_id',$id)
+                        ->orWhere('a.team2_id',$id)
+                        ->where('a.status',1)
+                        ->orderBy('match_id','DESC')->limit(5);
+            $data['matches'] = $builder->get()->getResult();
+
             return view('main/roster/teams/view', $data);
         }
         return redirect()->back();     

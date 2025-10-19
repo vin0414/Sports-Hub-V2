@@ -277,19 +277,15 @@
                                         <div class="row g-2">
                                             <div class="col-lg-12">
                                                 <b><?=$list['email']?></b><br />
-                                                <small>#<?=$list['jersey_num']?>|<?=$list['height']?>cm|<?=$list['weight']?>
+                                                <small>#<?=$list['jersey_num']?>&nbsp;|&nbsp;<?=$list['height']?>cm&nbsp;|&nbsp;<?=$list['weight']?>
                                                     kgs</small>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="d-flex">
-                                        <a href="<?=site_url('roster/players/change/')?><?=$list['player_id']?>"
-                                            class="btn card-btn join">
-                                            <i class="ti ti-edit"></i>&nbsp;Edit
-                                        </a>
                                         <a href="<?=site_url('roster/players/view/')?><?=$list['player_id']?>"
-                                            class="btn card-btn">
-                                            <i class="ti ti-zoom-scan"></i>&nbsp;View
+                                            class="card-btn">
+                                            <i class="ti ti-zoom-scan"></i>&nbsp;View Profile
                                         </a>
                                     </div>
                                 </div>
