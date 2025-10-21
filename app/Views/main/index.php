@@ -145,8 +145,8 @@
                                             <?php foreach($outstanding as $row): ?>
                                             <tr>
                                                 <td><?=$row->team_name?></td>
-                                                <td><?=$row->wins ?? 0 ?></td>
-                                                <td><?=$row->losses ?? 0?></td>
+                                                <td class="text-center"><?=$row->wins ?? 0 ?></td>
+                                                <td class="text-center"><?=$row->losses ?? 0?></td>
                                             </tr>
                                             <?php endforeach; ?>
                                         </tbody>

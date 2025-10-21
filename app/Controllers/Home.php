@@ -475,6 +475,35 @@ class Home extends BaseController
         return redirect()->back();
     }
 
+    public function viewProfile($id)
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['roster']==1)
+        {
+            $data['title'] = "Profile";
+            //profile
+            $playerModel = new \App\Models\playerModel();
+            $player = $playerModel->where('player_id',$id)->first();
+            //complete information
+            $infoModel = new \App\Models\registerModel();
+            $playerInfo = $infoModel->where('user_id',$player['user_id'])->first();
+            //position
+            $roleModel = new \App\Models\roleModel();
+            $role = $roleModel->where('roleID',$player['roleID'])->first();
+            //stats
+            $performanceModel = new \App\Models\performanceModel();
+            $performance = $performanceModel->where('player_id',$id)
+                        ->groupBy('stat_type')->findAll();
+            $data['performance']=$performance;
+            $data['role'] = $role;
+            $data['player'] = $player;
+            $data['info']= $playerInfo;
+            return view('main/roster/players/view',$data);
+        }
+        return redirect()->back();
+    }
+
     //registration
     public function rosterRegistration()
     {

@@ -84,11 +84,14 @@
                     </div>
                 </div>
                 <div class="col-lg-5">
-                    <div class="card">
+                    <!-- <div class="card">
                         <div class="card-body">
                             <div id="panorama"></div>
                         </div>
-                    </div>
+                    </div> -->
+                    <center>
+                        <img src="<?=site_url('assets/images/players/')?><?=$player['image']?>" alt="profile">
+                    </center>
                 </div>
                 <div class="col-lg-3">
                     <div class="card mb-3">
@@ -99,7 +102,8 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="card-title">WIN</div>
-                                            <h1>0</h1>
+                                            <h1 class="text-center">
+                                                <?php if($stats):?><?=$stats->win ?? 0 ?><?php endif;?></h1>
                                         </div>
                                     </div>
                                 </div>
@@ -107,7 +111,8 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="card-title">LOSE</div>
-                                            <h1>0</h1>
+                                            <h1 class="text-center">
+                                                <?php if($stats):?><?=$stats->loss ?? 0 ?><?php endif;?></h1>
                                         </div>
                                     </div>
                                 </div>

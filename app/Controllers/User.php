@@ -489,7 +489,16 @@ class User extends BaseController
         $teamModel = new \App\Models\teamModel();
         $team = $teamModel->where('team_name',$id)->first();
         $data['team']=$team;
-        //performance
+        //team stats
+        $stats = $this->db->table('team_stats')
+            ->select('SUM(wins) AS win, SUM(losses) AS loss')
+            ->where('team_id', $team['team_id'])
+            ->groupBy('team_id')
+            ->get()
+            ->getRow();
+        $data['stats'] = $stats;
+
+        //player performance
         $playerModel = new \App\Models\playerModel();
         $player = $playerModel->where('user_id',session()->get('User'))
                               ->where('team_id',$team['team_id'])
