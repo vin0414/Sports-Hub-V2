@@ -59,6 +59,8 @@ $routes->post('roster/schedules/edit','Roster::editSchedule');
 $routes->post('roster/players/edit','Roster::editPlayerInfo');
 $routes->post('roster/withdraw','Roster::withdrawRequest');
 $routes->post('roster/recruite','Roster::recruitePlayer');
+$routes->post('roster/edit-team','Roster::modifyTeam');
+$routes->post('roster/create-match','Roster::createMatch');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

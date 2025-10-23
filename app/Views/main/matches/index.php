@@ -42,12 +42,29 @@
                                 <thead>
                                     <th>Date</th>
                                     <th>Time</th>
-                                    <th>Details</th>
+                                    <th>Home</th>
+                                    <th>Away</th>
                                     <th>Venue</th>
                                     <th>Remarks</th>
                                     <th>Action</th>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php foreach($match as $row):?>
+                                    <tr>
+                                        <td><?=$row->date?></td>
+                                        <td><?=$row->time?></td>
+                                        <td><?=$row->home?></td>
+                                        <td><?=$row->away?></td>
+                                        <td><?=$row->location?></td>
+                                        <td><?=$row->result?></td>
+                                        <td>
+                                            <a href="" class="btn btn-primary">
+                                                <i class="ti ti-edit"></i>&nbsp;Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach;?>
+                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ use \App\Models\registerModel;
 use \App\Models\teamModel;
 use \App\Models\playerModel;
 use \App\Models\scheduleModel;
+use \App\Models\matchModel;
 use Config\Email;
 
 class Roster extends BaseController
@@ -387,5 +388,125 @@ class Roster extends BaseController
                         ->groupBy('a.player_id,a.match_id')
                         ->get()->getResult();
         return response()->setJSON(['stats'=>$stats]);
+    }
+
+    public function modifyTeam()
+    {
+        $teamModel = new teamModel();
+        $validation = $this->validate([
+            'id'=>'required|numeric',
+            'team_name'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Name of team is required',
+                ]
+            ],
+            'category'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Select category'
+                ]
+            ],
+            'organization'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Name of organization is required'
+                ]
+            ],
+            'school_barangay'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Enter name of school or barangay'
+                ]
+            ],
+        ]);
+
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $file = $this->request->getFile('file');
+            $originalName = date('YmdHis').$file->getClientName();
+            if(empty($file->getClientName()))
+            {
+                //not change the image
+                $data = [
+                        'team_name'=>$this->request->getPost('team_name'),
+                        'sportsID'=>$this->request->getPost('category'),
+                        'school_barangay'=>$this->request->getPost('school_barangay'),
+                        'organization'=>$this->request->getPost('organization'),
+                        'status'=>$this->request->getPost('status')
+                    ];
+                $teamModel->update($this->request->getPost('id'),$data);
+            }
+            else
+            {
+                // Define the target directory
+                $targetDir = 'assets/images/team/';
+                // Create the directory if it doesn't exist
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0755, true); // 0755 permissions, recursive creation
+                }
+                // Move the uploaded file
+                $file->move($targetDir, $originalName);
+
+                $data = [
+                        'team_name'=>$this->request->getPost('team_name'),
+                        'sportsID'=>$this->request->getPost('category'),
+                        'school_barangay'=>$this->request->getPost('school_barangay'),
+                        'image'=>$originalName,
+                        'organization'=>$this->request->getPost('organization'),
+                        'status'=>$this->request->getPost('status')
+                    ];
+                $teamModel->update($this->request->getPost('id'),$data);
+            }
+            return $this->response->setJSON(['success'=>'Successfully applied changes']);
+        }
+    }
+
+    public function createMatch()
+    {
+        $matchModel = new matchModel();
+        $teamModel = new teamModel();
+        $validation = $this->validate([
+            'tournament'=>'required',
+            'sports'=>'required',
+            'status'=>'required',
+            'location'=>'required'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $status = $this->request->getPost('status');
+            if($status==="All")
+            {
+                $team = $teamModel->findAll();
+            }
+            else if($status==="1")
+            {
+                $team = $teamModel->where('status',1)->findAll();
+            }
+            else
+            {
+                $team = $teamModel->where('status',0)->findAll();
+            }
+            for ($i = 0; $i < count($team); $i++) {
+                for ($j = $i + 1; $j < count($team); $j++) {
+                    $matchModel->insert([
+                        'tournament'=>$this->request->getPost('tournament'),
+                        'team1_id' => $team[$i]['team_id'],
+                        'team2_id' => $team[$j]['team_id'],
+                        'location'=>$this->request->getPost('location'),
+                        'status'=>1
+                    ]);
+                }
+            }
+            return $this->response->setJSON(['success'=>'Success']);
+        }
     }
 }

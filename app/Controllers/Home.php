@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
+use App\Models\matchModel;
 
 class Home extends BaseController
 {
@@ -328,10 +329,13 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['matches']==1)
         {
-            $title = 'Matches';
-            $data = [
-                'title' => $title
-            ];
+            $match = $this->db->table('matches a')
+                              ->select('a.*,b.team_name as home,c.team_name as away')
+                              ->join('teams b','a.team1_id=b.team_id','LEFT')
+                              ->join('teams c','a.team2_id=c.team_id','LEFT')
+                              ->groupBy('a.match_id')->get()->getResult();
+            $data['match'] = $match;
+            $data['title'] = "Matches";
             return view('main/matches/index', $data);
         }
         return redirect()->back();
@@ -395,6 +399,10 @@ class Home extends BaseController
         {
             $teamModel = new \App\Models\teamModel();
             $team = $teamModel->where('team_id',$id)->first();
+            if(empty($team))
+            {
+                return redirect()->back();
+            }
             $data['title'] = $team['team_name'];
             $data['team']=$team;
             //players
@@ -431,10 +439,16 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['roster']==1)
         {
-            $title = 'Teams';
-            $data = [
-                'title' => $title
-            ];
+            $teamModel = new \App\Models\teamModel();
+            $team = $teamModel->where('team_id',$id)->first();
+            if(empty($team))
+            {
+                return redirect()->back();
+            }
+            $data['title'] = $team['team_name'];
+            $data['team']=$team;
+            $model = new \App\Models\sportsModel();
+            $data['category']=$model->findAll();
             return view('main/roster/teams/edit-team', $data);
         }
         return redirect()->back();     

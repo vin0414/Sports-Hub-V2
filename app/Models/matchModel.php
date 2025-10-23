@@ -12,7 +12,7 @@ class matchModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['date','time','team1_id','team1_score','team2_id','team2_score','location','result','status'];
+    protected $allowedFields    = ['tournament','date','time','team1_id','team1_score','team2_id','team2_score','location','result','status'];
 
     // Dates
     protected $useTimestamps = false;

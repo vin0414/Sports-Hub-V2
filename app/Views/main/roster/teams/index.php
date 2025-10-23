@@ -273,7 +273,10 @@
                                         style="background-image: url(<?=base_url('assets/images/team/')?><?=$list['image']?>)">
                                     </div>
                                     <div class="card-body text-center">
-                                        <div class="card-title"><?=$list['team_name']?></div>
+                                        <h4 class="text-center"><?=$list['team_name']?></h4>
+                                        <div class="text-center">
+                                            <?=$list['status'] ? '<span class="badge bg-success text-white">Active</span>':'<span class="badge bg-danger text-white">Inactive</span>' ?>
+                                        </div>
                                         <div class="row g-2">
                                             <div class="col-lg-12">
                                                 <b><?=$list['school_barangay']?></b><br />
