@@ -214,8 +214,8 @@
                                                 class="text-reset d-block"><?=$match->team_name?>
                                             </a>
                                             <div class="d-block text-secondary text-truncate mt-n1">
-                                                <?=date('M d, Y', strtotime($match->date))?>
-                                                &nbsp;|&nbsp; <?=$match->time?><br />
+                                                <?=date('M d, Y', strtotime($match->date)) ?? 'TBD' ?>
+                                                &nbsp;|&nbsp; <?=$match->time ?? 'TBD' ?><br />
                                                 <?=$match->location?>
                                             </div>
                                         </div>

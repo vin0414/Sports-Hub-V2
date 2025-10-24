@@ -509,4 +509,30 @@ class Roster extends BaseController
             return $this->response->setJSON(['success'=>'Success']);
         }
     }
+
+    public function editMatch()
+    {
+        $matchModel = new matchModel();
+        $validation = $this->validate([
+            'date'=>'required',
+            'time'=>'required',
+            'status'=>'required',
+            'location'=>'required'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'date'=>$this->request->getPost('date'),
+                'time'=>$this->request->getPost('time'),
+                'location'=>$this->request->getPost('location'),
+                'status'=>$this->request->getPost('status')
+            ];
+            $matchModel->update($this->request->getPost('id'),$data);
+            return $this->response->setJSON(['success'=>'Sucessfully saved changes']);
+        }
+    }
 }

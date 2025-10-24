@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
-use App\Models\matchModel;
 
 class Home extends BaseController
 {
@@ -127,7 +126,7 @@ class Home extends BaseController
                     ->join('teams as b','b.team_id=a.team1_id')
                     ->join('teams as c','c.team_id=a.team2_id')
                     ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
-                    ->where('a.date >=',date('Y-m-d'))
+                    ->where('a.date =',date('Y-m-d'))
                     ->groupBy('a.match_id');
         $matches = $builder->get()->getResult();
         $data['matches']=$matches;
@@ -355,6 +354,35 @@ class Home extends BaseController
             $data['team'] = $teamModel->where('status',1)->findAll();
             
             return view('main/matches/create', $data);
+        }
+        return redirect()->back();
+    }
+
+    public function editMatch($id)
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['matches']==1)
+        {
+            $data['title'] = "Edit Match";
+            $sportModel = new \App\Models\sportsModel();
+            $data['sports'] = $sportModel->findAll();
+            //active team
+            $matchModel = new \App\Models\matchModel();
+            $match = $matchModel->where('match_id',$id)->first();
+            if(empty($match))
+            {
+                return redirect()->back();
+            }
+            $team = $this->db->table('matches a')
+                    ->select('b.team_name as home,c.team_name as away')
+                    ->join('teams b','b.team_id=a.team1_id','LEFT')
+                    ->join('teams c','c.team_id=a.team2_id','LEFT')
+                    ->where('a.match_id',$id)
+                    ->groupBy('a.match_id')->get()->getRow();
+            $data['team'] = $team;
+            $data['match'] = $match;
+            return view('main/matches/edit-match', $data);
         }
         return redirect()->back();
     }

@@ -42,23 +42,28 @@
                                 <thead>
                                     <th>Date</th>
                                     <th>Time</th>
+                                    <th>Tournament</th>
                                     <th>Home</th>
                                     <th>Away</th>
                                     <th>Venue</th>
+                                    <th>Status</th>
                                     <th>Remarks</th>
                                     <th>Action</th>
                                 </thead>
                                 <tbody>
                                     <?php foreach($match as $row):?>
                                     <tr>
-                                        <td><?=$row->date?></td>
-                                        <td><?=$row->time?></td>
+                                        <td><?=$row->date ?? 'TBD' ?></td>
+                                        <td><?=$row->time ?? 'TBD' ?></td>
+                                        <td><?=$row->tournament?></td>
                                         <td><?=$row->home?></td>
                                         <td><?=$row->away?></td>
                                         <td><?=$row->location?></td>
+                                        <td><?=$row->status ? 'Active' : 'Cancelled'?></td>
                                         <td><?=$row->result?></td>
                                         <td>
-                                            <a href="" class="btn btn-primary">
+                                            <a href="<?=site_url('matches/edit/')?><?=$row->match_id?>"
+                                                class="btn btn-primary">
                                                 <i class="ti ti-edit"></i>&nbsp;Edit
                                             </a>
                                         </td>
