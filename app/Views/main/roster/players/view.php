@@ -19,6 +19,7 @@
                     <!-- Page title actions -->
                     <div class="col-auto ms-auto d-print-none">
                         <div class="btn-list">
+                            <button class="btn btn-default add"><i class="ti ti-plus"></i>&nbsp;Add</button>
                             <a href="javascript:history.back();" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                                 <i class="ti ti-arrow-left"></i>&nbsp;Back
                             </a>
@@ -33,7 +34,7 @@
         <!-- END PAGE HEADER -->
         <div class="page-body">
             <div class="container-xl">
-                <div class="row g-3 mb-3">
+                <div class="row g-3">
                     <div class="col-lg-3">
                         <div class="card">
                             <div class="card-body">
@@ -137,11 +138,142 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="card-title">Match Performance</div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped" id="score">
+                                <thead>
+                                    <th>Match</th>
+                                    <th>Result</th>
+                                    <th>Points</th>
+                                    <th>Blocks</th>
+                                    <th>Assist</th>
+                                    <th>Others</th>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($points as $row): ?>
+                                    <tr>
+                                        <td><?=$row->home?> VS <?=$row->away?></td>
+                                        <td><?=$row->result?></td>
+                                        <td><?=$row->points?></td>
+                                        <td><?=$row->blocks?></td>
+                                        <td><?=$row->assist?></td>
+                                        <td><?=$row->others?></td>
+                                    </tr>
+                                    <?php endforeach;?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal modal-blur fade" id="statsModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Player Stats</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" class="row g-3" id="frmStat">
+                    <?=csrf_field()?>
+                    <input type="hidden" name="player" id="player_1" value="<?=$player['player_id']?>" />
+                    <input type="hidden" name="team" value="<?=$player['team_id']?>" />
+                    <div class="col-lg-12">
+                        <label class="form-label">Match</label>
+                        <select name="match" class="form-select">
+                            <option value="">Choose</option>
+                            <?php foreach($matches as $row): ?>
+                            <option value="<?=$row->match_id?>"><?=$row->home?> VS <?=$row->away?></option>
+                            <?php endforeach;?>
+                        </select>
+                        <div id="match-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label">Stats</label>
+                                <select name="stat" class="form-select">
+                                    <option value="">Choose</option>
+                                    <option value="PTS">Points</option>
+                                    <option value="BLK">Blocks</option>
+                                    <option value="REB">Rebounds</option>
+                                    <option value="AST">Assists</option>
+                                    <option value="STL">Steals</option>
+                                    <option value="TO">Turnovers</option>
+                                    <option value="K">Kills</option>
+                                    <option value="DIG">Digs</option>
+                                    <option value="SA">Service Aces</option>
+                                    <option value="G">Goals</option>
+                                    <option value="T">Tackles</option>
+                                    <option value="SOG">Shots On Goal</option>
+                                    <option value="S">Smaches</option>
+                                    <option value="DS">Drop Shots</option>
+                                    <option value="A">Aces</option>
+                                    <option value="SE">Service Errors</option>
+                                </select>
+                                <div id="stat-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label">Value</label>
+                                <input type="number" class="form-control" name="points" min="0" />
+                                <div id="points-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary form-control">
+                            <i class="ti ti-device-floppy"></i>&nbsp;Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
+<script>
+$('#score').DataTable();
+$(document).on('click', '.add', function() {
+    $('#statsModal').modal('show');
+});
+$('#frmStat').on('submit', function(e) {
+    e.preventDefault();
+    $('.error-message').html('');
+    let data = $(this).serialize();
+    $.ajax({
+        url: "<?=site_url('roster/score/save')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            if (response.success) {
+                $('#frmStat')[0].reset();
+                Swal.fire({
+                    title: 'Great!',
+                    text: "Successfully added",
+                    icon: 'success',
+                    confirmButtonText: 'Continue'
+                }).then((result) => {
+                    // Action based on user's choice
+                    if (result.isConfirmed) {
+                        // Perform some action when "Yes" is clicked
+                        location.reload();
+                    }
+                });
+            } else {
+                var errors = response.errors;
+                // Iterate over each error and display it under the corresponding input field
+                for (var field in errors) {
+                    $('#' + field + '-error').html('<p>' + errors[field] +
+                        '</p>'); // Show the first error message
+                    $('#' + field).addClass(
+                        'text-danger'); // Highlight the input field with an error
+                }
+            }
+        }
+    });
+});
+</script>
 <?= view('main/templates/closing')?>

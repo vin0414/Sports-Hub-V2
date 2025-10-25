@@ -321,6 +321,36 @@ class Home extends BaseController
         return redirect()->back();
     }
 
+    public function manageEvent()
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['events']==1)
+        {
+            $title = 'Manage Event';
+            $data = [
+                'title' => $title
+            ];
+            return view('main/events/manage', $data);
+        }
+        return redirect()->back();
+    }
+
+    public function editEvent($id)
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['events']==1)
+        {
+            $title = 'Edit Event';
+            $data = [
+                'title' => $title
+            ];
+            return view('main/events/edit-event', $data);
+        }
+        return redirect()->back();
+    }
+
     //matches
     public function matches()
     {
@@ -537,6 +567,24 @@ class Home extends BaseController
             $performanceModel = new \App\Models\performanceModel();
             $performance = $performanceModel->where('player_id',$id)
                         ->groupBy('stat_type')->findAll();
+            //match points
+            $data['points'] = $this->db->table('player_performance a')
+                        ->select('c.team_name as home,d.team_name as away,b.result,
+                        SUM(CASE WHEN stat_type="PTS" THEN stat_value ELSE 0 END) as points,
+                        SUM(CASE WHEN stat_type="BLK" THEN stat_value ELSE 0 END) as blocks,
+                        SUM(CASE WHEN stat_type="AST" THEN stat_value ELSE 0 END) as assist,
+                        SUM(CASE WHEN stat_type NOT IN ("PTS", "BLK", "AST") THEN stat_value ELSE 0 END) as others')
+                        ->join('matches b','b.match_id=a.match_id','LEFT')
+                        ->join('teams c','c.team_id=b.team1_id','LEFT')
+                        ->join('teams d','d.team_id=b.team2_id','LEFT')
+                        ->where('player_id',$id)
+                        ->groupBy('b.match_id')
+                        ->get()->getResult();
+            $data['matches'] = $this->db->table('matches a')
+                        ->select('b.team_name as home,c.team_name as away,a.match_id')
+                        ->join('teams b','b.team_id=a.team1_id','LEFT')
+                        ->join('teams c','c.team_id=a.team2_id','LEFT')
+                        ->groupBy('a.match_id')->get()->getResult();
             $data['performance']=$performance;
             $data['role'] = $role;
             $data['player'] = $player;

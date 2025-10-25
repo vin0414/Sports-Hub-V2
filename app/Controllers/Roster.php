@@ -7,6 +7,7 @@ use \App\Models\teamModel;
 use \App\Models\playerModel;
 use \App\Models\scheduleModel;
 use \App\Models\matchModel;
+use \App\Models\performanceModel;
 use Config\Email;
 
 class Roster extends BaseController
@@ -533,6 +534,38 @@ class Roster extends BaseController
             ];
             $matchModel->update($this->request->getPost('id'),$data);
             return $this->response->setJSON(['success'=>'Sucessfully saved changes']);
+        }
+    }
+
+    public function saveScore()
+    {
+        $performance = new performanceModel();
+        $teamModel = new teamModel();
+        $validation = $this->validate([
+            'match'=>'required|numeric',
+            'player'=>'required|numeric',
+            'team'=>'required|numeric',
+            'stat'=>'required',
+            'points'=>'required|numeric'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $team = $teamModel->where('team_id',$this->request->getPost('team'))->first();
+            $data =  [
+                'player_id'=>$this->request->getPost('player'),
+                'match_id'=>$this->request->getPost('match'),
+                'team_id'=>$this->request->getPost('team'),
+                'sportsID'=>$team['sportsID'],
+                'stat_type'=>$this->request->getPost('stat'),
+                'stat_value'=>$this->request->getPost('points'),
+                'date'=>date('Y-m-d'),
+            ];
+            $performance->save($data);
+            return $this->response->setJSON(['success'=>'Successfully added']);
         }
     }
 }
