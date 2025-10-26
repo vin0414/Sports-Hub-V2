@@ -72,12 +72,12 @@
                                                 <div id="sports-error" class="error-message text-danger text-sm"></div>
                                             </div>
                                             <div class="col-lg-6">
-                                                <label class="form-label">Status</label>
+                                                <label class="form-label">Team Status</label>
                                                 <select class="form-select" name="status">
                                                     <option value="">Choose</option>
                                                     <option value="All">All Team</option>
-                                                    <option value="1">Active</option>
-                                                    <option value="0">Inactive</option>
+                                                    <option value="1">Active Teams</option>
+                                                    <option value="0">Inactive Teams</option>
                                                 </select>
                                                 <div id="status-error" class="error-message text-danger text-sm"></div>
                                             </div>

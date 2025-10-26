@@ -59,15 +59,19 @@ $routes->post('roster/schedules/edit','Roster::editSchedule');
 $routes->post('roster/players/edit','Roster::editPlayerInfo');
 $routes->post('roster/withdraw','Roster::withdrawRequest');
 $routes->post('roster/recruite','Roster::recruitePlayer');
-$routes->post('roster/edit-team','Roster::modifyTeam');
-$routes->post('roster/create-match','Roster::createMatch');
-$routes->post('roster/edit-match','Roster::editMatch');
-$routes->post('roster/score/save','Roster::saveScore');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
 $routes->post('request-new-password','Auth::requestNewPassword');
 $routes->post('change-password','Home::changePassword');
+//roster
+$routes->post('roster/edit-team','Roster::modifyTeam');
+$routes->post('roster/create-match','Roster::createMatch');
+$routes->post('roster/edit-match','Roster::editMatch');
+$routes->post('roster/score/save','Roster::saveScore');
+//events
+$routes->post('save-event','Home::saveEvent');
+$routes->post('edit-event','Home::modifyEvent');
 //news
 $routes->post('save-post','Home::savePost');
 $routes->post('modify-post','Home::modifyPost');

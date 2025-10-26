@@ -297,10 +297,7 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['events']==1)
         {
-            $title = 'Events';
-            $data = [
-                'title' => $title
-            ];
+            $data['title'] = 'Events';
             return view('main/events/index', $data);
         }
         return redirect()->back();
@@ -312,10 +309,9 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['events']==1)
         {
-            $title = 'New Event';
-            $data = [
-                'title' => $title
-            ];
+            $data['title'] = 'New Event';
+            $sportModel = new \App\Models\sportsModel();
+            $data['sports'] = $sportModel->findAll();
             return view('main/events/create-event', $data);
         }
         return redirect()->back();
@@ -327,10 +323,9 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['events']==1)
         {
-            $title = 'Manage Event';
-            $data = [
-                'title' => $title
-            ];
+            $data['title'] = 'Manage Event';
+            $eventModel = new \App\Models\eventModel();
+            $data['events'] = $eventModel->findAll();
             return view('main/events/manage', $data);
         }
         return redirect()->back();
@@ -342,13 +337,109 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['events']==1)
         {
-            $title = 'Edit Event';
-            $data = [
-                'title' => $title
-            ];
+            $data['title'] = 'Edit Event';
+            $eventModel = new \App\Models\eventModel();
+            $event = $eventModel->where('event_id',$id)->first();
+            if(empty($event))
+            {
+                return redirect()->back();
+            }
+            $data['event'] = $event;
+            $sportModel = new \App\Models\sportsModel();
+            $data['sports'] = $sportModel->findAll();
             return view('main/events/edit-event', $data);
         }
         return redirect()->back();
+    }
+
+    public function saveEvent()
+    {
+        $eventModel = new \App\Models\eventModel();
+        $validation = $this->validate([
+            'event_title'=>'required',
+            'details'=>'required',
+            'event_location'=>'required',
+            'event_type'=>'required',
+            'sports'=>'required',
+            'from_date'=>'required',
+            'to_date'=>'required'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $rawDetails = $this->request->getPost('details');
+            $cleanDetails = trim($rawDetails);
+            if ($cleanDetails === '<p><br></p>' || $cleanDetails === '') 
+            {
+                $error = ['details'=>'Details is required'];
+                return $this->response->setJSON(['errors'=>$error]);
+            }
+            else
+            {
+                $data = [
+                    'accountID'=>session()->get('loggedUser'),
+                    'event_title'=>$this->request->getPost('event_title'),
+                    'event_description'=>$cleanDetails,
+                    'event_location'=>$this->request->getPost('event_location'),
+                    'event_type'=>$this->request->getPost('event_type'),
+                    'sportsID'=>$this->request->getPost('sports'),
+                    'start_date'=>$this->request->getPost('from_date'),
+                    'end_date'=>$this->request->getPost('to_date'),
+                    'status'=>1,
+                    'registration'=>0,
+                    'date'=>date('Y-m-d')
+                ];
+                $eventModel->save($data);
+                return $this->response->setJSON(['success'=>'Successfully added']);
+            }
+        }
+    }
+
+    public function modifyEvent()
+    {
+        $eventModel = new \App\Models\eventModel();
+        $validation = $this->validate([
+            'id'=>'required|numeric',
+            'event_title'=>'required',
+            'details'=>'required',
+            'event_location'=>'required',
+            'event_type'=>'required',
+            'sports'=>'required',
+            'from_date'=>'required',
+            'to_date'=>'required'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $rawDetails = $this->request->getPost('details');
+            $cleanDetails = trim($rawDetails);
+            if ($cleanDetails === '<p><br></p>' || $cleanDetails === '') 
+            {
+                $error = ['details'=>'Details is required'];
+                return $this->response->setJSON(['errors'=>$error]);
+            }
+            else
+            {
+                $data = [
+                    'accountID'=>session()->get('loggedUser'),
+                    'event_title'=>$this->request->getPost('event_title'),
+                    'event_description'=>$cleanDetails,
+                    'event_location'=>$this->request->getPost('event_location'),
+                    'event_type'=>$this->request->getPost('event_type'),
+                    'sportsID'=>$this->request->getPost('sports'),
+                    'start_date'=>$this->request->getPost('from_date'),
+                    'end_date'=>$this->request->getPost('to_date'),
+                ];
+                $eventModel->update($this->request->getPost('id'),$data);
+                return $this->response->setJSON(['success'=>'Successfully applied changes']);
+            }
+        }
     }
 
     //matches

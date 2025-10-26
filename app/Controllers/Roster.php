@@ -486,15 +486,20 @@ class Roster extends BaseController
             $status = $this->request->getPost('status');
             if($status==="All")
             {
-                $team = $teamModel->findAll();
+                $team = $teamModel->where('sportsID',$this->request->getPost('sports'))
+                                  ->findAll();
             }
             else if($status==="1")
             {
-                $team = $teamModel->where('status',1)->findAll();
+                $team = $teamModel->where('status',1)
+                                  ->where('sportsID',$this->request->getPost('sports'))
+                                  ->findAll();
             }
             else
             {
-                $team = $teamModel->where('status',0)->findAll();
+                $team = $teamModel->where('status',0)
+                                  ->where('sportsID',$this->request->getPost('sports'))
+                                  ->findAll();
             }
             for ($i = 0; $i < count($team); $i++) {
                 for ($j = $i + 1; $j < count($team); $j++) {
