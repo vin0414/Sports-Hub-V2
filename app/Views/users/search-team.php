@@ -296,7 +296,7 @@
                             </div>
                             <?php else: ?>
                             <?php foreach($team as $list): ?>
-                            <div class="col-lg-3">
+                            <div class="col-md-3">
                                 <div class="card">
                                     <div class="img-responsive img-responsive-21x15 card-img-top"
                                         style="background-image: url(<?=base_url('assets/images/team/')?><?=$list['image']?>)">
@@ -323,7 +323,7 @@
                                         </button>
                                         <?php else: ?>
                                         <a href="javascript:void(0);" class="btn card-btn">
-                                            <i class="ti ti-circle-check"></i>&nbsp;Joined
+                                            <?=$player['status'] ? '<i class="ti ti-circle-check"></i>&nbsp;Joined' :'<i class="ti ti-clock"></i>&nbsp;Pending'?>
                                         </a>
                                         <?php endif; ?>
                                         <button type="button" value="<?=$list['team_id']?>" class="btn card-btn view">
@@ -394,7 +394,11 @@ $(document).on('click', '.join', function() {
                     if (response.success) {
                         location.reload();
                     } else {
-                        alert(response);
+                        Swal.fire({
+                            title: "Invalid",
+                            text: response,
+                            icon: "warning"
+                        });
                     }
                 }
             });

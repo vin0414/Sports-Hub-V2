@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 //public pages
 $routes->get('/', 'Home::index');
+$routes->get('calendar','Home::matchCalendar');
 $routes->get('latest-videos','Home::latestVideos');
 $routes->get('latest-videos/watch/(:any)','Home::watch/$1');
 $routes->post('incrementViews/(:num)', 'Home::incrementViews/$1');

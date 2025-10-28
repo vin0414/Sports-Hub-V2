@@ -71,8 +71,8 @@
                             <?php foreach($video as $row): ?>
                             <div class="col-sm-6 col-lg-4">
                                 <div class="card card-sm">
-                                    <a href="<?=site_url('videos/play/')?><?=$row['Token']?>">
-                                        <video src="<?=base_url('admin/videos/')?><?=$row['file']?>"
+                                    <a href="<?=site_url('latest/watch/play/')?><?=$row['Token']?>" target="_blank">
+                                        <video src="<?=base_url('assets/videos/')?><?=$row['file']?>"
                                             class="card-img-top"></video>
                                     </a>
                                     <div class="card-body">
@@ -80,7 +80,8 @@
                                             <span class="avatar avatar-2 me-3 rounded"
                                                 style="background-image: url(<?=base_url('assets/images/logo.jpg')?>);"></span>
                                             <div style="width:100%;">
-                                                <a href="<?=site_url('videos/play/')?><?=$row['Token']?>">
+                                                <a href="<?=site_url('latest-videos/watch/')?><?=$row['Token']?>"
+                                                    target="_blank">
                                                     <?=substr($row['file_name'],0,40) ?>...
                                                 </a><br />
                                                 <small><?php echo substr($row['description'],0,50) ?>...</small>

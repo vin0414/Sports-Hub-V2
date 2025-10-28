@@ -194,12 +194,24 @@
                         <div id="location-error" class="error-message text-danger text-sm"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="status">Status</label>
-                        <select class="form-select" id="status" name="status">
-                            <option value="1">OPEN</option>
-                            <option value="0">CLOSE</option>
-                        </select>
-                        <div id="status-error" class="error-message text-danger text-sm"></div>
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1">Practice Game</option>
+                                    <option value="0">Try-outs</option>
+                                </select>
+                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label" for="status">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1">OPEN</option>
+                                    <option value="0">CLOSE</option>
+                                </select>
+                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -239,12 +251,24 @@
                         <div id="location-error" class="error-message text-danger text-sm"></div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label" for="status">Status</label>
-                        <select class="form-select" id="status" name="status">
-                            <option value="1">OPEN</option>
-                            <option value="0">CLOSE</option>
-                        </select>
-                        <div id="status-error" class="error-message text-danger text-sm"></div>
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1">Practice Game</option>
+                                    <option value="0">Try-outs</option>
+                                </select>
+                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label" for="status">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="1">OPEN</option>
+                                    <option value="0">CLOSE</option>
+                                </select>
+                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Save Changes</button>

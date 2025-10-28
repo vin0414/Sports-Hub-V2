@@ -99,23 +99,33 @@ class Roster extends BaseController
             $register = $registerModel->where('user_id',session()->get('User'))->first();
             //get the team id and category
             $team = $teamModel->where('team_id',$val)->first();
-            $data = [
-                'team_id'=>$val,
-                'user_id'=>session()->get('User'),
-                'date_of_birth'=>$register['birth_date'],
-                'sportsID'=>$team['sportsID'],
-                'roleID'=>0,
-                'jersey_num'=>0,
-                'gender'=>'Male',
-                'email'=>session()->get('user_email'),
-                'height'=>0,
-                'weight'=>0,
-                'address'=>$register['address'],
-                'image'=>'',
-                'status'=>0
-            ];
-            $model->save($data);
-            return response()->setJSON(['success'=>'Successfully submitted']);
+            //check if the user already joined a team
+            $checkUser = $model->where('user_id',session()->get('User'))
+                                        ->where('sportsID',$team['sportsID'])->first();
+            if(empty($checkUser))
+            {
+                $data = [
+                    'team_id'=>$val,
+                    'user_id'=>session()->get('User'),
+                    'date_of_birth'=>$register['birth_date'],
+                    'sportsID'=>$team['sportsID'],
+                    'roleID'=>0,
+                    'jersey_num'=>0,
+                    'gender'=>'Male',
+                    'email'=>session()->get('user_email'),
+                    'height'=>0,
+                    'weight'=>0,
+                    'address'=>$register['address'],
+                    'image'=>'',
+                    'status'=>0
+                ];
+                $model->save($data);
+                return response()->setJSON(['success'=>'Successfully submitted']);
+            }
+            else
+            {
+                echo "Invalid! You are already joined in a team. Please select other sports category";
+            }
         }
     }
 

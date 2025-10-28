@@ -75,8 +75,7 @@ class Home extends BaseController
                     ->join('teams as b','b.team_id=a.team1_id')
                     ->join('teams as c','c.team_id=a.team2_id')
                     ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
-                    ->where('a.date >=',date('Y-m-d'))
-                    ->groupBy('a.match_id');
+                    ->groupBy('a.match_id')->limit(5);
         $matches = $builder->get()->getResult();
 
         $data = [
@@ -85,6 +84,12 @@ class Home extends BaseController
             'player'=>$playerData,'matches'=>$matches
         ];
         return view('welcome_message',$data);
+    }
+
+    public function matchCalendar()
+    {
+        $data['title']='Game Matches';
+        return view('match-calendar',$data);
     }
 
     public function latestVideos()
