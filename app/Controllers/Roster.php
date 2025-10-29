@@ -252,7 +252,8 @@ class Roster extends BaseController
         $validation = $this->validate([
             'date' => 'required',
             'time' => 'required',
-            'location' => 'required'
+            'location' => 'required',
+            'category'=>'required'
         ]);
         if(!$validation)
         {
@@ -268,6 +269,7 @@ class Roster extends BaseController
                 'date' => $this->request->getPost('date'),
                 'time' => $this->request->getPost('time'),
                 'location' => $this->request->getPost('location'),
+                'category' => $this->request->getPost('category'),
                 'status' => $this->request->getPost('status')
             ];
             $model->save($data);
@@ -350,9 +352,10 @@ class Roster extends BaseController
     {
         $model = new scheduleModel();
         $validation = $this->validate([
-            'date' => 'required',
-            'time' => 'required',
-            'location' => 'required'
+            'edit-date' => 'required',
+            'edit-time' => 'required',
+            'edit-location' => 'required',
+            'edit-category'=>'required'
         ]);
         if(!$validation)
         {
@@ -361,10 +364,11 @@ class Roster extends BaseController
         else
         {
             $data = [
-                'date' => $this->request->getPost('date'),
-                'time' => $this->request->getPost('time'),
-                'location' => $this->request->getPost('location'),
-                'status' => $this->request->getPost('status')
+                'date' => $this->request->getPost('edit-date'),
+                'time' => $this->request->getPost('edit-time'),
+                'location' => $this->request->getPost('edit-location'),
+                'category' => $this->request->getPost('edit-category'),
+                'status' => $this->request->getPost('edit-status')
             ];
             $model->update($this->request->getPost('schedule_id'),$data);
             return response()->setJSON(['success'=>'Successfully updated']);

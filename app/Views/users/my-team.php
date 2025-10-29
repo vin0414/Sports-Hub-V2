@@ -109,6 +109,7 @@
                                         <th>Date</th>
                                         <th>Time</th>
                                         <th>Location</th>
+                                        <th>Category</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </thead>
@@ -164,7 +165,7 @@
     </div>
 </div>
 <div class="modal fade" id="modal-large" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Create Schedule</h5>
@@ -197,11 +198,11 @@
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <label class="form-label">Category</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="1">Practice Game</option>
-                                    <option value="0">Try-outs</option>
+                                <select class="form-select" id="category" name="category">
+                                    <option>Practice Game</option>
+                                    <option>Try-outs</option>
                                 </select>
-                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                                <div id="category-error" class="error-message text-danger text-sm"></div>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label" for="status">Status</label>
@@ -222,7 +223,7 @@
     </div>
 </div>
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Edit Schedule</h5>
@@ -235,38 +236,38 @@
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <label class="form-label" for="date">Date</label>
-                                <input type="date" class="form-control" id="date" name="date" />
-                                <div id="date-error" class="error-message text-danger text-sm"></div>
+                                <input type="date" class="form-control" id="date" name="edit-date" />
+                                <div id="edit-date-error" class="error-message text-danger text-sm"></div>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label" for="time">Time</label>
-                                <input type="time" class="form-control" id="time" name="time" />
-                                <div id="time-error" class="error-message text-danger text-sm"></div>
+                                <input type="time" class="form-control" id="time" name="edit-time" />
+                                <div id="edit-time-error" class="error-message text-danger text-sm"></div>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="location">Location</label>
-                        <input type="text" class="form-control" id="location" name="location" />
-                        <div id="location-error" class="error-message text-danger text-sm"></div>
+                        <input type="text" class="form-control" id="location" name="edit-location" />
+                        <div id="edit-location-error" class="error-message text-danger text-sm"></div>
                     </div>
                     <div class="mb-3">
                         <div class="row g-3">
                             <div class="col-lg-6">
                                 <label class="form-label">Category</label>
-                                <select class="form-select" id="status" name="status">
-                                    <option value="1">Practice Game</option>
-                                    <option value="0">Try-outs</option>
+                                <select class="form-select" id="category" name="edit-category">
+                                    <option>Practice Game</option>
+                                    <option>Try-outs</option>
                                 </select>
-                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                                <div id="edit-category-error" class="error-message text-danger text-sm"></div>
                             </div>
                             <div class="col-lg-6">
                                 <label class="form-label" for="status">Status</label>
-                                <select class="form-select" id="status" name="status">
+                                <select class="form-select" id="status" name="edit-status">
                                     <option value="1">OPEN</option>
                                     <option value="0">CLOSE</option>
                                 </select>
-                                <div id="status-error" class="error-message text-danger text-sm"></div>
+                                <div id="edit-status-error" class="error-message text-danger text-sm"></div>
                             </div>
                         </div>
                     </div>
@@ -453,6 +454,9 @@ $(document).ready(function() {
                 data: 'location'
             },
             {
+                data: 'category'
+            },
+            {
                 data: 'status',
                 render: function(status) {
                     return status == 1 ? 'OPEN' : 'CLOSE';
@@ -552,10 +556,11 @@ $(document).on('click', '.editSchedule', function() {
             if (response.schedule) {
                 const schedule = response.schedule;
                 $('#frmEdit input[name="schedule_id"]').val(schedule.schedule_id);
-                $('#frmEdit input[name="date"]').val(schedule.date);
-                $('#frmEdit input[name="time"]').val(schedule.time);
-                $('#frmEdit input[name="location"]').val(schedule.location);
-                $('#frmEdit select[name="status"]').val(schedule.status);
+                $('#frmEdit input[name="edit-date"]').val(schedule.date);
+                $('#frmEdit input[name="edit-time"]').val(schedule.time);
+                $('#frmEdit input[name="edit-location"]').val(schedule.location);
+                $('#frmEdit select[name="edit-category"]').val(schedule.category);
+                $('#frmEdit select[name="edit-status"]').val(schedule.status);
                 $('#editModal').modal('show');
             } else {
                 Swal.fire({

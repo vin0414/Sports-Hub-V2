@@ -12,7 +12,7 @@ class scheduleModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['team_id','date','time','location','status'];
+    protected $allowedFields    = ['team_id','date','time','location','category','status'];
 
     // Dates
     protected $useTimestamps = true;

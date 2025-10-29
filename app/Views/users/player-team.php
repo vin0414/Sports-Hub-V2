@@ -47,7 +47,7 @@
                                     <p class="form-control"><?=$player['email']?></p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <div class="row g-3">
+                                    <div class="row g-1">
                                         <div class="col-lg-6">
                                             <label class="form-label">Date of Birth</label>
                                             <p class="form-control"><?=$player['date_of_birth']?></p>
@@ -74,10 +74,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
+                                <div class="col-lg-12 mb-3">
                                     <label class="form-label">Address</label>
                                     <textarea class="form-control" style="height: 100px;"
                                         disabled><?=$player['address']?></textarea>
+                                </div>
+                                <div class="col-lg-12">
+                                    <a href="<?=site_url('profile/edit/')?><?=$player['player_id']?>"
+                                        class="btn btn-primary">
+                                        <i class="ti ti-edit"></i>&nbsp;Edit Profile
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +202,7 @@ function matches() {
 
                     const dateTime = document.createElement('div');
                     dateTime.className = 'text-muted';
-                    dateTime.textContent = `${match.date} at ${match.time}`;
+                    dateTime.textContent = `${match.date ?? 'TBD'} at ${match.time ?? 'TBD'}`;
 
                     const teamName = document.createElement('div');
                     teamName.className = 'fw-bold';

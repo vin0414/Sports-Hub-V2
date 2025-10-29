@@ -517,6 +517,14 @@ class User extends BaseController
         return view('users/player-team',$data);
     }
 
+    public function meEdit($id)
+    {
+        $data['title']='Edit Profile';
+        $playerModel = new \App\Models\playerModel();
+        $data['player'] = $playerModel->where('player_id',$id)->first();
+        return view('users/edit-profile',$data);
+    }
+
     public function createTeam()
     {
         $data['title']="Create a Team";
