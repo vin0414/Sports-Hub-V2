@@ -1,4 +1,13 @@
 <?= view('main/templates/header')?>
+<style>
+.w-20px {
+    width: 20px;
+}
+
+.w-10px {
+    width: 10px;
+}
+</style>
 <div class="page">
     <!--  BEGIN SIDEBAR  -->
     <?= view('main/templates/sidebar')?>
@@ -60,27 +69,26 @@
                                         <div id="tournament-error" class="error-message text-danger text-sm"></div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <div class="row g-3">
-                                            <div class="col-lg-6">
-                                                <label class="form-label">Type of Sports</label>
-                                                <select name="sports" class="form-select">
-                                                    <option value="">Choose</option>
-                                                    <?php foreach($sports as $row): ?>
-                                                    <option value="<?=$row['sportsID']?>"><?=$row['Name']?></option>
-                                                    <?php endforeach;?>
-                                                </select>
-                                                <div id="sports-error" class="error-message text-danger text-sm"></div>
-                                            </div>
-                                            <div class="col-lg-6">
-                                                <label class="form-label">Team Status</label>
-                                                <select class="form-select" name="status">
-                                                    <option value="">Choose</option>
-                                                    <option value="All">All Team</option>
-                                                    <option value="1">Active Teams</option>
-                                                    <option value="0">Inactive Teams</option>
-                                                </select>
-                                                <div id="status-error" class="error-message text-danger text-sm"></div>
-                                            </div>
+                                        <label class="form-label">Type of Sports</label>
+                                        <select name="sports" class="form-select" id="sports">
+                                            <option value="">Choose</option>
+                                            <?php foreach($sports as $row): ?>
+                                            <option value="<?=$row['sportsID']?>"><?=$row['Name']?></option>
+                                            <?php endforeach;?>
+                                        </select>
+                                        <div id="sports-error" class="error-message text-danger text-sm"></div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label class="form-label">Teams</label>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped" id="table">
+                                                <thead>
+                                                    <th class="w-10px">#</th>
+                                                    <th>Teams</th>
+                                                    <th class="w-20px">Total Players</th>
+                                                </thead>
+                                                <tbody id="teams"></tbody>
+                                            </table>
                                         </div>
                                     </div>
                                     <div class="col-lg-12">
@@ -150,6 +158,33 @@
 <?= view('main/templates/footer')?>
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
+$('#sports').on('change', function() {
+    const val = $(this).val();
+    $.ajax({
+        url: "<?=site_url('get-team')?>",
+        method: "GET",
+        data: {
+            sports: val
+        },
+        success: function(response) {
+            console.log(response);
+            const tbody = $('#table tbody');
+            tbody.empty(); // Clear previous rows
+
+            response.team.forEach(team => {
+                const row = `
+                <tr>
+                    <td><input type="checkbox" name="teams[]" value="${team.team_id}" style="width:20px;height:20px;"></td>
+                    <td>${team.team_name}<br/><small>${team.school_barangay}</small></td>
+                    <td>${team.total}</td>
+                </tr>
+                `;
+                tbody.append(row);
+            });
+
+        }
+    });
+});
 $('#frmCreate').on('submit', function(e) {
     e.preventDefault();
     $('.error-message').html('');

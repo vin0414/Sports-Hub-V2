@@ -488,7 +488,6 @@ class Roster extends BaseController
         $validation = $this->validate([
             'tournament'=>'required',
             'sports'=>'required',
-            'status'=>'required',
             'location'=>'required'
         ]);
         if(!$validation)
@@ -497,32 +496,24 @@ class Roster extends BaseController
         }
         else
         {
-            $status = $this->request->getPost('status');
-            if($status==="All")
-            {
-                $team = $teamModel->where('sportsID',$this->request->getPost('sports'))
-                                  ->findAll();
+            $allTeam = $this->request->getPost('teams');
+            $teams = [];
+            foreach ($allTeam as $teamId) {
+                $team = $teamModel->where('team_id', $teamId)->first();
+                if ($team) {
+                    $teams[] = $team;
+                }
             }
-            else if($status==="1")
-            {
-                $team = $teamModel->where('status',1)
-                                  ->where('sportsID',$this->request->getPost('sports'))
-                                  ->findAll();
-            }
-            else
-            {
-                $team = $teamModel->where('status',0)
-                                  ->where('sportsID',$this->request->getPost('sports'))
-                                  ->findAll();
-            }
-            for ($i = 0; $i < count($team); $i++) {
-                for ($j = $i + 1; $j < count($team); $j++) {
+            
+            // Generate all unique matchups (round-robin style)
+            for ($i = 0; $i < count($teams); $i++) {
+                for ($j = $i + 1; $j < count($teams); $j++) {
                     $matchModel->insert([
-                        'tournament'=>$this->request->getPost('tournament'),
-                        'team1_id' => $team[$i]['team_id'],
-                        'team2_id' => $team[$j]['team_id'],
-                        'location'=>$this->request->getPost('location'),
-                        'status'=>1
+                        'tournament' => $this->request->getPost('tournament'),
+                        'team1_id'   => $teams[$i]['team_id'],
+                        'team2_id'   => $teams[$j]['team_id'],
+                        'location'   => $this->request->getPost('location'),
+                        'status'     => 1
                     ]);
                 }
             }

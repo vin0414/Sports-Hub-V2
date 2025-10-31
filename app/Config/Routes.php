@@ -67,6 +67,7 @@ $routes->get('logout', 'Auth::logout');
 $routes->post('request-new-password','Auth::requestNewPassword');
 $routes->post('change-password','Home::changePassword');
 //roster
+$routes->get('get-team','Home::getTeam');
 $routes->post('roster/edit-team','Roster::modifyTeam');
 $routes->post('roster/create-match','Roster::createMatch');
 $routes->post('roster/edit-match','Roster::editMatch');

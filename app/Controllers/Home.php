@@ -477,11 +477,22 @@ class Home extends BaseController
             $data['sports'] = $sportModel->findAll();
             //active team
             $teamModel = new \App\Models\teamModel();
-            $data['team'] = $teamModel->where('status',1)->findAll();
+            $data['team'] = $teamModel->where('status',1)->limit(5)->findAll();
             
             return view('main/matches/create', $data);
         }
         return redirect()->back();
+    }
+
+    public function getTeam()
+    {
+        $cat = $this->request->getGet('sports');
+        $builder = $this->db->table('teams a');
+        $builder->select('a.team_id,a.team_name,a.school_barangay,COUNT(b.player_id)total');
+        $builder->join('players b','b.team_id=a.team_id','LEFT');
+        $builder->where('a.sportsID',$cat)->where('a.status',1)->groupBy('a.team_id');
+        $team = $builder->get()->getResult();
+        return $this->response->setJSON(['team'=>$team]);
     }
 
     public function editMatch($id)
@@ -2374,13 +2385,13 @@ class Home extends BaseController
         }
 
         // Fetch filtered records based on limit and offset
-        $account = $accountModel->findAll($limit, $offset);
+        $account = $accountModel->where('accountID !=',session()->get('loggedUser'))->findAll($limit, $offset);
 
         // Count total records (without filter)
-        $totalRecords = $accountModel->countAllResults();
+        $totalRecords = $accountModel->where('accountID !=',session()->get('loggedUser'))->countAllResults();
 
         // Count filtered records (with filter)
-        $filteredRecords = $filteredaccountModel->countAllResults();
+        $filteredRecords = $filteredaccountModel->where('accountID !=',session()->get('loggedUser'))->countAllResults();
 
         $response = [
             "draw" => $_GET['draw'],
