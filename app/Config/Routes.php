@@ -21,6 +21,7 @@ $routes->get('contact-us','Home::contactUs');
 $routes->get('success/(:any)','User::successLink/$1');
 $routes->get('resend/(:any)','User::resend/$1');
 $routes->get('activate/(:any)','User::activateAccount/$1');
+$routes->post('save-inquiry','Home::saveInquiry');
 //users
 $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 {

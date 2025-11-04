@@ -2472,4 +2472,27 @@ class Home extends BaseController
         }
     }
 
+    public function saveInquiry()
+    {
+        $inquiryModel = new \App\Models\inquiryModel();
+        $validation = $this->validate([
+            'fullname'=>'required',
+            'email'=>'required|valid_email',
+            'details'=>'required'
+        ]);
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                    'fullname'=>$this->request->getPost('fullname'),
+                    'email'=>$this->request->getPost('email'),
+                    'details'=>$this->request->getPost('details'),
+                    ];
+            $inquiryModel->save($data);
+            return $this->response->setJSON(['success' => 'Successfully submitted']);
+        }
+    }
 }

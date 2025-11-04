@@ -159,6 +159,13 @@
                             </div>
                         </div>
                         <div class="list-group list-group-flush">
+                            <?php if(empty($recent)): ?>
+                            <div class="list-group-item">
+                                <div class="text-center text-muted py-3">
+                                    No recent news posted.
+                                </div>
+                            </div>
+                            <?php else:?>
                             <?php foreach($recent as $row):?>
                             <div class="list-group-item">
                                 <div class="row align-items-center">
@@ -179,6 +186,7 @@
                                 </div>
                             </div>
                             <?php endforeach; ?>
+                            <?php endif;?>
                         </div>
                     </div>
                     <div class="card">
