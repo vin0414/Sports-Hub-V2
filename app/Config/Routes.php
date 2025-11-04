@@ -22,6 +22,8 @@ $routes->get('success/(:any)','User::successLink/$1');
 $routes->get('resend/(:any)','User::resend/$1');
 $routes->get('activate/(:any)','User::activateAccount/$1');
 $routes->post('save-inquiry','Home::saveInquiry');
+$routes->post('processing','User::processing');
+$routes->post('send-donation','User::sendDonation');
 //users
 $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 {
@@ -48,6 +50,8 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('roster/schedules/fetch','Roster::fetchSchedules');
     $routes->get('roster/matches','Roster::matches');
     $routes->get('roster/stats','Roster::stats');
+    $routes->get('subscribe','User::subscribe');
+    $routes->get('donate','User::donate');
 });
 $routes->post('register','User::registerUser');
 $routes->post('checkUser','User::checkUser');

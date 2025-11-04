@@ -641,4 +641,63 @@ class User extends BaseController
         $data = ['title'=>'Edit Player','player'=>$player,'registration'=>$registration,'roles'=>$roles];
         return view('users/edit-player',$data);
     }
+
+    public function subscribe()
+    {
+        $data['title']="Subscribe";
+        return view('users/subscribe',$data);
+    }
+
+    public function donate()
+    {
+        $data['title']="Donate";
+        return view('users/donate',$data);
+    }
+
+    public function processing()
+    {
+        $subscribeModel = new \App\Models\subscribeModel();
+        $data = [
+            'user_id'=>session()->get('User'),
+            'reference'=>'',
+            'amount'=>0,
+        ];
+        $subscribeModel->save($data);
+        return $this->response->setJSON(['success'=>'Successfully subscribed']);
+    }
+
+    public function sendDonation()
+    {
+        $subscribeModel = new \App\Models\subscribeModel();
+        $validation = $this->validate([
+            'amount'=>[
+                'rules'=>'required|numeric|min_length[2]',
+                'errors'=>[
+                    'required'=>'Enter donation amount',
+                    'numeric'=>'Enter valid amount',
+                    'min_length'=>'Minimum amount is 10'
+                ]
+            ],
+            'reference'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Transaction reference is required'
+                ]
+            ]
+        ]);
+        if(!$validation)
+        {
+            return $this->response->SetJSON(['errors' => 'Invalid input. Please check and try again.']);
+        }
+        else
+        {
+            $subscribe = $subscribeModel->where('user_id',session()->get('User'))->first();
+            $data = [
+                'reference'=>$this->request->getPost('reference'),
+                'amount'=>$this->request->getPost('amount')
+            ];
+            $subscribeModel->update($subscribe['subscribe_id'],$data);
+            return $this->response->setJSON(['success'=>'Thank you for your donation!']);
+        } 
+    }
 }

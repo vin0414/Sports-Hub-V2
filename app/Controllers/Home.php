@@ -19,6 +19,7 @@ class Home extends BaseController
         $eventModel = new \App\Models\eventModel();
         $registerModel = new \App\Models\registerModel();
         $teamModel = new \App\Models\teamModel();
+        $subscribeModel = new \App\Models\subscribeModel();
         
         $videos = array_map(function($v) {
             return [
@@ -77,11 +78,14 @@ class Home extends BaseController
                     ->join('players d','d.team_id=b.team_id OR d.team_id=c.team_id','LEFT')
                     ->groupBy('a.match_id')->limit(5);
         $matches = $builder->get()->getResult();
+        //subscription
+        $subscribe = $subscribeModel->where('user_id',session()->get('User'))->first() ?? '';
 
         $data = [
             'title'=>$title,'recent'=>$recent,'feed'=>$feed,
             'register'=>$register,'team'=>$team,
-            'player'=>$playerData,'matches'=>$matches
+            'player'=>$playerData,'matches'=>$matches,
+            'subscribe'=>$subscribe
         ];
         return view('welcome_message',$data);
     }
@@ -121,6 +125,12 @@ class Home extends BaseController
     public function live()
     {
         $data['title'] = "Live";
+        $subscribeModel = new \App\Models\subscribeModel();
+        $subscribe = $subscribeModel->where('user_id',session()->get('User'))->first();
+        if(empty($subscribe))
+        {
+            return redirect()->back();
+        }
         $liveCodeModel = new \App\Models\liveCodeModel();
         $code = $liveCodeModel->first();
         $data['code']= $code;

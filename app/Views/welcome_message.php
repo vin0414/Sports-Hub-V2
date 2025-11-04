@@ -40,6 +40,7 @@
                         </a>
                         <?php elseif(isset($register)): ?>
                         <?php if($register['application_type']==="Player"): ?>
+                        <?php if(!empty($subscribe)): ?>
                         <a class="btn btn-danger" href="<?=site_url('live')?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -52,6 +53,7 @@
                             </svg>
                             Live
                         </a>
+                        <?php endif;?>
                         <a href="<?=site_url('search')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -244,5 +246,49 @@
         </div>
     </div>
 </div>
+<?php if(empty($subscribe)): ?>
+<a href="<?=site_url('subscribe')?>" class="btn btn-floating btn-primary" target="_blank">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="icon icon-tabler icons-tabler-outline icon-tabler-bell">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+        <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+    </svg>
+    Subscribe
+</a>
+<?php else:?>
+<a href="javascrip:void(0);" class="btn btn-floating btn-primary donate">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        class="icon icon-tabler icons-tabler-outline icon-tabler-pig-money">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M15 11v.01" />
+        <path d="M5.173 8.378a3 3 0 1 1 4.656 -1.377" />
+        <path
+            d="M16 4v3.803a6.019 6.019 0 0 1 2.658 3.197h1.341a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-1.342c-.336 .95 -.907 1.8 -1.658 2.473v2.027a1.5 1.5 0 0 1 -3 0v-.583a6.04 6.04 0 0 1 -1 .083h-4a6.04 6.04 0 0 1 -1 -.083v.583a1.5 1.5 0 0 1 -3 0v-2l0 -.027a6 6 0 0 1 4 -10.473h2.5l4.5 -3h0z" />
+    </svg>
+    Donate
+</a>
+<div class="modal fade" id="donateModal" data-backdrop="static">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <h3 class="m-3">Support Digital Sports Hub!</h3>
+                <p>Your donation helps us keep Digital Sports Hub running and improve our services. Thank you for your
+                    support!
+                </p>
+                <a href="<?=site_url('donate')?>" class="btn btn-primary mb-3">Donate Now</a>
+                <button type="button" class="btn btn-secondary mb-3" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif;?>
 <?= view('main/templates/footer')?>
+<script>
+$(document).on('click', '.donate', function() {
+    $('#donateModal').modal('show');
+});
+</script>
 <?= view('main/templates/closing')?>
