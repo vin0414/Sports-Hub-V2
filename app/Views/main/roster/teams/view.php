@@ -127,7 +127,8 @@
                                                                         style="width:30px;border:1px solid #000000;border-radius:10px 10px;" />
                                                                 </td>
                                                                 <td><?=$user['Fullname']?></td>
-                                                                <td><?=$role['roleName']?></td>
+                                                                <td><?=!empty($role['roleName']) ? $role['roleName'] : 'N/A' ?>
+                                                                </td>
                                                                 <td><?=$row['height']?>cm</td>
                                                                 <td><?=$row['weight']?>kgs</td>
                                                                 <td>

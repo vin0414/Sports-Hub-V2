@@ -183,7 +183,51 @@ class Roster extends BaseController
                     //generate a random name
                     $newName = $imagefile->getRandomName();
                     //move the file to the designated folder
-                    $imagefile->move(ROOTPATH.'public/assets/images/players/',$newName);
+                    $imagefile->move(ROOTPATH.'assets/images/players/',$newName);
+                    //add the image name to the data array
+                    $data['image'] = $newName;
+                }
+            }
+            $model->update($this->request->getPost('player_id'),$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
+    public function editProfileInfo()
+    {
+        $model = new playerModel();
+        $validation = $this->validate([
+            'email' => 'required|valid_email',
+            'dob' => 'required|valid_date',
+            'height' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'image' => [
+                'uploaded[image]',
+                'mime_in[image,image/jpg,image/jpeg,image/png]',
+                'max_size[image,2048]',
+            ]
+        ]);
+        if(!$validation)
+        {
+            return response()->setJSON(['error'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'email' => $this->request->getPost('email'),
+                'date_of_birth' => $this->request->getPost('dob'),
+                'height' => $this->request->getPost('height'),
+                'weight' => $this->request->getPost('weight'),
+            ];
+            //check if image is uploaded
+            if($imagefile = $this->request->getFile('image'))
+            {
+                if($imagefile->isValid() && !$imagefile->hasMoved())
+                {
+                    //generate a random name
+                    $newName = $imagefile->getRandomName();
+                    //move the file to the designated folder
+                    $imagefile->move(ROOTPATH.'assets/images/players/',$newName);
                     //add the image name to the data array
                     $data['image'] = $newName;
                 }
@@ -261,7 +305,7 @@ class Roster extends BaseController
         }
         else
         {
-           
+            $category = $this->request->getPost('category');
             $db = \Config\Database::connect();
             $db->transStart(); 
             $data = [
@@ -282,45 +326,82 @@ class Roster extends BaseController
                         ->get()->getResult();
             foreach($players as $player)
             {
-                //send email to all new players
-                $emailConfig = new Email();
-                $fromEmail = $emailConfig->fromEmail;
-                $fromName  = $emailConfig->fromName;
-                $email = \Config\Services::email();
-                $email->setTo($player->email);
-                $email->setFrom($fromEmail, $fromName); 
-                $email->setSubject('Welcome to the Team! Upcoming Tryouts Info Inside');
-                $email->setMessage("
-                    Dear Players,
+                if($category==="Try-outs")
+                {
+                    //send email to all new players
+                    $emailConfig = new Email();
+                    $fromEmail = $emailConfig->fromEmail;
+                    $fromName  = $emailConfig->fromName;
+                    $email = \Config\Services::email();
+                    $email->setTo($player->email);
+                    $email->setFrom($fromEmail, $fromName); 
+                    $email->setSubject('Welcome to the Team! Upcoming Tryouts Info Inside');
+                    $email->setMessage("
+                        Dear Players,
 
-                    Welcome aboard! We’re thrilled to have you as part of our growing team. As a newly recruited player, you’re invited to participate in our upcoming team tryouts, where we’ll assess skills, build chemistry, and finalize our roster for the season.
+                        Welcome aboard! We’re thrilled to have you as part of our growing team. As a newly recruited player, you’re invited to participate in our upcoming team tryouts, where we’ll assess skills, build chemistry, and finalize our roster for the season.
 
-                    📅 Tryout Details:
-                    - Date: {$this->request->getPost('date')}
-                    - Time: {$this->request->getPost('time')}
-                    - Location: {$this->request->getPost('location')}
-                    - Attire: Sportswear, team jersey (if available), and proper footwear
+                        📅 Tryout Details:
+                        - Date: {$this->request->getPost('date')}
+                        - Time: {$this->request->getPost('time')}
+                        - Location: {$this->request->getPost('location')}
+                        - Attire: Sportswear, team jersey (if available), and proper footwear
 
-                    What to Expect:
-                    - Skill drills and position evaluations
-                    - Team-building exercises
-                    - Brief orientation with coaches and staff
+                        What to Expect:
+                        - Skill drills and position evaluations
+                        - Team-building exercises
+                        - Brief orientation with coaches and staff
 
-                    Please bring:
-                    - Valid ID
-                    - Water bottle
-                    - Any medical clearance (if required)
+                        Please bring:
+                        - Valid ID
+                        - Water bottle
+                        - Any medical clearance (if required)
 
-                    We encourage you to arrive at least 30 minutes early for registration and warm-up. If you have any questions or need assistance, feel free to reply to this email or contact us.
+                        We encourage you to arrive at least 30 minutes early for registration and warm-up. If you have any questions or need assistance, feel free to reply to this email or contact us.
 
-                    Let’s make this season unforgettable. See you on the court!
+                        Let’s make this season unforgettable. See you on the court!
 
-                    Warm regards,
-                    
-                    Digital Sports Hub Team
-                ");
+                        Warm regards,
+                        
+                        Digital Sports Hub Team
+                    ");
 
-                $email->send();
+                    $email->send();
+                }
+                else
+                {
+                    //send email to all new players
+                    $emailConfig = new Email();
+                    $fromEmail = $emailConfig->fromEmail;
+                    $fromName  = $emailConfig->fromName;
+                    $email = \Config\Services::email();
+                    $email->setTo($player->email);
+                    $email->setFrom($fromEmail, $fromName); 
+                    $email->setSubject('Practice Game Invitation and Details');
+                    $email->setMessage("
+                        Dear Players,
+
+                        📅 Practice Game Details:
+                        - Date: {$this->request->getPost('date')}
+                        - Time: {$this->request->getPost('time')}
+                        - Location: {$this->request->getPost('location')}
+                        - Attire: Sportswear, team jersey (if available), and proper footwear
+
+                        What to Expect:
+                        - Skill drills and position evaluations
+                        - Team-building exercises
+
+                        We encourage you to arrive at least 30 minutes early for warm-up. If you have any questions or need assistance, feel free to reply to this email or contact us.
+
+                        Let’s make this season unforgettable. See you on the court!
+
+                        Warm regards,
+                        
+                        Digital Sports Hub Team
+                    ");
+                    $email->send();
+                }
+
             }
             $db->transComplete();
             if ($db->transStatus() === false) {

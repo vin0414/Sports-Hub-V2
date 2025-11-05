@@ -113,7 +113,7 @@ $('#frmEdit').on('submit', function(e) {
     var formData = new FormData(this);
     $('#modal-loading').modal('show');
     $.ajax({
-        url: '<?= base_url('roster/players/edit') ?>',
+        url: '<?= base_url('roster/players/edit-profile') ?>',
         type: 'POST',
         data: formData,
         contentType: false,

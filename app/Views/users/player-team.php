@@ -58,7 +58,8 @@
                                         </div>
                                         <div class="col-lg-12">
                                             <label class="form-label">Position</label>
-                                            <p class="form-control"><?=$role['roleName']?></p>
+                                            <p class="form-control">
+                                                <?=!empty($role['roleName']) ? $role['roleName'] : 'N/A' ?></p>
                                         </div>
                                         <div class="col-lg-4">
                                             <label class="form-label">Jersey No</label>

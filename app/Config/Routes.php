@@ -7,6 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 //public pages
 $routes->get('/', 'Home::index');
+$routes->get('teams-and-players', 'Home::teamsAndPlayers');
 $routes->get('calendar','Home::matchCalendar');
 $routes->get('latest-videos','Home::latestVideos');
 $routes->get('latest-videos/watch/(:any)','Home::watch/$1');
@@ -64,6 +65,7 @@ $routes->post('roster/join-now','Roster::joinTeam');
 $routes->post('roster/schedules/create','Roster::createSchedule');
 $routes->post('roster/schedules/edit','Roster::editSchedule');
 $routes->post('roster/players/edit','Roster::editPlayerInfo');
+$routes->post('roster/players/edit-profile','Roster::editProfileInfo');
 $routes->post('roster/withdraw','Roster::withdrawRequest');
 $routes->post('roster/recruite','Roster::recruitePlayer');
 //functions for admin

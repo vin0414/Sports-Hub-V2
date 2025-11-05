@@ -27,7 +27,7 @@ class Home extends BaseController
                 'title' => $v['file_name'],
                 'content' => substr($v['description'],0,300),
                 'timestamp' => strtotime($v['date']),
-                'media'=> 'assets/videos/',$v['file'],
+                'media'=> 'assets/videos/'.$v['file'],
                 'link'=>'latest-videos/watch/'.$v['Token']
             ];
         }, $videoModel->findAll());
@@ -88,6 +88,43 @@ class Home extends BaseController
             'subscribe'=>$subscribe
         ];
         return view('welcome_message',$data);
+    }
+
+    public function teamsAndPlayers()
+    {
+        $data['title']='Teams & Players';
+        //teams
+        $teamModel = new \App\Models\teamModel();
+        $data['page'] = (int) ($this->request->getGet('page') ?? 1);
+        $data['perPage'] = 8;
+
+        // Retrieve total count and filtered data
+        $data['total'] = $teamModel->where('status', 1)->countAllResults();
+
+        $data['team'] = $teamModel->where('status', 1)
+                            ->orderBy('team_id', 'DESC')
+                            ->paginate($data['perPage'], 'default', $data['page']);
+
+        $data['pager'] = $teamModel->pager;
+        //players
+        $playerModel = new \App\Models\playerModel();
+        $player = $playerModel->select('users.Fullname,players.*,player_role.roleName,teams.team_name')
+                                ->join('users','players.user_id=users.user_id','LEFT')
+                                ->join('player_role','players.roleID=player_role.roleID','LEFT')
+                                ->join('teams','players.team_id=teams.team_id','LEFT');
+                            
+        $page = (int) ($this->request->getGet('page') ?? 1);
+        $perPage = 8;
+        $player->orderBy('player_id', 'DESC');
+        $list = $player->paginate($perPage, 'default', $page);
+        $total = $player->countAllResults();       
+        $pager = $player->pager;
+        $data['players']=$list;
+        $data['pages']=$page;
+        $data['perPages']=$perPage;
+        $data['totals']=$total;
+        $data['pagers']=$pager;
+        return view('teams-and-players',$data);
     }
 
     public function matchCalendar()
@@ -582,7 +619,7 @@ class Home extends BaseController
             $data['team']=$team;
             //players
             $playerModel = new \App\Models\playerModel();
-            $player = $playerModel->where('team_id',$id)->findAll();
+            $player = $playerModel->where('team_id',$id)->where('status',1)->findAll();
             $data['player'] = $player;
             //sports
             $sportsModel = new \App\Models\sportsModel();
