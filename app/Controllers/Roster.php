@@ -135,8 +135,8 @@ class Roster extends BaseController
         //get the list of players
         $data = $this->db->table('players as a')
                 ->select('a.*,b.Fullname,c.roleName')
-                ->join('users as b','b.user_id=a.user_id')
-                ->join('player_role as c','c.roleID=a.roleID')
+                ->join('users as b','b.user_id=a.user_id','LEFT')
+                ->join('player_role as c','c.roleID=a.roleID','LEFT')
                 ->where('a.team_id',$val)
                 ->whereIN('a.status',[1,2]);
         $players = $data->get()->getResult();

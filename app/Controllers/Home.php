@@ -80,12 +80,17 @@ class Home extends BaseController
         $matches = $builder->get()->getResult();
         //subscription
         $subscribe = $subscribeModel->where('user_id',session()->get('User'))->first() ?? '';
+        //schedules
+        $schedules = $this->db->table('players as a')->select('b.*')
+                    ->join('schedules as b','b.team_id=a.team_id','LEFT')
+                    ->where('a.user_id',session()->get('User'))
+                    ->groupBy('b.schedule_id')->orderBy('b.schedule_id','DESC')->get()->getResult();
 
         $data = [
             'title'=>$title,'recent'=>$recent,'feed'=>$feed,
             'register'=>$register,'team'=>$team,
             'player'=>$playerData,'matches'=>$matches,
-            'subscribe'=>$subscribe
+            'subscribe'=>$subscribe,'schedules'=>$schedules
         ];
         return view('welcome_message',$data);
     }
