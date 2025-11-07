@@ -50,7 +50,7 @@
                                 <path d="M16 19h6" />
                                 <path d="M19 16v6" />
                             </svg>
-                            Become a Player or Coach
+                            Join
                         </a>
                         <?php elseif(isset($register)): ?>
                         <?php if($register['application_type']==="Player"): ?>
@@ -79,7 +79,7 @@
                             </svg>
                             Join a Team
                         </a>
-                        <?php elseif($register['application_type']==="Coach") :?>
+                        <?php elseif($register['application_type']==="Organization") :?>
                         <a class="btn btn-danger" href="<?=site_url('live')?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

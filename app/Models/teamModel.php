@@ -12,7 +12,7 @@ class teamModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['team_name','coach_name','user_id','sportsID','school_barangay','image','organization','status'];
+    protected $allowedFields    = ['team_name','coordinator','user_id','sportsID','category','school_barangay','image','organization','remarks','status'];
 
     // Dates
     protected $useTimestamps = true;

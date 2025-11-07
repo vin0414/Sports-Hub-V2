@@ -25,7 +25,7 @@ class Roster extends BaseController
             return redirect()->back();
         }
         $registerModel = new registerModel();
-        $pending = $registerModel->where('status',0)->findAll();
+        $pending = $registerModel->where('status',0)->where('application_type','Organization')->findAll();
         return response()->setJSON(body: ['pending'=>$pending]);
     }
 
@@ -36,7 +36,7 @@ class Roster extends BaseController
             return redirect()->back();
         }
         $registerModel = new registerModel();
-        $approve = $registerModel->where('status',1)->findAll();
+        $approve = $registerModel->where('status',1)->where('application_type','Organization')->findAll();
         return response()->setJSON(body: ['approve'=>$approve]);
     }
 
@@ -78,6 +78,22 @@ class Roster extends BaseController
         {   
             $registerModel = new registerModel();
             $data = ['status'=>1,'remarks'=>'Registered'];
+            $registerModel->update($val,$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
+    public function reject()
+    {
+        $val = $this->request->getPost('value');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {   
+            $registerModel = new registerModel();
+            $data = ['status'=>2,'remarks'=>'Rejected'];
             $registerModel->update($val,$data);
             return response()->setJSON(['success'=>'Successfully updated']);
         }

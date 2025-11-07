@@ -323,11 +323,9 @@ class User extends BaseController
         $model = new \App\Models\registerModel();
         $validation = $this->validate([
             'user'=>[
-                'rules'=>'required|numeric|is_unique[registration.user_id]',
+                'rules'=>'required|numeric',
                 'errors'=>[
                     'required'=>'User ID is required',
-                    'numeric'=>'Invalid user token',
-                    'is_unique'=>'User ID already registered'
                 ]
             ],
             'application'=>[
@@ -342,22 +340,30 @@ class User extends BaseController
                         'numeric'=>'Enter valid number'
                                 ]
                      ],
-            'birth_date'=>[
-                'rules'=>'required|valid_date[Y-m-d]',
-                'errors'=>[
-                    'required'=>'Enter birth date',
-                    'valid_date'=>'Enter valid date'
-                    ]
-                ],
             'address'=>[
                 'rules'=>'required',
                 'errors'=>['required'=>'Enter complete address']
-            ]
+            ],
+            'file' => [
+                'rules' => 'uploaded[file]|max_size[file,10240]|mime_in[file,application/pdf,application/zip]',
+                'errors' => [
+                    'uploaded' => 'Attachment is required.',
+                    'max_size' => 'The file must not exceed 10MB.',
+                    'mime_in' => 'Only PDF and ZIP formats are allowed.'
+                ]
+            ],
+            'agreement'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'You must agree to the terms and conditions to proceed.'
+                ]
+            ],
+
         ]);
 
         if(!$validation)
         {
-            return view('users/join',['validation'=>$this->validator,'title'=>'Join']);
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
         }
         else
         {
@@ -367,11 +373,39 @@ class User extends BaseController
             $age = $currentDate->diff($birthDate);
             if($age->y<18)
             {
-                session()->setFlashdata("fail","Invalid! You must be 18 years or older to join.");
-                return redirect()->to('join')->withInput();
+                $errors = ['birth_date'=>'Invalid! You must be 18 years or older to join.'];
+                return $this->response->setJSON(['errors'=>$errors]);
             }  
             else
             {
+                $application = $this->request->getPost('application');
+                $height = $this->request->getPost('height');
+                $weight = $this->request->getPost('weight');
+                if($application==="Player" && (empty($height) || empty($weight)))
+                {
+                    $errors = ['height'=>'Height is required','weight'=>'Weight is required'];
+                    return $this->response->setJSON(['errors'=>$errors]);
+                }
+
+                $file = $this->request->getFile('file');
+                $originalName = date('YmdHis').$file->getClientName();
+                // Define the target directory
+                $targetDir = 'assets/files/';
+                // Create the directory if it doesn't exist
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0755, true); // 0755 permissions, recursive creation
+                }
+                // Move the uploaded file
+                $file->move($targetDir, $originalName);
+                $status=0;
+                if($application==="Player")
+                {
+                    $status=1;
+                }
+                else
+                {
+                    $status=0;
+                }
                 $data = [
                         'application_type'=>$this->request->getPost('application'),
                         'user_id'=>session()->get('User'),
@@ -380,13 +414,17 @@ class User extends BaseController
                         'phone'=>$this->request->getPost('phone'),
                         'birth_date'=>$this->request->getPost('birth_date'),
                         'address'=>$this->request->getPost('address'),
-                        'status'=>0,
+                        'height'=>$height,
+                        'weight'=>$weight,
+                        'desired_position'=>$this->request->getPost('position'),
+                        'status'=>$status,
                         'remarks'=>'',
-                        'datecreated'=>date('Y-m-d')
+                        'file'=>$originalName,
+                        'datecreated'=>date('Y-m-d'),
+                        'agreement'=>$this->request->getPost('agreement')
                     ];
                 $model->save($data);
-                session()->setFlashdata("success","Great! Successfully submitted");
-                return redirect()->to('join')->withInput();
+                return $this->response->setJSON(['success'=>'Successfully submitted']);
             }
         }
     }
@@ -544,6 +582,12 @@ class User extends BaseController
                     'is_unique'=>'Name of team is already exist. Please try again'
                 ]
             ],
+            'sport'=>[
+                'rules'=>'required',
+                'errors'=>[
+                    'required'=>'Select sport'
+                ]
+            ],
             'category'=>[
                 'rules'=>'required',
                 'errors'=>[
@@ -598,12 +642,14 @@ class User extends BaseController
 
             $data = [
                     'team_name'=>$this->request->getPost('team_name'),
-                    'coach_name'=>session()->get('user_fullname'),
+                    'coordinator'=>session()->get('user_fullname'),
                     'user_id'=>session()->get('User'),
-                    'sportsID'=>$this->request->getPost('category'),
+                    'sportsID'=>$this->request->getPost('sport'),
+                    'category'=>$this->request->getPost('category'),
                     'school_barangay'=>$this->request->getPost('school_barangay'),
                     'image'=>$originalName,
                     'organization'=>$this->request->getPost('organization'),
+                    'remarks'=>'OPEN',
                     'status'=>0
                 ];
             $model->save($data);

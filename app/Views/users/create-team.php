@@ -37,17 +37,26 @@
                         </div>
                         <div class="col-lg-12">
                             <div class="row g-3">
-                                <div class="col-lg-4">
-                                    <label class="form-label">Sports Category</label>
-                                    <select name="category" class="form-select">
+                                <div class="col-lg-3">
+                                    <label class="form-label">Type of Sports</label>
+                                    <select name="sport" class="form-select">
                                         <option value="">Choose</option>
                                         <?php foreach($category as $row): ?>
                                         <option value="<?=$row['sportsID']?>"><?=$row['Name']?></option>
                                         <?php endforeach;?>
                                     </select>
+                                    <div id="sport-error" class="error-message text-danger text-sm"></div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <label class="form-label">Category</label>
+                                    <select name="category" class="form-select">
+                                        <option value="">Choose</option>
+                                        <option value="School">School/University</option>
+                                        <option value="Barangay">Barangay/Village</option>
+                                    </select>
                                     <div id="category-error" class="error-message text-danger text-sm"></div>
                                 </div>
-                                <div class="col-lg-8">
+                                <div class="col-lg-6">
                                     <label class="form-label">Name of Organization</label>
                                     <input type="text" class="form-control" name="organization"
                                         placeholder="Enter text here...">

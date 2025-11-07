@@ -79,7 +79,7 @@ $('#frmSubscribe').on('submit', function(e) {
         success: function(response) {
             if (response.success) {
                 alert(response.success);
-                location.href = '<?=site_url("/")?>';
+                location.href = '<?=site_url("/donate")?>';
                 // Optionally redirect or update UI
             } else {
                 alert('Error: ' + response);

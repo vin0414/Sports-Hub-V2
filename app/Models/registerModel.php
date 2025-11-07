@@ -12,8 +12,8 @@ class registerModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['application_type','user_id','fullname','email','phone','birth_date','address','status','remarks','datecreated'];
-
+    protected $allowedFields    = [
+        'application_type','user_id','fullname','email','phone','birth_date','address','height','weight','desired_position','status','remarks','file','datecreated','agreement'];
     // Dates
     protected $useTimestamps = false;
     protected $dateFormat    = 'datetime';
