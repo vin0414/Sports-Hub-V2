@@ -98,6 +98,11 @@
                                 <i class="ti ti-scoreboard"></i>&nbsp;Team Stats
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#tabs-staff-8" class="nav-link" data-bs-toggle="tab">
+                                <i class="ti ti-users"></i>&nbsp;Team Staff
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 <div class="card-body">
@@ -174,6 +179,46 @@
                                         <th>Points Scored</th>
                                     </thead>
                                     <tbody id="stats"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-staff-8">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="table6">
+                                    <thead>
+                                        <th>Complete Name</th>
+                                        <th>Position</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($staff as $row): ?>
+                                        <tr>
+                                            <td><?=$row['name']?></td>
+                                            <td><?=$row['position']?></td>
+                                            <td><?=$row['email']?></td>
+                                            <td><?=($row['status']) ? 'Active' :'Inactive' ?></td>
+                                            <td>
+                                                <button type="button" class="btn dropdown-toggle"
+                                                    data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                                                    role="button">
+                                                    <span>More</span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <button type="button" class="dropdown-item edit"
+                                                        value="<?=$row['staff_id']?>">
+                                                        <i class="ti ti-edit"></i>&nbsp;Edit Profile
+                                                    </button>
+                                                    <button type="button" class="dropdown-item send"
+                                                        value="<?=$row['staff_id']?>">
+                                                        <i class="ti ti-send"></i>&nbsp;Send Link
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach;?>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -319,6 +364,7 @@ let table1;
 let table2;
 let table4;
 let table5;
+let table6 = $('#table6').DataTable();
 
 function calculateAge(birthDateString) {
     const birthDate = new Date(birthDateString);

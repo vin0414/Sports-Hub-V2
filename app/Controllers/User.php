@@ -574,6 +574,7 @@ class User extends BaseController
     public function teamRegistration()
     {
         $model = new \App\Models\teamModel();
+        $staff = new \App\Models\staffModel();
         $validation = $this->validate([
             'team_name'=>[
                 'rules'=>'required|is_unique[teams.team_name]',
@@ -629,31 +630,71 @@ class User extends BaseController
         }
         else
         {
-            $file = $this->request->getFile('file');
-            $originalName = date('YmdHis').$file->getClientName();
-            // Define the target directory
-            $targetDir = 'assets/images/team/';
-            // Create the directory if it doesn't exist
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0755, true); // 0755 permissions, recursive creation
-            }
-            // Move the uploaded file
-            $file->move($targetDir, $originalName);
 
-            $data = [
-                    'team_name'=>$this->request->getPost('team_name'),
-                    'coordinator'=>session()->get('user_fullname'),
-                    'user_id'=>session()->get('User'),
-                    'sportsID'=>$this->request->getPost('sport'),
-                    'category'=>$this->request->getPost('category'),
-                    'school_barangay'=>$this->request->getPost('school_barangay'),
-                    'image'=>$originalName,
-                    'organization'=>$this->request->getPost('organization'),
-                    'remarks'=>'OPEN',
-                    'status'=>0
-                ];
-            $model->save($data);
-            return $this->response->SetJSON(['success'=>'Successfully submitted']);
+            $name = array_map('strip_tags', $this->request->getPost('name'));
+            $email = array_map('strip_tags', $this->request->getPost('email'));
+            $position = array_map('strip_tags', $this->request->getPost('position'));
+            $errors = [];
+
+            for ($i = 0; $i < count($name); $i++) {
+                if (empty($name[$i])) {
+                    $errors["name_$i"] = "Staff name is required.";
+                }
+                if (empty($email[$i])) {
+                    $errors["email_$i"] = "Staff email is required.";
+                } elseif (!filter_var($email[$i], FILTER_VALIDATE_EMAIL)) {
+                    $errors["email_$i"] = "Staff email is invalid.";
+                }
+                if (empty($position[$i])) {
+                    $errors["position_$i"] = "Staff position is required.";
+                }
+            }
+            if(!empty($errors))
+            {
+                return $this->response->setJSON(['error'=>$errors]);
+            }
+            else
+            {
+                $file = $this->request->getFile('file');
+                $originalName = date('YmdHis').$file->getClientName();
+                // Define the target directory
+                $targetDir = 'assets/images/team/';
+                // Create the directory if it doesn't exist
+                if (!is_dir($targetDir)) {
+                    mkdir($targetDir, 0755, true); // 0755 permissions, recursive creation
+                }
+                // Move the uploaded file
+                $file->move($targetDir, $originalName);
+                $data = [
+                        'team_name'=>$this->request->getPost('team_name'),
+                        'coordinator'=>session()->get('user_fullname'),
+                        'user_id'=>session()->get('User'),
+                        'sportsID'=>$this->request->getPost('sport'),
+                        'category'=>$this->request->getPost('category'),
+                        'school_barangay'=>$this->request->getPost('school_barangay'),
+                        'image'=>$originalName,
+                        'organization'=>$this->request->getPost('organization'),
+                        'remarks'=>'OPEN',
+                        'status'=>0
+                    ];
+                $model->save($data);
+                $team_id = $model->insertID();
+                //save the staff info
+                for ($i = 0; $i < count($name); $i++) 
+                {
+                    $data = [
+                        'team_id'=>$team_id,
+                        'name'=>$name[$i],
+                        'position'=>$position[$i],
+                        'email'=>$email[$i],
+                        'status'=>1,
+                        'user_id'=>session()->get('User')
+                    ];
+                    $staff->save($data);
+                }
+                
+                return $this->response->SetJSON(['success'=>'Successfully submitted']);
+            }
         }
     }
 
@@ -662,7 +703,10 @@ class User extends BaseController
         $data['title']="My Team";
         //load the team data
         $model = new \App\Models\teamModel();
-        $data['team']=$model->where('team_name',$id)->first();
+        $team=$model->where('team_name',$id)->first();
+        $data['team'] = $team;
+        $staff = new \App\Models\staffModel();
+        $data['staff'] = $staff->where('team_id',$team['team_id'])->findAll();
         return view('users/my-team',$data);
     }
 

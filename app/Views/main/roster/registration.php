@@ -46,55 +46,49 @@
                     <div class="card-body">
                         <div class="tab-content">
                             <div class="tab-pane fade active show" id="tabs-pending-8">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" id="table1">
-                                        <thead>
-                                            <th>#</th>
-                                            <th>Complete Name</th>
-                                            <th>Email</th>
-                                            <th>Account Type</th>
-                                            <th>Contact #</th>
-                                            <th>Address</th>
-                                            <th>File</th>
-                                            <th>Action</th>
-                                        </thead>
-                                        <tbody id="pending">
+                                <table class="table table-bordered table-striped" id="table1">
+                                    <thead>
+                                        <th>#</th>
+                                        <th>Complete Name</th>
+                                        <th>Email</th>
+                                        <th>Account Type</th>
+                                        <th>Contact #</th>
+                                        <th>Address</th>
+                                        <th>File</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody id="pending">
 
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="tab-pane fade" id="tabs-approved-8">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" id="table2">
-                                        <thead>
-                                            <th>Complete Name</th>
-                                            <th>Email</th>
-                                            <th>Account Type</th>
-                                            <th>Contact #</th>
-                                            <th>Files</th>
-                                        </thead>
-                                        <tbody id="approve">
+                                <table class="table table-bordered table-striped" id="table2">
+                                    <thead>
+                                        <th>Complete Name</th>
+                                        <th>Email</th>
+                                        <th>Account Type</th>
+                                        <th>Contact #</th>
+                                        <th>Files</th>
+                                    </thead>
+                                    <tbody id="approve">
 
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="tab-pane fade" id="tabs-new-8">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped" id="table3">
-                                        <thead>
-                                            <th>Name of Team</th>
-                                            <th>Organization</th>
-                                            <th>School/Barangay</th>
-                                            <th>Coach</th>
-                                            <th>Action</th>
-                                        </thead>
-                                        <tbody id="team">
+                                <table class="table table-bordered table-striped" id="table3">
+                                    <thead>
+                                        <th>Name of Team</th>
+                                        <th>Organization</th>
+                                        <th>School/Barangay</th>
+                                        <th>Owner</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <tbody id="team">
 
-                                        </tbody>
-                                    </table>
-                                </div>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -214,9 +208,18 @@ function team() {
             <td>${item.team_name}</td>
             <td>${item.organization}</td>
             <td>${item.school_barangay}</td>
-            <td>${item.coach_name}</td>
+            <td>${item.coordinator}</td>
             <td>
-                <button type="button" class="btn btn-primary approveTeam" value="${item.team_id}">Accept</button>
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                    role="button">
+                    <span>Action</span>
+                </button>
+                <div class="dropdown-menu">
+                    <button type="button" class="dropdown-item viewTeam" value="${item.team_id}"><i class="ti ti-search"></i>&nbsp;View</button>
+                    <button type="button" class="dropdown-item approveTeam" value="${item.team_id}"><i class="ti ti-check"></i>&nbsp;Accept</button>
+                    <button type="button" class="dropdown-item rejectTeam" value="${item.team_id}"><i class="ti ti-trash"></i>&nbsp;Reject</button>
+                </div>
             </td>
         `;
                 tbody.appendChild(row);
@@ -292,7 +295,7 @@ function pending() {
                 <div class="dropdown-menu">
                     <button type="button" class="dropdown-item approve" value="${item.register_id}"><i class="ti ti-check"></i>&nbsp;Accept</button>
                     <button type="button" class="dropdown-item reject" value="${item.register_id}"><i class="ti ti-trash"></i>&nbsp;Reject</button>
-                </div
+                </div>
             </td>
         `;
                 tbody.appendChild(row);

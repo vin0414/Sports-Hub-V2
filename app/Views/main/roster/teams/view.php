@@ -80,8 +80,8 @@
                                                 <p class="form-control"><?=$team['organization']?></p>
                                             </div>
                                             <div class="col-lg-6">
-                                                <label class="form-label">Coach</label>
-                                                <p class="form-control"><?=$team['coach_name']?></p>
+                                                <label class="form-label">Owner</label>
+                                                <p class="form-control"><?=$team['coordinator']?></p>
                                             </div>
                                         </div>
                                     </div>
