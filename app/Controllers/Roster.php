@@ -67,6 +67,22 @@ class Roster extends BaseController
         }
     }
 
+    public function teamReject()
+    {
+       $val = $this->request->getPost('value');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {   
+            $teamModel = new teamModel();
+            $data = ['status'=>2];
+            $teamModel->update($val,$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
     public function confirmation()
     {
         $val = $this->request->getPost('value');
@@ -129,8 +145,8 @@ class Roster extends BaseController
                     'jersey_num'=>0,
                     'gender'=>'Male',
                     'email'=>session()->get('user_email'),
-                    'height'=>0,
-                    'weight'=>0,
+                    'height'=>$register['height'],
+                    'weight'=>$register['weight'],
                     'address'=>$register['address'],
                     'image'=>'',
                     'status'=>0

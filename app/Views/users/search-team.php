@@ -24,15 +24,30 @@
             <div class="row g-3">
                 <div class="col-lg-3">
                     <form method="GET" autocomplete="off" novalidate class="sticky-top">
-                        <div class="form-label">Sports Category</div>
-                        <?php foreach($category as $row): ?>
-                        <label class="form-check mb-3">
-                            <input type="checkbox" class="form-check-input" name="category[]"
-                                value="<?=$row['sportsID']?>"
-                                <?= (isset($_GET['category']) && in_array($row['sportsID'], $_GET['category'])) ? 'checked' : '' ?> />
-                            <span class="form-check-label"><?=$row['Name']?></span>
-                        </label>
-                        <?php endforeach;?>
+                        <div class="mb-3">
+                            <select class="form-select" name="organization">
+                                <option value="">Choose</option>
+                                <option value="School"
+                                    <?= (!empty($_GET['organization']) && $_GET['organization'] == "School") ? 'selected' : '' ?>>
+                                    School/University
+                                </option>
+                                <option value="Barangay"
+                                    <?= (!empty($_GET['organization']) && $_GET['organization'] == "Barangay") ? 'selected' : '' ?>>
+                                    Barangay/Village
+                                </option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-label">Sports Category</div>
+                            <?php foreach($category as $row): ?>
+                            <label class="form-check mb-3">
+                                <input type="checkbox" class="form-check-input" name="category[]"
+                                    value="<?=$row['sportsID']?>"
+                                    <?= (!empty($_GET['category']) && in_array($row['sportsID'], $_GET['category'])) ? 'checked' : '' ?> />
+                                <span class="form-check-label"><?=$row['Name']?></span>
+                            </label>
+                            <?php endforeach;?>
+                        </div>
                         <div class="mb-2">
                             <button type="submit" class="btn btn-primary form-control">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -312,12 +327,12 @@
                                     </div>
                                     <div class="d-flex">
                                         <?php
+                                        if($list['remarks']=="OPEN"){
                                         $playerModel = new \App\Models\playerModel();
                                         $player = $playerModel->where('user_id',session()->get('User'))
                                                               ->where('team_id',$list['team_id'])
                                                               ->first();
-                                        if(empty($player)):
-                                        ?>
+                                        if(empty($player)): ?>
                                         <button type="button" value="<?=$list['team_id']?>" class="btn card-btn join">
                                             <i class="ti ti-circle-plus"></i>&nbsp;Join
                                         </button>
@@ -326,6 +341,7 @@
                                             <?=$player['status'] ? '<i class="ti ti-circle-check"></i>&nbsp;Joined' :'<i class="ti ti-clock"></i>&nbsp;Pending'?>
                                         </a>
                                         <?php endif; ?>
+                                        <?php } ?>
                                         <button type="button" value="<?=$list['team_id']?>" class="btn card-btn view">
                                             <i class="ti ti-zoom-scan"></i>&nbsp;View
                                         </button>

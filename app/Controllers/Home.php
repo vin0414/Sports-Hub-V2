@@ -82,9 +82,11 @@ class Home extends BaseController
         $subscribe = $subscribeModel->where('user_id',session()->get('User'))->first() ?? '';
         //schedules
         $schedules = $this->db->table('players as a')->select('b.*')
-                    ->join('schedules as b','b.team_id=a.team_id','LEFT')
+                    ->join('schedules as b','b.team_id=a.team_id','INNER')
                     ->where('a.user_id',session()->get('User'))
-                    ->groupBy('b.schedule_id')->orderBy('b.schedule_id','DESC')->get()->getResult();
+                    ->groupBy('b.schedule_id')
+                    ->orderBy('b.schedule_id','DESC')
+                    ->get()->getResult();
 
         $data = [
             'title'=>$title,'recent'=>$recent,'feed'=>$feed,
@@ -622,6 +624,9 @@ class Home extends BaseController
             }
             $data['title'] = $team['team_name'];
             $data['team']=$team;
+            //staff
+            $staff = new \App\Models\staffModel();
+            $data['staff'] = $staff->where('team_id',$team['team_id'])->findAll();
             //players
             $playerModel = new \App\Models\playerModel();
             $player = $playerModel->where('team_id',$id)->where('status',1)->findAll();

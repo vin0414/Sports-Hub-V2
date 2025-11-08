@@ -436,13 +436,17 @@ class User extends BaseController
         $data['category']=$model->findAll();
         //team
         $cat = $this->request->getGet('category');
+        $org= $this->request->getGet('organization');
         $team = new \App\Models\teamModel();
         $page = (int) ($this->request->getGet('page') ?? 1);
         $perPage = 6;
 
-        // Build query
-        if ($cat) {
-            if ($cat) $team->whereIn('sportsID', (array)$cat);
+        if ($org) {
+            $team->where('category', $org);
+            if ($cat) 
+            {
+                $team->whereIn('sportsID', (array)$cat);   
+            }
         }
         $team->where('status', 1)->orderBy('team_id', 'DESC');
         $list = $team->paginate($perPage, 'default', $page);
@@ -480,7 +484,7 @@ class User extends BaseController
                                 <div class="col-lg-12">Team : '.$team['team_name'].'</div>
                                 <div class="col-lg-12">School/University/Brgy : '.$team['school_barangay'].'</div>
                                 <div class="col-lg-12">Organization : '.$team['organization'].'</div>
-                                <div class="col-lg-12 mb-1">Coach : '.$team['coach_name'].'</div>
+                                <div class="col-lg-12 mb-1">Account : '.$team['coordinator'].'</div>
                                 <div class="col-lg-12">
                                     <div class="row g-3">
                                         <div class="col-lg-4">

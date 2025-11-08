@@ -79,7 +79,7 @@
                     <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                     <path d="M21 21l-6 -6" />
                 </svg>
-                No Tryout Games
+                No Tryout/Practice Games
             </div>
         </div>
         <?php else : ?>
@@ -87,15 +87,14 @@
         <div class="list-group-item">
             <div class="row align-items-center">
                 <div class="col-auto">
-                    <a href="<?=site_url('training/')?><?=$row->schedule_id?>">
+                    <a href="javascript:void(0);">
                         <span class="avatar avatar-1"
                             style="background-image: url(<?=base_url('assets/images/tryout.png')?>)">
                         </span>
                     </a>
                 </div>
                 <div class="col text-truncate">
-                    <a href="<?=site_url('training/')?><?=$row->schedule_id?>"
-                        class="text-reset d-block"><?=$row->location?></a>
+                    <a href="javascript:void(0);" class="text-reset d-block"><?=$row->location?></a>
                     <div class="d-block text-secondary text-truncate mt-n1">
                         <?=$row->date?> | <?=$row->time?>
                     </div>

@@ -159,7 +159,8 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('roster/team','Roster::fetchTeam');
     $routes->post('roster/confirmation','Roster::confirmation');
     $routes->post('roster/reject','Roster::reject');
-    $routes->post('roster/verify','Roster::teamVerify');
+    $routes->post('roster/team/accept','Roster::teamVerify');
+    $routes->post('roster/team/reject','Roster::teamReject');
     //videos
     $routes->get('videos','Home::videos');
     $routes->get('videos/upload','Home::uploadVideo');

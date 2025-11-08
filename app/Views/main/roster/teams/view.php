@@ -63,9 +63,18 @@
                                                 <img src="<?=site_url('assets/images/team/')?><?=$team['image']?>"
                                                     style="width:50px;border:1px solid #000000;border-radius:10px 10px;" />
                                             </div>
-                                            <div class="col-lg-11">
+                                            <div class="col-lg-6">
                                                 <div><?=$team['team_name']?></div>
                                                 <small><?=$sports['Name']?></small>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="row g-1">
+                                                    <?php foreach($staff as $row):?>
+                                                    <div class="col-lg-12">
+                                                        <?=$row['position']?> : <?=$row['name']?>
+                                                    </div>
+                                                    <?php endforeach;?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

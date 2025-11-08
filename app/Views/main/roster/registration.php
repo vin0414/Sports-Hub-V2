@@ -166,7 +166,7 @@ $(document).on('click', '.approve', function() {
 $(document).on('click', '.approveTeam', function() {
     Swal.fire({
         title: 'Are you sure?',
-        text: "Do you want to continue?",
+        text: "Do you want to approve this team to join?",
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Continue',
@@ -175,7 +175,36 @@ $(document).on('click', '.approveTeam', function() {
         if (result.isConfirmed) {
             const value = $(this).val();
             $.ajax({
-                url: "/roster/verify",
+                url: "/roster/team/accept",
+                method: "POST",
+                data: {
+                    value: value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        team();
+                    } else {
+                        alert(response);
+                    }
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.rejectTeam', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to reject this team to join?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const value = $(this).val();
+            $.ajax({
+                url: "/roster/team/reject",
                 method: "POST",
                 data: {
                     value: value
@@ -216,7 +245,7 @@ function team() {
                     <span>Action</span>
                 </button>
                 <div class="dropdown-menu">
-                    <button type="button" class="dropdown-item viewTeam" value="${item.team_id}"><i class="ti ti-search"></i>&nbsp;View</button>
+                    <a class="dropdown-item" href="<?=base_url('roster/teams/view/')?>${item.team_id}"><i class="ti ti-search"></i>&nbsp;View</a>
                     <button type="button" class="dropdown-item approveTeam" value="${item.team_id}"><i class="ti ti-check"></i>&nbsp;Accept</button>
                     <button type="button" class="dropdown-item rejectTeam" value="${item.team_id}"><i class="ti ti-trash"></i>&nbsp;Reject</button>
                 </div>
