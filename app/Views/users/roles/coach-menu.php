@@ -50,7 +50,8 @@
                     <a href="<?=site_url('my-team/')?><?=$row['team_name']?>"
                         class="text-reset d-block"><?=$row['team_name']?></a>
                     <div class="d-block text-secondary text-truncate mt-n1">
-                        <?=$row['school_barangay']?>
+                        <?=$row['school_barangay']?><br />
+                        <?=($row['status']) ? '<small class="badge bg-success text-white">ACTIVE</small>' : '<small class="badge bg-warning text-white">PENDING</small>'?>
                     </div>
                 </div>
             </div>

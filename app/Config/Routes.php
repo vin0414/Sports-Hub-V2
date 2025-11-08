@@ -42,6 +42,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('view-team-info','User::teamInfo');
     $routes->get('create-a-team','User::createTeam');
     $routes->get('my-team/(:any)','User::myTeam/$1');
+    $routes->get('players/add','User::addPlayers');
     $routes->get('me/(:any)','User::me/$1');
     $routes->get('profile/edit/(:any)','User::meEdit/$1');
     $routes->get('roster/player-list','Roster::playerList');

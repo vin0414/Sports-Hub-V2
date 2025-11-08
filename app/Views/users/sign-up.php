@@ -68,7 +68,7 @@
                                             <span class="input-group-text">
                                                 <a href="javascript:void(0);" onclick="toggle()" class="link-secondary"
                                                     title="Show password" data-bs-toggle="tooltip">
-                                                    <i id="icons" class="ti ti-eye-closed"></i>
+                                                    <i id="icon" class="ti ti-eye-closed"></i>
                                                 </a>
                                             </span>
                                         </div>

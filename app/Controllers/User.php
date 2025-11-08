@@ -46,11 +46,38 @@ class User extends BaseController
     {
         $validation = $this->validate([
             'csrf_sports'=>'required',
-            'name'=>'required|is_unique[users.Fullname]',
-            'email'=>'required|valid_email|is_unique[users.Email]',
-            'password'=>'required|min_length[8]|max_length[16]|regex_match[/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W]).+$/]',
-            'confirm_password'=>'required|matches[password]',
-            'agreement'=>'required'
+            'name'=>[
+                'rules'=>'required|is_unique[users.Fullname]',
+                'errors'=>[
+                    'required'=>'Fullname is required',
+                    'is_unique'=>'Fullname is already taken. Please use different name'
+                ]
+            ],
+            'email'=>[
+                'rules'=>'required|valid_email|is_unique[users.Email]',
+                'errors'=>[
+                    'required'=>'Email is required',
+                    'valid_email'=>'Email is invalid',
+                    'is_unique'=>'Email is already registered. Please use different email',
+                ]
+            ],
+            'password'=>[
+                'rules' => 'required|min_length[8]|max_length[16]|regex_match[/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W]).+$/]',
+                'errors' => [
+                    'required' => 'Password is required.',
+                    'min_length' => 'Password must be at least 8 characters long.',
+                    'max_length' => 'Password must not exceed 16 characters.',
+                    'regex_match' => 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+                ],
+            ],
+            'confirm_password'=>[
+                'rules' => 'required|matches[password]',
+                'errors' => [
+                    'required' => 'Confirm Password is required.',
+                    'matches' => 'Passwords do not match.',
+                ],
+            ],
+            'agreement'=>['rules'=>'required','errors'=>['required'=>'You must agree with the terms and conditions upon registration']]
         ]);
         if(!$validation)
         {
@@ -108,8 +135,23 @@ class User extends BaseController
     {
         $validation = $this->validate([
             'csrf_sports'=>'required',
-            'email'=>'required|valid_email|is_not_unique[users.Email]',
-            'password'=>'required|min_length[8]|max_length[16]|regex_match[/[A-Z]/]|regex_match[/[a-z]/]|regex_match[/[0-9]/]'
+            'email'=>[
+                'rules'=>'required|valid_email|is_not_unique[users.Email]',
+                'errors'=>[
+                    'required'=>'Email is required',
+                    'valid_email'=>'Email is invalid',
+                    'is_not_unique'=>'Email is not registered',
+                ]
+            ],
+            'password'=>[
+                'rules' => 'required|min_length[8]|max_length[16]|regex_match[/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W]).+$/]',
+                'errors' => [
+                    'required' => 'Current Password is required.',
+                    'min_length' => 'Password must be at least 8 characters long.',
+                    'max_length' => 'Password must not exceed 16 characters.',
+                    'regex_match' => 'Password must include at least one uppercase letter, one lowercase letter, one digit, and one special character.',
+                ],
+            ]
         ]);
 
         if(!$validation)
@@ -709,9 +751,18 @@ class User extends BaseController
         $model = new \App\Models\teamModel();
         $team=$model->where('team_name',$id)->first();
         $data['team'] = $team;
+        //get sports
+        $sportsModel = new \App\Models\sportsModel();
+        $data['sportsCategory']= $sportsModel->where('sportsID',$team['sportsID'])->first();
         $staff = new \App\Models\staffModel();
         $data['staff'] = $staff->where('team_id',$team['team_id'])->findAll();
         return view('users/my-team',$data);
+    }
+
+    public function addPlayers()
+    {
+        $data['title']="Add Players";
+        return view('users/add-players',$data);
     }
 
     public function editPlayer($id)

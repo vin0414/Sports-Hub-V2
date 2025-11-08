@@ -258,7 +258,7 @@ $('#frmCreate').on('submit', function(e) {
                     // Action based on user's choice
                     if (result.isConfirmed) {
                         // Perform some action when "Yes" is clicked
-                        location.reload();
+                        location.href = "/";
                     }
                 });
             } else {

@@ -17,8 +17,9 @@
                             <path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
                             <path d="M3 13v-1a2 2 0 0 1 2 -2h2" />
                         </svg>
-                        <?=$team['team_name']?>
+                        <?=$team['team_name']?><br />
                     </h2>
+                    <small>Sports Category : <?=$sportsCategory['Name']?></small>
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
@@ -54,10 +55,12 @@
                             OPEN
                         </button>
                         <?php endif;?>
+                        <a href="<?=site_url('players/add')?>" class="btn btn-default"><i
+                                class="ti ti-user-plus"></i>&nbsp;Add</a>
                         <a href="javascript:void(0);" class="btn btn-primary d-none d-sm-inline-block"
                             data-bs-toggle="modal" data-bs-target="#modal-large">
                             <i class="ti ti-calendar-plus"></i>
-                            Create Schedule
+                            Create
                         </a>
                         <a href="javascript:void(0);" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal"
                             data-bs-target="#modal-large" aria-label="Create Schedule">
@@ -133,6 +136,7 @@
                                         <th>Contact #</th>
                                         <th>Age</th>
                                         <th>Address</th>
+                                        <th>Files</th>
                                         <th>Action</th>
                                     </thead>
                                     <tbody id="list"></tbody>
@@ -493,6 +497,12 @@ $(document).ready(function() {
             },
             {
                 data: 'address'
+            },
+            {
+                data: 'file',
+                render: function(file) {
+                    return `<a href="<?=base_url('assets/files/')?>${file}">${file}</a>`;
+                }
             },
             {
                 data: 'player_id',

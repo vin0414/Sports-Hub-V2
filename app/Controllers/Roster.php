@@ -280,7 +280,7 @@ class Roster extends BaseController
         else
         {   
             $model = new playerModel();
-            $data = ['status'=>2];
+            $data = ['team_id'=>0,'status'=>2];
             $model->update($val,$data);
             return response()->setJSON(['success'=>'Successfully updated']);
         }
@@ -291,7 +291,7 @@ class Roster extends BaseController
         $val = $this->request->getGet('teamId');
         //get the list of players
         $data = $this->db->table('players as a')
-                ->select('a.player_id,b.fullname,b.email,b.phone,b.birth_date,b.address')
+                ->select('a.player_id,b.fullname,b.email,b.phone,b.birth_date,b.address,b.file')
                 ->join('registration as b','b.user_id=a.user_id')
                 ->where('a.team_id',$val)
                 ->where('a.status',0);
