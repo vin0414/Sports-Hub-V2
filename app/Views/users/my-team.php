@@ -399,9 +399,9 @@ $(document).ready(function() {
                 data: 'image',
                 render: function(image) {
                     if (image) {
-                        return `<img src="/assets/images/players/${image}" alt="Player Image" width="50" height="50" style="object-fit:cover; border-radius:50%;">`;
+                        return `<img src="/assets/images/players/${image}" alt="Player Image" width="50" height="50" style="object-fit:cover;">`;
                     } else {
-                        return `<img src="/assets/images/players/default.png" alt="Default Image" width="50" height="50" style="object-fit:cover; border-radius:50%;">`;
+                        return `<img src="/assets/images/players/default.png" alt="Default Image" width="50" height="50" style="object-fit:cover;">`;
                     }
                 }
             },
@@ -496,12 +496,30 @@ $(document).ready(function() {
             },
             {
                 data: 'player_id',
-                render: function(id) {
-                    return `
-                        <button type="button" class="btn btn-primary recruite" value="${id}">
-                            <i class='ti ti-circle-check'></i>&nbsp;Recruite
+                render: function(data, type, row) {
+                    const id = row.player_id;
+
+                    let dropdown = `
+                        <button type="button" class="btn dropdown-toggle"
+                            data-bs-toggle="dropdown" data-bs-auto-close="outside"
+                            role="button">
+                            <span>Action</span>
                         </button>
                     `;
+
+                    dropdown += `
+                            <div class="dropdown-menu">
+                                <button type="button" value="${id}" class="dropdown-item recruite">
+                                    <i class="ti ti-user-check"></i>&nbsp;Recruite
+                                </button>
+                                <button type="button" value="${id}" class="dropdown-item decline">
+                                    <i class="ti ti-user-cancel"></i>&nbsp;Decline
+                                </button>
+                            </div>
+                        `;
+
+                    return dropdown;
+
                 }
             }
         ]
@@ -825,6 +843,154 @@ $(document).on('click', '.recruite', function() {
                         Swal.fire(
                             'Error!',
                             'Failed to recruite the player.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.decline', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to decline this player to join!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, decline it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('roster/decline')?>',
+                method: 'POST',
+                data: {
+                    player_id: playerId,
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Declined!',
+                            'Player has been declined.',
+                            'success'
+                        );
+                        table2.ajax.reload();
+                        table1.ajax.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to recruite the player.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.open', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to open this team for recruitment!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('roster/recruitment/open')?>',
+                method: 'POST',
+                data: {
+                    team: $(this).val()
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Great!',
+                            'Successfully Open for recruitment',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to open this team.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.close', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to close this team for recruitment!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('roster/recruitment/close')?>',
+                method: 'POST',
+                data: {
+                    team: $(this).val()
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Great!',
+                            'Successfully Close for recruitment',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to close this team.',
                             'error'
                         );
                     }

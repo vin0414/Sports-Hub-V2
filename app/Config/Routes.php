@@ -68,6 +68,9 @@ $routes->post('roster/players/edit','Roster::editPlayerInfo');
 $routes->post('roster/players/edit-profile','Roster::editProfileInfo');
 $routes->post('roster/withdraw','Roster::withdrawRequest');
 $routes->post('roster/recruite','Roster::recruitePlayer');
+$routes->post('roster/decline','Roster::declinePlayer');
+$routes->post('roster/recruitment/open','Roster::openRecruitment');
+$routes->post('roster/recruitment/close','Roster::closeRecruitment');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

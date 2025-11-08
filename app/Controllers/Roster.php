@@ -133,6 +133,7 @@ class Roster extends BaseController
             $team = $teamModel->where('team_id',$val)->first();
             //check if the user already joined a team
             $checkUser = $model->where('user_id',session()->get('User'))
+                                        ->where('team_id !=',0)
                                         ->where('sportsID',$team['sportsID'])->first();
             if(empty($checkUser))
             {
@@ -215,7 +216,7 @@ class Roster extends BaseController
                     //generate a random name
                     $newName = $imagefile->getRandomName();
                     //move the file to the designated folder
-                    $imagefile->move(ROOTPATH.'assets/images/players/',$newName);
+                    $imagefile->move('assets/images/players/',$newName);
                     //add the image name to the data array
                     $data['image'] = $newName;
                 }
@@ -259,7 +260,7 @@ class Roster extends BaseController
                     //generate a random name
                     $newName = $imagefile->getRandomName();
                     //move the file to the designated folder
-                    $imagefile->move(ROOTPATH.'assets/images/players/',$newName);
+                    $imagefile->move('assets/images/players/',$newName);
                     //add the image name to the data array
                     $data['image'] = $newName;
                 }
@@ -309,6 +310,22 @@ class Roster extends BaseController
         {   
             $model = new playerModel();
             $data = ['status'=>1];
+            $model->update($val,$data);
+            return response()->setJSON(['success'=>'Successfully updated']);
+        }
+    }
+
+    public function declinePlayer()
+    {
+        $val = $this->request->getPost('player_id');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {   
+            $model = new playerModel();
+            $data = ['team_id'=>0,'status'=>0];
             $model->update($val,$data);
             return response()->setJSON(['success'=>'Successfully updated']);
         }
@@ -690,5 +707,23 @@ class Roster extends BaseController
             $performance->save($data);
             return $this->response->setJSON(['success'=>'Successfully added']);
         }
+    }
+
+    public function openRecruitment()
+    {
+        $teamModel = new teamModel();
+        $val = $this->request->getPost('team');
+        $data = ['remarks'=>'OPEN'];
+        $teamModel->update($val,$data);
+        return $this->response->setJSON(['success'=>'Successfully updated']);
+    }
+
+    public function closeRecruitment()
+    {
+        $teamModel = new teamModel();
+        $val = $this->request->getPost('team');
+        $data = ['remarks'=>'CLOSE'];
+        $teamModel->update($val,$data);
+        return $this->response->setJSON(['success'=>'Successfully updated']);
     }
 }
