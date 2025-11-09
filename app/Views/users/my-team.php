@@ -55,7 +55,7 @@
                             OPEN
                         </button>
                         <?php endif;?>
-                        <a href="<?=site_url('players/add')?>" class="btn btn-default"><i
+                        <a href="<?=site_url('players/add/')?><?=$team['team_id']?>" class="btn btn-default"><i
                                 class="ti ti-user-plus"></i>&nbsp;Add</a>
                         <a href="javascript:void(0);" class="btn btn-primary d-none d-sm-inline-block"
                             data-bs-toggle="modal" data-bs-target="#modal-large">

@@ -42,7 +42,7 @@ $routes->group('',['filter'=>'UserCheck'],function($routes)
     $routes->get('view-team-info','User::teamInfo');
     $routes->get('create-a-team','User::createTeam');
     $routes->get('my-team/(:any)','User::myTeam/$1');
-    $routes->get('players/add','User::addPlayers');
+    $routes->get('players/add/(:any)','User::addPlayers/$1');
     $routes->get('me/(:any)','User::me/$1');
     $routes->get('profile/edit/(:any)','User::meEdit/$1');
     $routes->get('roster/player-list','Roster::playerList');
@@ -72,6 +72,7 @@ $routes->post('roster/recruite','Roster::recruitePlayer');
 $routes->post('roster/decline','Roster::declinePlayer');
 $routes->post('roster/recruitment/open','Roster::openRecruitment');
 $routes->post('roster/recruitment/close','Roster::closeRecruitment');
+$routes->post('roster/players/save','Roster::savePlayers');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

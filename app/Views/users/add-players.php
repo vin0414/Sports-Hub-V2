@@ -48,32 +48,64 @@
     </div>
     <div class="page-body">
         <div class="container-xl">
-            <form method="POST" class="row g-3" id="frmPlayer">
+            <form method="POST" class="row g-1" id="frmPlayer">
                 <?=csrf_field()?>
+                <input type="hidden" name="team" value="<?=$team['team_id']?>">
+                <input type="hidden" name="sports" value="<?=$team['sportsID']?>">
                 <div class="col-lg-12">
                     <div id="staff-container">
                         <div class="staff-form card card-body mb-3" data-index="0">
                             <div class="row g-3">
                                 <div class="col-lg-12">
-                                    <label class="form-label" for="name_0">Complete Name</label>
-                                    <input type="text" name="name[]" id="name_0" class="form-control" />
-                                    <div id="name_0-error" class="error-message text-danger text-sm">
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
                                     <div class="row g-3">
+                                        <div class="col-lg-6">
+                                            <label class="form-label" for="name_0">Complete Name</label>
+                                            <input type="text" name="name[]" id="name_0" class="form-control" />
+                                            <div id="name_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
                                         <div class="col-lg-6">
                                             <label class="form-label" for="email_0">Email</label>
                                             <input type="text" name="email[]" id="email_0" class="form-control" />
                                             <div id="email_0-error" class="error-message text-danger text-sm">
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <label class="form-label" for="position_0">Position/Designation</label>
-                                            <input type="text" name="position[]" id="position_0" class="form-control" />
-                                            <div id="position_0-error" class="error-message text-danger text-sm">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="row g-3">
+                                        <div class="col-lg-3">
+                                            <label class="form-label" for="phone_0">Contact No</label>
+                                            <input type="text" name="phone[]" id="phone_0" minlength="11" maxlength="11"
+                                                class="form-control" />
+                                            <div id="phone_0-error" class="error-message text-danger text-sm">
                                             </div>
                                         </div>
+                                        <div class="col-lg-3">
+                                            <label class="form-label" for="birth_date_0">Date of Birth</label>
+                                            <input type="date" name="birth_date[]" id="birth_date_0"
+                                                class="form-control" />
+                                            <div id="birth_date_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="form-label" for="height_0">Height</label>
+                                            <input type="number" name="height[]" id="height_0" class="form-control" />
+                                            <div id="height_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <label class="form-label" for="weight_0">Weight</label>
+                                            <input type="number" name="weight[]" id="weight_0" class="form-control" />
+                                            <div id="weight_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <label class="form-label" for="address_0">Address</label>
+                                    <textarea name="address[]" id="address_0" class="form-control"></textarea>
+                                    <div id="address_0-error" class="error-message text-danger text-sm">
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -92,6 +124,11 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-12">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="ti ti-device-floppy"></i>&nbsp;Save Data
+                    </button>
                 </div>
             </form>
         </div>
@@ -175,5 +212,44 @@ function removeStaff(button) {
         });
     }
 }
+
+$('#frmPlayer').on('submit', function(e) {
+    e.preventDefault();
+    $('.error-message').html('');
+    let data = $(this).serialize();
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: "<?=site_url('roster/players/save')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.success) {
+                $('#frmPlayer')[0].reset();
+                Swal.fire({
+                    title: 'Great!',
+                    text: "Successfully submitted",
+                    icon: 'success',
+                    confirmButtonText: 'Continue'
+                }).then((result) => {
+                    // Action based on user's choice
+                    if (result.isConfirmed) {
+                        // Perform some action when "Yes" is clicked
+                        history.back();
+                    }
+                });
+            } else {
+                var errors = response.errors;
+                // Iterate over each error and display it under the corresponding input field
+                for (var field in errors) {
+                    $('#' + field + '-error').html('<p>' + errors[field] +
+                        '</p>'); // Show the first error message
+                    $('#' + field).addClass(
+                        'text-danger'); // Highlight the input field with an error
+                }
+            }
+        }
+    });
+});
 </script>
 <?= view('main/templates/closing')?>

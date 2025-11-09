@@ -782,8 +782,15 @@ class User extends BaseController
         return view('users/my-team',$data);
     }
 
-    public function addPlayers()
+    public function addPlayers($id)
     {
+        $model = new \App\Models\teamModel();
+        $team=$model->where('team_id',$id)->first();
+        if(empty($team))
+        {
+            return redirect()->back();
+        }
+        $data['team'] = $team;
         $data['title']="Add Players";
         return view('users/add-players',$data);
     }

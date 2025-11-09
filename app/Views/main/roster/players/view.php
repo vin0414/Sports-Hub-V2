@@ -34,7 +34,7 @@
         <!-- END PAGE HEADER -->
         <div class="page-body">
             <div class="container-xl">
-                <div class="row g-3">
+                <div class="row row-deck mb-3">
                     <div class="col-lg-3">
                         <div class="card">
                             <div class="card-body">
@@ -95,9 +95,12 @@
                         </div>
                     </div>
                     <div class="col-lg-5">
-                        <center>
-                            <img src="<?=site_url('assets/images/players/')?><?=$player['image']?>" alt="profile">
-                        </center>
+                        <div class="card">
+                            <div class="card-body">
+                                <img src="<?=site_url('assets/images/players/')?><?=($player['image']) ? $player['image']: 'default.png' ?>"
+                                    alt="profile">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="card">

@@ -127,15 +127,15 @@
                                                             $roleModel = new \App\Models\roleModel();
                                                             $role = $roleModel->where('roleID',$row['roleID'])->first();
                                                             //name
-                                                            $userModel = new \App\Models\userModel();
-                                                            $user = $userModel->where('user_id',$row['user_id'])->first();
+                                                            $model = new \App\Models\registerModel();
+                                                            $user = $model->where('email',$row['email'])->first();
                                                             ?>
                                                             <tr>
                                                                 <td><?=$row['jersey_num']?></td>
                                                                 <td><img src="<?=site_url('assets/images/players/')?><?=$row['image']?>"
                                                                         style="width:30px;border:1px solid #000000;border-radius:10px 10px;" />
                                                                 </td>
-                                                                <td><?=$user['Fullname']?></td>
+                                                                <td><?=$user['fullname']?></td>
                                                                 <td><?=!empty($role['roleName']) ? $role['roleName'] : 'N/A' ?>
                                                                 </td>
                                                                 <td><?=$row['height']?>cm</td>

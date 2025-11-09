@@ -270,10 +270,10 @@
                             <div class="col-lg-3">
                                 <div class="card">
                                     <div class="img-responsive img-responsive-21x15 card-img-top"
-                                        style="background-image: url(<?=base_url('assets/images/players/')?><?=$list['image']?>)">
+                                        style="background-image: url(<?=base_url('assets/images/players/')?><?=($list['image']) ? $list['image'] : 'Default.png' ?>)">
                                     </div>
                                     <div class="card-body text-center">
-                                        <div class="card-title"><?=$list['Fullname']?></div>
+                                        <div class="card-title"><?=$list['fullname']?></div>
                                         <div class="row g-2">
                                             <div class="col-lg-12">
                                                 <b><?=$list['email']?></b><br />

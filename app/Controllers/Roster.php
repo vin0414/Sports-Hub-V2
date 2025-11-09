@@ -168,7 +168,7 @@ class Roster extends BaseController
         //get the list of players
         $data = $this->db->table('players as a')
                 ->select('a.*,b.Fullname,c.roleName')
-                ->join('users as b','b.user_id=a.user_id','LEFT')
+                ->join('registration as b','b.user_id=a.user_id','LEFT')
                 ->join('player_role as c','c.roleID=a.roleID','LEFT')
                 ->where('a.team_id',$val)
                 ->whereIN('a.status',[1,2]);
@@ -725,5 +725,91 @@ class Roster extends BaseController
         $data = ['remarks'=>'CLOSE'];
         $teamModel->update($val,$data);
         return $this->response->setJSON(['success'=>'Successfully updated']);
+    }
+
+    public function savePlayers()
+    {
+        $name = array_map('strip_tags', $this->request->getPost('name'));
+        $email = array_map('strip_tags', $this->request->getPost('email'));
+        $birthDate = array_map('strip_tags', $this->request->getPost('birth_date'));
+        $phone = array_map('strip_tags', $this->request->getPost('phone'));
+        $height = array_map('strip_tags', $this->request->getPost('height'));
+        $weight = array_map('strip_tags', $this->request->getPost('weight'));
+        $address = array_map('strip_tags', $this->request->getPost('address'));
+        $errors = [];
+
+        for ($i = 0; $i < count($name); $i++) {
+            if (empty($name[$i])) {
+                $errors["name_$i"] = "Player's name is required.";
+            }
+            if (empty($email[$i])) {
+                $errors["email_$i"] = "Email is required.";
+            } elseif (!filter_var($email[$i], FILTER_VALIDATE_EMAIL)) {
+                $errors["email_$i"] = "Email is invalid.";
+            }
+            if (empty($birthDate[$i])) {
+                $errors["birth_date_$i"] = "Birth Date is required.";
+            }
+            if (empty($phone[$i])) {
+                $errors["phone_$i"] = "Contact Number is required.";
+            }
+            if (empty($height[$i])) {
+                $errors["height_$i"] = "Height is required.";
+            }
+            if (empty($weight[$i])) {
+                $errors["weight_$i"] = "Weight is required.";
+            }
+            if (empty($address[$i])) {
+                $errors["address_$i"] = "Address is required.";
+            }
+        }
+        if(!empty($errors))
+        {
+            return $this->response->setJSON(['errors'=>$errors]);
+        }
+        else
+        {
+            $registerModel = new registerModel();
+            $playerModel = new playerModel();
+            for($i=0;$i<count($name);$i++)
+            {
+                $data = [
+                    'application_type'=>'Player',
+                    'user_id'=>0,
+                    'fullname'=>$name[$i],
+                    'email'=>$email[$i],
+                    'phone'=>$phone[$i],
+                    'birth_date'=>$birthDate[$i],
+                    'address'=>$address[$i],
+                    'height'=>$height[$i],
+                    'weight'=>$weight[$i],
+                    'desired_position'=>'Newbie',
+                    'status'=>1,
+                    'remarks'=>'',
+                    'file'=>'',
+                    'datecreated'=>date('Y-m-d'),
+                    'agreement'=>1
+                ]; 
+                $registerModel->save($data);
+                //players
+                $records = [
+                    'team_id'=>$this->request->getPost('team'),
+                    'user_id'=>0,
+                    'date_of_birth'=>$birthDate[$i],
+                    'sportsID'=>$this->request->getPost('sports'),
+                    'roleID'=>0,
+                    'jersey_num'=>0,
+                    'gender'=>'Male',
+                    'email'=>$email[$i],
+                    'height'=>$height[$i],
+                    'weight'=>$weight[$i],
+                    'address'=>$address[$i],
+                    'image'=>'',
+                    'status'=>1
+                ];
+                $playerModel->save($records);
+            }
+            return $this->response->setJSON(['success'=>'Successfully submitted']);
+        }
     }
 }

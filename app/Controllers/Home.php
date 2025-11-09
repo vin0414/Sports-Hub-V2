@@ -705,8 +705,8 @@ class Home extends BaseController
             //team
             $val = $this->request->getGet('search');
             $playerModel = new \App\Models\playerModel();
-            $player = $playerModel->select('users.Fullname,players.*')
-                                  ->join('users','players.user_id=users.user_id','LEFT');
+            $player = $playerModel->select('registration.fullname,players.*')
+                                  ->join('registration','players.email=registration.email','LEFT');
                                 
             $page = (int) ($this->request->getGet('page') ?? 1);
             $perPage = 8;
