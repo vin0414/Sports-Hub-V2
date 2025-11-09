@@ -540,11 +540,15 @@ class Home extends BaseController
 
     public function getTeam()
     {
-        $cat = $this->request->getGet('sports');
+        $sports = $this->request->getGet('sports');
+        $cat = $this->request->getGet('category');
         $builder = $this->db->table('teams a');
         $builder->select('a.team_id,a.team_name,a.school_barangay,COUNT(b.player_id)total');
         $builder->join('players b','b.team_id=a.team_id','LEFT');
-        $builder->where('a.sportsID',$cat)->where('a.status',1)->groupBy('a.team_id');
+        $builder->where('a.sportsID',$sports)
+        ->where('a.category',$cat)
+        ->where('a.status',1)
+        ->groupBy('a.team_id');
         $team = $builder->get()->getResult();
         return $this->response->setJSON(['team'=>$team]);
     }
@@ -576,6 +580,19 @@ class Home extends BaseController
             return view('main/matches/edit-match', $data);
         }
         return redirect()->back();
+    }
+
+    //scoreboard
+    public function scoreboard()
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['scoreboard']==1)
+        {
+            $data['title'] = "Scoreboard";
+            return view('main/scoreboard/index',$data);
+        }
+        return redirect()->back();  
     }
 
     //teams
@@ -1870,6 +1887,7 @@ class Home extends BaseController
             'roster'=>'required|numeric',
             'events'=>'required|numeric',
             'matches'=>'required|numeric',
+            'score'=>'required|numeric',
             'videos'=>'required|numeric',
             'news'=>'required|numeric',
             'shops'=>'required|numeric',
@@ -1887,6 +1905,7 @@ class Home extends BaseController
                     'roster'=>$this->request->getPost('roster'),
                     'events'=>$this->request->getPost('events'),
                     'matches'=>$this->request->getPost('matches'),
+                    'scoreboard'=>$this->request->getPost('score'),
                     'videos'=>$this->request->getPost('videos'),
                     'news'=>$this->request->getPost('news'),
                     'shops'=>$this->request->getPost('shops'),
@@ -1923,6 +1942,7 @@ class Home extends BaseController
             'edit-roster'=>'required|numeric',
             'edit-events'=>'required|numeric',
             'edit-matches'=>'required|numeric',
+            'edit-score'=>'required|numeric',
             'edit-videos'=>'required|numeric',
             'edit-news'=>'required|numeric',
             'edit-shops'=>'required|numeric',
@@ -1941,6 +1961,7 @@ class Home extends BaseController
                     'roster'=>$this->request->getPost('edit-roster'),
                     'events'=>$this->request->getPost('edit-events'),
                     'matches'=>$this->request->getPost('edit-matches'),
+                    'scoreboard'=>$this->request->getPost('edit-score'),
                     'videos'=>$this->request->getPost('edit-videos'),
                     'news'=>$this->request->getPost('edit-news'),
                     'shops'=>$this->request->getPost('edit-shops'),
@@ -1994,6 +2015,7 @@ class Home extends BaseController
                 'roster' => ($row['roster']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',
                 'events' => ($row['events']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',
                 'matches' => ($row['matches']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',
+                'scoreboard' => ($row['scoreboard']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',
                 'videos' => ($row['videos']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',       
                 'news' => ($row['news']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',
                 'shops' => ($row['shops']==1) ? '<i class="ti ti-check"></i>&nbsp;Active' : '<i class="ti ti-x"></i>&nbsp;Inactive',

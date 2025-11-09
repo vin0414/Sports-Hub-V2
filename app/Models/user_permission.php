@@ -12,7 +12,7 @@ class user_permission extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['role','roster','events','matches','videos','news','shops','maintenance'];
+    protected $allowedFields    = ['role','roster','events','matches','scoreboard','videos','news','shops','maintenance'];
 
     // Dates
     protected $useTimestamps = true;

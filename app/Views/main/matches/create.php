@@ -69,14 +69,28 @@
                                         <div id="tournament-error" class="error-message text-danger text-sm"></div>
                                     </div>
                                     <div class="col-lg-12">
-                                        <label class="form-label">Type of Sports</label>
-                                        <select name="sports" class="form-select" id="sports">
-                                            <option value="">Choose</option>
-                                            <?php foreach($sports as $row): ?>
-                                            <option value="<?=$row['sportsID']?>"><?=$row['Name']?></option>
-                                            <?php endforeach;?>
-                                        </select>
-                                        <div id="sports-error" class="error-message text-danger text-sm"></div>
+                                        <div class="row g-3">
+                                            <div class="col-lg-6">
+                                                <label class="form-label">Type of Sports</label>
+                                                <select name="sports" class="form-select" id="sports">
+                                                    <option value="">Choose</option>
+                                                    <?php foreach($sports as $row): ?>
+                                                    <option value="<?=$row['sportsID']?>"><?=$row['Name']?></option>
+                                                    <?php endforeach;?>
+                                                </select>
+                                                <div id="sports-error" class="error-message text-danger text-sm"></div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="form-label">Category</label>
+                                                <select name="category" class="form-select" id="category">
+                                                    <option value="">Choose</option>
+                                                    <option value="School">School/University</option>
+                                                    <option value="Barangay">Barangay/Village</option>
+                                                </select>
+                                                <div id="category-error" class="error-message text-danger text-sm">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-lg-12">
                                         <label class="form-label">Teams</label>
@@ -158,13 +172,15 @@
 <?= view('main/templates/footer')?>
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
-$('#sports').on('change', function() {
+$('#category').on('change', function() {
     const val = $(this).val();
+    const sports = $('#sports').val();
     $.ajax({
         url: "<?=site_url('get-team')?>",
         method: "GET",
         data: {
-            sports: val
+            sports: sports,
+            category: val
         },
         success: function(response) {
             console.log(response);

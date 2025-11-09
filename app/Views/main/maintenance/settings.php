@@ -77,6 +77,7 @@
                                             <th>Roster</th>
                                             <th>Events</th>
                                             <th>Matches</th>
+                                            <th>Scoreboard</th>
                                             <th>Videos</th>
                                             <th>News</th>
                                             <th>Shops</th>
@@ -391,6 +392,39 @@
                         <div id="matches-error" class="error-message text-danger text-sm"></div>
                     </div>
                     <div class="col-lg-6">
+                        <label class="form-label">Scoreboard</label>
+                        <div class="form-selectgroup-boxes row mb-3">
+                            <div class="col-lg-6">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="score" value="1" class="form-selectgroup-input"
+                                        required />
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">Yes</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="score" value="0" class="form-selectgroup-input" />
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">No</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="score-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="col-lg-6">
                         <label class="form-label">Videos</label>
                         <div class="form-selectgroup-boxes row mb-3">
                             <div class="col-lg-6">
@@ -647,6 +681,39 @@
                         <div id="edit-matches-error" class="error-message text-danger text-sm"></div>
                     </div>
                     <div class="col-lg-6">
+                        <label class="form-label">Scoreboard</label>
+                        <div class="form-selectgroup-boxes row mb-3">
+                            <div class="col-lg-6">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="edit-score" value="1" class="form-selectgroup-input"
+                                        required />
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">Yes</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-selectgroup-item">
+                                    <input type="radio" name="edit-score" value="0" class="form-selectgroup-input" />
+                                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                                        <span class="me-3">
+                                            <span class="form-selectgroup-check"></span>
+                                        </span>
+                                        <span class="form-selectgroup-label-content">
+                                            <span class="form-selectgroup-title strong mb-1">No</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div id="edit-score-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="col-lg-6">
                         <label class="form-label">Videos</label>
                         <div class="form-selectgroup-boxes row mb-3">
                             <div class="col-lg-6">
@@ -818,6 +885,9 @@ let user = $('#user_permission').DataTable({
         },
         {
             "data": "matches"
+        },
+        {
+            "data": "scoreboard"
         },
         {
             "data": "videos"

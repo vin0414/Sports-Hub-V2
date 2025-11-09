@@ -147,6 +147,8 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('matches','Home::matches');
     $routes->get('matches/create','Home::createMatch');
     $routes->get('matches/edit/(:num)','Home::editMatch/$1');
+    //scoreboard
+    $routes->get('scoreboard','Home::scoreboard');
     //teams
     $routes->match(['get','post'],'roster/teams','Home::teams');
     $routes->get('roster/teams/view/(:num)','Home::viewTeam/$1');
