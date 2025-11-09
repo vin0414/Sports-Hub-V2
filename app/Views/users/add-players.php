@@ -22,6 +22,18 @@
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
+                        <button type="button" class="btn btn-default" onclick="addStaff()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="icon icon-tabler icons-tabler-outline icon-tabler-circle-plus">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+                                <path d="M9 12h6" />
+                                <path d="M12 9v6" />
+                            </svg>
+                            Add Another Player
+                        </button>
                         <a href="javascript:history.back();" class="btn btn-primary d-none d-sm-inline-block">
                             <i class="ti ti-arrow-left"></i>
                             Back
@@ -36,7 +48,52 @@
     </div>
     <div class="page-body">
         <div class="container-xl">
-
+            <form method="POST" class="row g-3" id="frmPlayer">
+                <?=csrf_field()?>
+                <div class="col-lg-12">
+                    <div id="staff-container">
+                        <div class="staff-form card card-body mb-3" data-index="0">
+                            <div class="row g-3">
+                                <div class="col-lg-12">
+                                    <label class="form-label" for="name_0">Complete Name</label>
+                                    <input type="text" name="name[]" id="name_0" class="form-control" />
+                                    <div id="name_0-error" class="error-message text-danger text-sm">
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="row g-3">
+                                        <div class="col-lg-6">
+                                            <label class="form-label" for="email_0">Email</label>
+                                            <input type="text" name="email[]" id="email_0" class="form-control" />
+                                            <div id="email_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <label class="form-label" for="position_0">Position/Designation</label>
+                                            <input type="text" name="position[]" id="position_0" class="form-control" />
+                                            <div id="position_0-error" class="error-message text-danger text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <button type="button" class="btn btn-danger" onclick="removeStaff(this)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-circle-minus">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                                            <path d="M9 12l6 0" />
+                                        </svg>
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -55,4 +112,68 @@
 </div>
 <?= view('main/templates/footer')?>
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
+<script>
+let staffIndex = 1;
+
+function addStaff() {
+    const container = document.getElementById("staff-container");
+    const forms = container.getElementsByClassName("staff-form");
+    const lastForm = forms[forms.length - 1];
+    const newForm = lastForm.cloneNode(true); // deep clone
+
+    // Update index
+    newForm.setAttribute("data-index", staffIndex);
+
+    // Clear and update input fields
+    const inputs = newForm.querySelectorAll("input, select, textarea");
+    inputs.forEach(input => {
+        const baseName = input.name.replace(/\[\]$/, "");
+        input.name = `${baseName}[]`;
+        input.id = `${baseName}_${staffIndex}`;
+        input.value = "";
+    });
+
+    // Update labels and error containers
+    const labels = newForm.querySelectorAll("label");
+    labels.forEach(label => {
+        const htmlFor = label.getAttribute("for");
+        if (htmlFor) {
+            const baseFor = htmlFor.replace(/_\d+$/, "");
+            label.setAttribute("for", `${baseFor}_${staffIndex}`);
+        }
+    });
+
+    const errors = newForm.querySelectorAll(".error-message");
+    errors.forEach(error => {
+        const baseId = error.id.replace(/_\d+-error$/, "");
+        error.id = `${baseId}_${staffIndex}-error`;
+        error.innerHTML = "";
+    });
+
+    container.appendChild(newForm);
+    staffIndex++;
+}
+
+function removeStaff(button) {
+    const container = document.getElementById("staff-container");
+    const form = button.closest(".staff-form");
+
+    if (!form || !container.contains(form)) {
+        console.warn("Form not found or not in container.");
+        return;
+    }
+
+    const totalForms = container.getElementsByClassName("staff-form").length;
+
+    if (totalForms > 1) {
+        container.removeChild(form);
+    } else {
+        Swal.fire({
+            title: 'Warning',
+            text: "At least one player entry is required.",
+            icon: 'warning',
+        });
+    }
+}
+</script>
 <?= view('main/templates/closing')?>

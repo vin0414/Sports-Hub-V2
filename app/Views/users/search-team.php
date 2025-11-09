@@ -311,7 +311,7 @@
                             </div>
                             <?php else: ?>
                             <?php foreach($team as $list): ?>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="card">
                                     <div class="img-responsive img-responsive-21x15 card-img-top"
                                         style="background-image: url(<?=base_url('assets/images/team/')?><?=$list['image']?>)">

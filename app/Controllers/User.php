@@ -481,7 +481,7 @@ class User extends BaseController
         $org= $this->request->getGet('organization');
         $team = new \App\Models\teamModel();
         $page = (int) ($this->request->getGet('page') ?? 1);
-        $perPage = 6;
+        $perPage = 9;
 
         if ($org) {
             $team->where('category', $org);
@@ -520,7 +520,7 @@ class User extends BaseController
                     ->where('team_id',$val)->groupBy('team_id');
             $stats = $statModel->get()->getRow();
 
-            $output.='<div class="row g-2">
+            $output.='<div class="row g-2 mb-3">
                         <div class="col-lg-8">
                             <div class="row g-1">
                                 <div class="col-lg-12">Team : '.$team['team_name'].'</div>
@@ -560,8 +560,31 @@ class User extends BaseController
                         <div class="col-lg-4">
                             <img src="/assets/images/team/'.$team['image'].'" style="border-radius: 5px 5px;height:200px;width:250px;"/>
                         </div>
-                    </div>
-                     ';
+                    </div>';
+            $output.='<div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <th>Achievement(s)</th>
+                            </thead>
+                            <tbody>';
+            $records = $this->db->table('team_achievements as a')
+                    ->select('b.name')
+                    ->join('achievements b','b.achievement_id=a.achievement_id','LEFT')
+                    ->where('a.team_id',$val)->get()->getResult();
+                    if(empty($records))
+                    {
+                $output.='<tr><td>No Record(s) found</td></tr>';
+                    }
+                    else
+                    {
+                        foreach($records as $row)
+                        {
+                $output.='<tr><td>'.$row->name.'</td></tr>';
+                        }
+                    }
+            $output.='      </tbody>
+                        </table>
+                    </div>';
             echo $output;
         }
     }

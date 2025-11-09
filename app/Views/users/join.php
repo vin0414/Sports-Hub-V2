@@ -42,6 +42,7 @@
                     <form method="POST" autocomplete="off" enctype="multipart/form-data" id="frmCreate">
                         <?=csrf_field();?>
                         <input type="hidden" name="user" value="<?=session()->get('User')?>" />
+                        <input type="hidden" name="agreement" id="agreement" />
                         <div class="mb-3">
                             <label class="form-label">Account Type</label>
                             <div class="form-selectgroup-boxes row mb-3">
@@ -125,14 +126,6 @@
                             <input type="file" class="form-control" name="file" />
                             <div id="file-error" class="error-message text-danger text-sm"></div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-check">
-                                <input type="checkbox" class="form-check-input" name="agreement" value="1" />
-                                <span class="form-check-label">I agree to the <a href="/terms-and-conditions"
-                                        target="_blank">Terms and Conditions</a> for the application</span>
-                            </label>
-                            <div id="agreement-error" class="error-message text-danger text-sm"></div>
-                        </div>
                         <div class="form-footer">
                             <button type="submit" class="btn btn-primary w-100">Submit Application</button>
                         </div>
@@ -144,7 +137,7 @@
             </div>
         </div>
     </div>
-    <div class="modal" id="modal-loading" data-backdrop="static">
+    <div class="modal" id="modal-loading" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -157,9 +150,58 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="policyModal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Digital Sports Hub - Policies and Requirements</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-1">
+                        <div class="col-lg-12">
+                            <object data="assets/policy/" type="application/pdf" style="width:100%;height:500px;">
+                                <p>Your web browser doesn't have a PDF plugin.
+                                    Instead you can <a href="assets/policy/">click here to
+                                        download the PDF file.</a></p>
+                            </object>
+                        </div>
+                        <div class="col-lg-12">
+                            <label class="form-check">
+                                <input type="checkbox" class="form-check-input" name="agree" id="agree" value="1" />
+                                <span class="form-check-label">I agree to the <a href="/terms-and-conditions"
+                                        target="_blank">Terms and Conditions</a> for the application</span>
+                            </label>
+                            <div id="errors" class="error-message text-danger text-sm"></div>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="button" id="accept" class="btn btn-primary">Agree</button>
+                            <button type="button" id="decline" class="btn btn-default">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <?= view('main/templates/footer')?>
     <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
     <script>
+    $(document).ready(function() {
+        $('#policyModal').modal('show');
+    });
+
+    $('#decline').on('click', function() {
+        window.location.href = "/";
+    });
+    $('#accept').on('click', function() {
+        const agree = document.getElementById('agree');
+        if (!agree.checked) {
+            $('#errors').html("You must select the checkbox before proceeding.");
+        } else {
+            $('#policyModal').modal('hide');
+            $('#agreement').val(1); // or .attr("value", 1) if needed
+        }
+    });
+
     const checkboxes = document.querySelectorAll('input[name="application"]');
 
     checkboxes.forEach(checkbox => {
