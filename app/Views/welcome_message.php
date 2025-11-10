@@ -131,7 +131,7 @@
                                     style="background-image: url(<?=$item['media']?>)">
                                 </div>
                                 <?php }else{ ?>
-                                <video id="video-preview" class="card-img-top" width="100%" height="250px" controls>
+                                <video id="video-preview" class="card-img-top" width="100%" height="100%" controls>
                                     <source src="<?=$item['media']?>" type="video/mp4">
                                     <source src="<?=$item['media']?>" type="video/webm">
                                     Your browser does not support the video tag.

@@ -23,7 +23,7 @@
                     <div class="col">
                         <!-- Page pre-title -->
                         <div class="page-pretitle">Digital Sports Hub</div>
-                        <h2 class="page-title"><?=$title?></h2>
+                        <h2 class="page-title"><?=$title?> | Create</h2>
                     </div>
                     <!-- Page title actions -->
                     <div class="col-auto ms-auto d-print-none">

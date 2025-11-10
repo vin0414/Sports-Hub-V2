@@ -511,7 +511,7 @@
                                             style="background-image: url(<?=base_url('assets/images/players/')?><?=($list['image']) ? $list['image']: 'Default.png' ?>)">
                                         </div>
                                         <div class="card-body text-center">
-                                            <h4 class="text-center"><?=$list['Fullname']?></h4>
+                                            <h4 class="text-center"><?=$list['fullname']?></h4>
                                             <div class="row g-1">
                                                 <div class="col-lg-12">
                                                     <div class="row g-2">

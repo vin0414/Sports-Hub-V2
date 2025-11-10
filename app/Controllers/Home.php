@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
+use App\Models\matchModel;
 
 class Home extends BaseController
 {
@@ -115,8 +116,8 @@ class Home extends BaseController
         $data['pager'] = $teamModel->pager;
         //players
         $playerModel = new \App\Models\playerModel();
-        $player = $playerModel->select('users.Fullname,players.*,player_role.roleName,teams.team_name')
-                                ->join('users','players.user_id=users.user_id','LEFT')
+        $player = $playerModel->select('registration.fullname,players.*,player_role.roleName,teams.team_name')
+                                ->join('registration','players.email=registration.email','LEFT')
                                 ->join('player_role','players.roleID=player_role.roleID','LEFT')
                                 ->join('teams','players.team_id=teams.team_id','LEFT');
                             
@@ -526,7 +527,7 @@ class Home extends BaseController
         $role = $permissionModel->where('role',session()->get('role'))->first();
         if($role['matches']==1)
         {
-            $data['title'] = "Create Match";
+            $data['title'] = "Matches";
             $sportModel = new \App\Models\sportsModel();
             $data['sports'] = $sportModel->findAll();
             //active team
@@ -563,7 +564,7 @@ class Home extends BaseController
             $sportModel = new \App\Models\sportsModel();
             $data['sports'] = $sportModel->findAll();
             //active team
-            $matchModel = new \App\Models\matchModel();
+            $matchModel = new matchModel();
             $match = $matchModel->where('match_id',$id)->first();
             if(empty($match))
             {
@@ -590,9 +591,47 @@ class Home extends BaseController
         if($role['scoreboard']==1)
         {
             $data['title'] = "Scoreboard";
+            $data['match'] = $this->db->table('matches a')
+                              ->select('a.*,b.team_name as home,c.team_name as away')
+                              ->join('teams b','a.team1_id=b.team_id','LEFT')
+                              ->join('teams c','a.team2_id=c.team_id','LEFT')
+                              ->groupBy('a.match_id')->get()->getResult();
             return view('main/scoreboard/index',$data);
         }
         return redirect()->back();  
+    }
+
+    public function addScoreboard($id)
+    {
+        $permissionModel = new \App\Models\user_permission();
+        $role = $permissionModel->where('role',session()->get('role'))->first();
+        if($role['scoreboard']==1)
+        {
+            $data['title']="Scoreboard";
+            $matchModel = new matchModel();
+            $match = $matchModel->where('match_id',$id)->first();
+            if(empty($match))
+            {
+                return redirect()->back();
+            }
+            $data['matchID'] = $id;
+            //get the players for team1
+            $team1 = $this->db->table('players as a')
+                    ->select('a.team_id,a.sportsID,a.player_id,a.jersey_num,b.fullname')
+                    ->join('registration as b','b.email=a.email','LEFT')
+                    ->where('a.team_id',$match['team1_id'])
+                    ->groupBy('a.player_id')->get()->getResult();
+            $data['team1'] = $team1;
+            //get the players for team2
+            $team2 = $this->db->table('players as a')
+                    ->select('a.team_id,a.sportsID,a.player_id,a.jersey_num,b.fullname')
+                    ->join('registration as b','b.email=a.email','LEFT')
+                    ->where('a.team_id',$match['team2_id'])
+                    ->groupBy('a.player_id')->get()->getResult();
+            $data['team2'] = $team2;
+            return view('main/scoreboard/create',$data);
+        }
+        return redirect()->back();
     }
 
     //teams
@@ -858,7 +897,7 @@ class Home extends BaseController
             $title = "Live Stream";
             $date = date('Y-m-d');
             $time = date('H:i');
-            $matchModel = new \App\Models\matchModel();
+            $matchModel = new matchModel();
             $match = $matchModel->WHERE('date',$date)
                                 ->WHERE('time >=',$time)
                                 ->first();
@@ -1001,7 +1040,7 @@ class Home extends BaseController
 
     public function addScore1()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getPost('match');
         $team_id = $this->request->getPost('team');
         //get the primary ID
@@ -1014,7 +1053,7 @@ class Home extends BaseController
 
     public function addScore2()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getPost('match');
         $team_id = $this->request->getPost('team');
         //get the primary ID
@@ -1027,7 +1066,7 @@ class Home extends BaseController
 
     public function minusScore1()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getPost('match');
         $team_id = $this->request->getPost('team');
         //get the primary ID
@@ -1040,7 +1079,7 @@ class Home extends BaseController
 
     public function minusScore2()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getPost('match');
         $team_id = $this->request->getPost('team');
         //get the primary ID
@@ -1053,7 +1092,7 @@ class Home extends BaseController
 
     public function teamHome()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getGet('match');
         $team_id = $this->request->getGet('team');
         $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team1_id',$team_id)->first();
@@ -1062,7 +1101,7 @@ class Home extends BaseController
 
     public function teamGuest()
     {
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $match_id = $this->request->getGet('match');
         $team_id = $this->request->getGet('team');
         $match = $matchModel->WHERE('match_id',$match_id)->WHERE('team2_id',$team_id)->first();
@@ -1072,7 +1111,7 @@ class Home extends BaseController
     public function endGame()
     {
         $teamStatsModel = new \App\Models\teamStatsModel();
-        $matchModel = new \App\Models\matchModel();
+        $matchModel = new matchModel();
         $teamModel = new \App\Models\teamModel();
         $match_id = $this->request->getPost('match');
         $match = $matchModel->WHERE('match_id',$match_id)->first();

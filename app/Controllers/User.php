@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Libraries\Hash;
+use App\Models\teamModel;
 use Config\Email;
 use DateTime;
 
@@ -874,5 +875,58 @@ class User extends BaseController
             $subscribeModel->update($subscribe['subscribe_id'],$data);
             return $this->response->setJSON(['success'=>'Thank you for your donation!']);
         } 
+    }
+
+    public function sendLink()
+    {
+        $staffModel = new \App\Models\staffModel();
+        $val = $this->request->getPost('value');
+        $staff = $staffModel->where('staff_id',$val)->first();
+        //send email
+        $emailConfig = new Email();
+        $fromEmail = $emailConfig->fromEmail;
+        $fromName  = $emailConfig->fromName;
+        $email = \Config\Services::email();
+        $email->setTo($staff['email']);
+        $email->setFrom($fromEmail, $fromName); 
+        $imgURL = "assets/images/logo.jpg";
+        $email->attach($imgURL);
+        $cid = $email->setAttachmentCID($imgURL);
+        $template = "<center>
+        <img src='cid:". $cid ."' width='100'/>
+        <table style='padding:20px;background-color:#ffffff;' border='0'><tbody>
+        <tr><td><center><h1>Account Authentication</h1></center></td></tr>
+        <tr><td><center>Hi, ".$staff['name']."</center></td></tr>
+        <tr><td><p><center>Please click the link below to access your account.</center></p></td><tr>
+        <tr><td><center><b>".anchor('authenticate/'.$staff['staff_id'],'Magic Link')."</b></center></td></tr>
+        <tr><td><p><center>If you did not sign-up in Digital Sports Hub Website,<br/> please ignore this message or contact us @ digitalsportshub@gmail.com</center></p></td></tr>
+        <tr><td><center>IT Support</center></td></tr></tbody></table></center>";
+        $subject = "Account Authentication | Digital Sports Hub";
+        $email->setSubject($subject);
+        $email->setMessage($template);
+        $email->send();
+        return $this->response->setJSON(['success'=>'Successfully sent']);
+    }
+
+    public function authenticateUser($id)
+    {
+        $staffModel = new \App\Models\staffModel();
+        $staff = $staffModel->where('staff_id',$id)->where('status',1)->first();
+        if(empty($staff))
+        {
+            return  redirect()->to('/sign-in')->with('error', 'Invalid credentials or inactive account.');
+        }
+        else
+        {
+            //team
+            $teamModel = new teamModel();
+            $team = $teamModel->where('team_id',$staff['team_id'])->first();
+            //create session
+            session()->set('User', $team['user_id']);
+            session()->set('user_fullname', $staff['name']);
+            session()->set('user_email',$staff['email']);
+            session()->set('is_logged_in',true);
+            return redirect()->to('/');
+        }
     }
 }

@@ -13,7 +13,7 @@ class playerModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = ['team_id','user_id','date_of_birth','sportsID','roleID','jersey_num',
-                                    'gender','email','height','weight','address','image','status'];
+                                    'gender','email','height','weight','address','image','status','order'];
 
     // Dates
     protected $useTimestamps = true;

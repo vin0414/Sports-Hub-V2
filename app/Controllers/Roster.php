@@ -8,6 +8,7 @@ use \App\Models\playerModel;
 use \App\Models\scheduleModel;
 use \App\Models\matchModel;
 use \App\Models\performanceModel;
+use \App\Models\userModel;
 use Config\Email;
 
 class Roster extends BaseController
@@ -63,6 +64,32 @@ class Roster extends BaseController
             $teamModel = new teamModel();
             $data = ['status'=>1];
             $teamModel->update($val,$data);
+            //get the contact email
+            $team = $teamModel->where('team_id',$val)->first();
+            $userModel = new userModel();
+            $user = $userModel->where('user_id',$team['user_id'])->first();
+            //send email
+            $emailConfig = new Email();
+            $fromEmail = $emailConfig->fromEmail;
+            $fromName  = $emailConfig->fromName;
+            $email = \Config\Services::email();
+            $email->setTo($user['Email']);
+            $email->setFrom($fromEmail, $fromName); 
+            $imgURL = "assets/images/logo.jpg";
+            $email->attach($imgURL);
+            $cid = $email->setAttachmentCID($imgURL);
+            $template = "<center>
+            <img src='cid:". $cid ."' width='100'/>
+            <table style='padding:20px;background-color:#ffffff;' border='0'><tbody>
+            <tr><td><center><h1>Digital Sports Hub</h1></center></td></tr>
+            <tr><td><center>Hi, ".$user['Fullname']."</center></td></tr>
+            <tr><td><p><center>Your registered team has been approved. Please check your account to verify the details.</center></p></td><tr>
+            <tr><td><p><center>If you did not sign-up in Digital Sports Hub Website,<br/> please ignore this message or contact us @ digitalsportshub@gmail.com</center></p></td></tr>
+            <tr><td><center>IT Support</center></td></tr></tbody></table></center>";
+            $subject = "Approved Registration | Digital Sports Hub";
+            $email->setSubject($subject);
+            $email->setMessage($template);
+            $email->send();
             return response()->setJSON(['success'=>'Successfully updated']);
         }
     }
@@ -79,6 +106,32 @@ class Roster extends BaseController
             $teamModel = new teamModel();
             $data = ['status'=>2];
             $teamModel->update($val,$data);
+            //get the contact email
+            $team = $teamModel->where('team_id',$val)->first();
+            $userModel = new userModel();
+            $user = $userModel->where('user_id',$team['user_id'])->first();
+            //send email
+            $emailConfig = new Email();
+            $fromEmail = $emailConfig->fromEmail;
+            $fromName  = $emailConfig->fromName;
+            $email = \Config\Services::email();
+            $email->setTo($user['Email']);
+            $email->setFrom($fromEmail, $fromName); 
+            $imgURL = "assets/images/logo.jpg";
+            $email->attach($imgURL);
+            $cid = $email->setAttachmentCID($imgURL);
+            $template = "<center>
+            <img src='cid:". $cid ."' width='100'/>
+            <table style='padding:20px;background-color:#ffffff;' border='0'><tbody>
+            <tr><td><center><h1>Digital Sports Hub</h1></center></td></tr>
+            <tr><td><center>Hi, ".$user['Fullname']."</center></td></tr>
+            <tr><td><p><center>Your registered team has been declined. Please check your account to verify the details.</center></p></td><tr>
+            <tr><td><p><center>If you did not sign-up in Digital Sports Hub Website,<br/> please ignore this message or contact us @ digitalsportshub@gmail.com</center></p></td></tr>
+            <tr><td><center>IT Support</center></td></tr></tbody></table></center>";
+            $subject = "Declined Registration | Digital Sports Hub";
+            $email->setSubject($subject);
+            $email->setMessage($template);
+            $email->send();
             return response()->setJSON(['success'=>'Successfully updated']);
         }
     }
@@ -95,6 +148,32 @@ class Roster extends BaseController
             $registerModel = new registerModel();
             $data = ['status'=>1,'remarks'=>'Registered'];
             $registerModel->update($val,$data);
+            //get the contact email
+            $register = $registerModel->where('register_id',$val)->first();
+            $userModel = new userModel();
+            $user = $userModel->where('user_id',$register['user_id'])->first();
+            //send email
+            $emailConfig = new Email();
+            $fromEmail = $emailConfig->fromEmail;
+            $fromName  = $emailConfig->fromName;
+            $email = \Config\Services::email();
+            $email->setTo($user['Email']);
+            $email->setFrom($fromEmail, $fromName); 
+            $imgURL = "assets/images/logo.jpg";
+            $email->attach($imgURL);
+            $cid = $email->setAttachmentCID($imgURL);
+            $template = "<center>
+            <img src='cid:". $cid ."' width='100'/>
+            <table style='padding:20px;background-color:#ffffff;' border='0'><tbody>
+            <tr><td><center><h1>Digital Sports Hub</h1></center></td></tr>
+            <tr><td><center>Hi, ".$user['Fullname']."</center></td></tr>
+            <tr><td><p><center>Your account registration has been approved. Please check your account to verify the details.</center></p></td><tr>
+            <tr><td><p><center>If you did not sign-up in Digital Sports Hub Website,<br/> please ignore this message or contact us @ digitalsportshub@gmail.com</center></p></td></tr>
+            <tr><td><center>IT Support</center></td></tr></tbody></table></center>";
+            $subject = "Account Registration | Digital Sports Hub";
+            $email->setSubject($subject);
+            $email->setMessage($template);
+            $email->send();
             return response()->setJSON(['success'=>'Successfully updated']);
         }
     }
@@ -111,6 +190,33 @@ class Roster extends BaseController
             $registerModel = new registerModel();
             $data = ['status'=>2,'remarks'=>'Rejected'];
             $registerModel->update($val,$data);
+            //get the contact email
+            $register = $registerModel->where('register_id',$val)->first();
+            $userModel = new userModel();
+            $user = $userModel->where('user_id',$register['user_id'])->first();
+            //send email
+            $emailConfig = new Email();
+            $fromEmail = $emailConfig->fromEmail;
+            $fromName  = $emailConfig->fromName;
+            $email = \Config\Services::email();
+            $email->setTo($user['Email']);
+            $email->setFrom($fromEmail, $fromName); 
+            $imgURL = "assets/images/logo.jpg";
+            $email->attach($imgURL);
+            $cid = $email->setAttachmentCID($imgURL);
+            $template = "<center>
+            <img src='cid:". $cid ."' width='100'/>
+            <table style='padding:20px;background-color:#ffffff;' border='0'><tbody>
+            <tr><td><center><h1>Digital Sports Hub</h1></center></td></tr>
+            <tr><td><center>Hi, ".$user['Fullname']."</center></td></tr>
+            <tr><td><p><center>Your account registration has been declined. Please check your account to verify the details.</center></p></td><tr>
+            <tr><td><p><center>If you did not sign-up in Digital Sports Hub Website,<br/> please ignore this message or contact us @ digitalsportshub@gmail.com</center></p></td></tr>
+            <tr><td><center>IT Support</center></td></tr></tbody></table></center>";
+            $subject = "Account Registration | Digital Sports Hub";
+            $email->setSubject($subject);
+            $email->setMessage($template);
+            $email->send();
+
             return response()->setJSON(['success'=>'Successfully updated']);
         }
     }
@@ -183,6 +289,7 @@ class Roster extends BaseController
             'email' => 'required|valid_email',
             'birth_date' => 'required|valid_date',
             'position' => 'required|numeric',
+            'order'=>'required|numeric',
             'jersey_number' => 'required|numeric',
             'height' => 'required|numeric',
             'weight' => 'required|numeric',
@@ -206,7 +313,8 @@ class Roster extends BaseController
                 'jersey_num' => $this->request->getPost('jersey_number'),
                 'height' => $this->request->getPost('height'),
                 'weight' => $this->request->getPost('weight'),
-                'status' => $this->request->getPost('status')
+                'status' => $this->request->getPost('status'),
+                'order' => $this->request->getPost('order')
             ];
             //check if image is uploaded
             if($imagefile = $this->request->getFile('image'))
@@ -808,6 +916,74 @@ class Roster extends BaseController
                     'status'=>1
                 ];
                 $playerModel->save($records);
+            }
+            return $this->response->setJSON(['success'=>'Successfully submitted']);
+        }
+    }
+
+    public function scorePlayers()
+    {
+        $performanceModel = new performanceModel();
+        $player = array_map('strip_tags', $this->request->getPost('player'));
+        $sports = array_map('strip_tags', $this->request->getPost('sports'));
+        $team = array_map('strip_tags', $this->request->getPost('team'));
+        $match = $this->request->getPost('match');
+        $points = array_map('strip_tags', $this->request->getPost('points'));
+        $blocks = array_map('strip_tags', $this->request->getPost('blocks'));
+        $assist = array_map('strip_tags', $this->request->getPost('assist'));
+
+        $errors = [];
+
+        foreach ($points as $i => $val) {
+            if (empty($val)) {
+                $errors[] = "Points value missing for player index $i";
+            } elseif (!is_numeric($val)) {
+                $errors[] = "Points must be numeric for player index $i";
+            }
+        }
+
+        foreach ($blocks as $i => $val) {
+            if (empty($val)) {
+                $errors[] = "Blocks value missing for player index $i";
+            } elseif (!is_numeric($val)) {
+                $errors[] = "Blocks must be numeric for player index $i";
+            }
+        }
+
+        foreach ($assist as $i => $val) {
+            if (empty($val)) {
+                $errors[] = "Assist value missing for player index $i";
+            } elseif (!is_numeric($val)) {
+                $errors[] = "Assist must be numeric for player index $i";
+            }
+        }
+
+        if (!empty($errors)) {
+            return $this->response->setJSON(['errors' => $errors]);
+        }
+        else
+        {
+            for($i = 0; $i < COUNT($player); $i++)
+            {
+                $stats = [
+                    ['type' => 'PTS', 'value' => $points[$i]],
+                    ['type' => 'BLK', 'value' => $blocks[$i]],
+                    ['type' => 'AST', 'value' => $assist[$i]],
+                ];
+
+                foreach ($stats as $stat) {
+                    $data = [
+                        'player_id'   => $player[$i],
+                        'match_id'    => $match,
+                        'team_id'     => $team[$i],
+                        'sportsID'    => $sports[$i],
+                        'stat_type'   => $stat['type'],
+                        'stat_value'  => $stat['value'],
+                        'date'        => date('Y-m-d'),
+                        'description' => 'Scores Recorded'
+                    ];
+                    $performanceModel->save($data);
+                }
             }
             return $this->response->setJSON(['success'=>'Successfully submitted']);
         }

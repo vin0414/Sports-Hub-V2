@@ -114,8 +114,9 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="table1">
                                     <thead>
+                                        <th>#</th>
                                         <th>Image</th>
-                                        <th>Jersey #</th>
+                                        <th>Jersey</th>
                                         <th>Name of Players</th>
                                         <th>Role</th>
                                         <th>Height</th>
@@ -400,6 +401,9 @@ $(document).ready(function() {
             dataSrc: 'players'
         },
         columns: [{
+                data: 'order'
+            },
+            {
                 data: 'image',
                 render: function(image) {
                     if (image) {
@@ -994,6 +998,55 @@ $(document).on('click', '.close', function() {
                         Swal.fire(
                             'Great!',
                             'Successfully Close for recruitment',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to close this team.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    $('#modal-loading').modal('hide');
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+
+$(document).on('click', '.send', function() {
+    const playerId = $(this).val();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to send email link to this user?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-loading').modal('show');
+            $.ajax({
+                url: '<?=site_url('send-link')?>',
+                method: 'POST',
+                data: {
+                    value: $(this).val()
+                },
+                success: function(response) {
+                    $('#modal-loading').modal('hide');
+                    if (response.success) {
+                        Swal.fire(
+                            'Great!',
+                            'Successfully sent',
                             'success'
                         );
                         location.reload();

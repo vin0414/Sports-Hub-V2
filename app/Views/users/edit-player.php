@@ -47,18 +47,18 @@
                             <input type="text" class="form-control" name="fullname"
                                 value="<?= $registration['fullname'] ?>">
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-5">
                             <label class="form-label">Email Address</label>
                             <input type="email" class="form-control" name="email" value="<?=$player['email']?>">
                             <div id="email-error" class="error-message text-danger text-sm"></div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <label class="form-label">Date of Birth</label>
                             <input type="date" class="form-control" name="birth_date"
                                 value="<?=$player['date_of_birth']?>">
                             <div id="birth_date-error" class="error-message text-danger text-sm"></div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Position</label>
                             <select class="form-select" name="position">
                                 <option value="">Choose</option>
@@ -69,6 +69,11 @@
                                 <?php endforeach; ?>
                             </select>
                             <div id="position-error" class="error-message text-danger text-sm"></div>
+                        </div>
+                        <div class="col-lg-2">
+                            <label class="form-label">Order</label>
+                            <input type="number" class="form-control" name="order" value="<?= $player['order'] ?>">
+                            <div id="order-error" class="error-message text-danger text-sm"></div>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Jersey Number</label>

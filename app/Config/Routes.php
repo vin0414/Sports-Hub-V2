@@ -25,6 +25,8 @@ $routes->get('activate/(:any)','User::activateAccount/$1');
 $routes->post('save-inquiry','Home::saveInquiry');
 $routes->post('processing','User::processing');
 $routes->post('send-donation','User::sendDonation');
+$routes->post('send-link','User::sendLink');
+$routes->get('authenticate/(:any)','User::authenticateUser/$1');
 //users
 $routes->group('',['filter'=>'UserLoggedIn'],function($routes)
 {
@@ -73,6 +75,7 @@ $routes->post('roster/decline','Roster::declinePlayer');
 $routes->post('roster/recruitment/open','Roster::openRecruitment');
 $routes->post('roster/recruitment/close','Roster::closeRecruitment');
 $routes->post('roster/players/save','Roster::savePlayers');
+$routes->post('roster/score/save','Roster::scorePlayers');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');
@@ -150,6 +153,7 @@ $routes->group('',['filter'=>'AuthCheck'],function($routes)
     $routes->get('matches/edit/(:num)','Home::editMatch/$1');
     //scoreboard
     $routes->get('scoreboard','Home::scoreboard');
+    $routes->get('scoreboard/add/(:any)','Home::addScoreboard/$1');
     //teams
     $routes->match(['get','post'],'roster/teams','Home::teams');
     $routes->get('roster/teams/view/(:num)','Home::viewTeam/$1');

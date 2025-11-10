@@ -31,10 +31,25 @@
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Match</th>
-                                    <th>Scores</th>
                                     <th>Action</th>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <?php foreach($match as $row): ?>
+                                    <tr>
+                                        <td><?=date('F d, Y', strtotime($row->date))?></td>
+                                        <td><?=date('h:i:s a',strtotime($row->time))?></td>
+                                        <td><?=$row->home ?> [<?=($row->team1_score) ? $row->team1_score : 0 ?>] VS
+                                            <?=$row->away?>
+                                            [<?=($row->team2_score) ? $row->team2_score : 0 ?>]</td>
+                                        <td>
+                                            <a href="<?=site_url('scoreboard/add/')?><?=$row->match_id?>"
+                                                class="btn btn-primary">
+                                                <i class="ti ti-arrow-right"></i>&nbsp;Proceed
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach;?>
+                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -109,6 +109,7 @@
                                                     <table class="table table-bordered table-striped">
                                                         <thead>
                                                             <th>#</th>
+                                                            <th>Jersey</th>
                                                             <th>Image</th>
                                                             <th>Name of Player</th>
                                                             <th>Position</th>
@@ -119,7 +120,7 @@
                                                         <tbody>
                                                             <?php if(empty($player)): ?>
                                                             <tr>
-                                                                <td colspan="7">No Player(s) found</td>
+                                                                <td colspan="8">No Player(s) found</td>
                                                             </tr>
                                                             <?php else: ?>
                                                             <?php foreach($player as $row): ?>
@@ -131,7 +132,8 @@
                                                             $user = $model->where('email',$row['email'])->first();
                                                             ?>
                                                             <tr>
-                                                                <td><?=$row['jersey_num']?></td>
+                                                                <td><?=$row['order']?></td>
+                                                                <td># <?=$row['jersey_num']?></td>
                                                                 <td><img src="<?=site_url('assets/images/players/')?><?=$row['image']?>"
                                                                         style="width:30px;border:1px solid #000000;border-radius:10px 10px;" />
                                                                 </td>
