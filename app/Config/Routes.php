@@ -76,6 +76,10 @@ $routes->post('roster/recruitment/open','Roster::openRecruitment');
 $routes->post('roster/recruitment/close','Roster::closeRecruitment');
 $routes->post('roster/players/save','Roster::savePlayers');
 $routes->post('roster/score/save','Roster::scorePlayers');
+$routes->post('roster/achievement/save','Roster::addAchievement');
+$routes->post('roster/achievement/delete','Roster::deleteAchievement');
+$routes->get('roster/staff/fetch','Roster::fetchStaff');
+$routes->post('roster/staff/edit','Roster::editStaff');
 //functions for admin
 $routes->post('checkAuth', 'Auth::checkAuth');
 $routes->get('logout', 'Auth::logout');

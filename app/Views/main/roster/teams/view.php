@@ -19,6 +19,9 @@
                     <!-- Page title actions -->
                     <div class="col-auto ms-auto d-print-none">
                         <div class="btn-list">
+                            <button type="button" class="btn btn-default add" value="<?=$team['team_id']?>">
+                                <i class="ti ti-plus"></i>&nbsp;Add
+                            </button>
                             <a href="<?=site_url('roster/teams')?>"
                                 class="btn btn-primary btn-5 d-none d-sm-inline-block">
                                 <i class="ti ti-arrow-left"></i>&nbsp;Back
@@ -204,7 +207,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card">
+                        <div class="card mb-3">
                             <div class="card-header">
                                 <div class="card-title">
                                     <i class="ti ti-calendar"></i>&nbsp;Upcoming Matches
@@ -237,11 +240,167 @@
                                 <?php endif;?>
                             </div>
                         </div>
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="icon icon-tabler icons-tabler-outline icon-tabler-trophy">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <path d="M8 21l8 0" />
+                                        <path d="M12 17l0 4" />
+                                        <path d="M7 4l10 0" />
+                                        <path d="M17 4v8a5 5 0 0 1 -10 0v-8" />
+                                        <path d="M5 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                        <path d="M19 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                                    </svg>
+                                    Achievement
+                                </div>
+                            </div>
+                            <div class="list-group list-group-flush">
+                                <?php if(empty($achievement)): ?>
+                                <div class="list-group-item">
+                                    <div class="text-center text-muted py-3">
+                                        No achievement(s) found.
+                                    </div>
+                                </div>
+                                <?php else: ?>
+                                <?php foreach($achievement as $row):?>
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col text-truncate">
+                                            <a href="javascript:void(0);" class="text-reset d-block">
+                                                <?=$row->name?>
+                                                <button type="button" class="btn btn-danger delete" style="float:right;"
+                                                    value="<?=$row->team_achievement_id?>">
+                                                    <i class="ti ti-trash"></i>
+                                                </button>
+                                            </a>
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                <?=$row->description?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                                <?php endif;?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Achievement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" class="row g-3" id="frmAdd">
+                    <?=csrf_field()?>
+                    <input type="hidden" name="team" id="team">
+                    <div class="col-lg-12">
+                        <label class="form-label">Achievement</label>
+                        <select name="achievement" class="form-select">
+                            <option value="">Choose</option>
+                            <?php foreach($list as $row): ?>
+                            <option value="<?=$row['achievement_id']?>"><?=$row['name']?></option>
+                            <?php endforeach;?>
+                        </select>
+                    </div>
+                    <div class="col-lg-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="ti ti-device-floppy"></i>&nbsp;Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= view('main/templates/footer')?>
+<script>
+$(document).on('click', '.add', function() {
+    $('#addModal').modal('show');
+    $('#team').attr("value", $(this).val());
+});
+
+$('#frmAdd').on('submit', function(e) {
+    e.preventDefault();
+    let data = $(this).serialize();
+    $.ajax({
+        url: "<?=site_url('roster/achievement/save')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            if (response.success) {
+                Swal.fire(
+                    'Great!',
+                    'Successfully added',
+                    'success'
+                );
+                location.reload();
+            } else {
+                Swal.fire(
+                    'Error!',
+                    response.errors.achievement,
+                    'error'
+                );
+            }
+        }
+    });
+});
+
+$(document).on('click', '.delete', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You want to remove this selected achievement",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '<?=site_url('roster/achievement/delete')?>',
+                method: 'POST',
+                data: {
+                    value: $(this).val()
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire(
+                            'Great!',
+                            'Successfully removed',
+                            'success'
+                        );
+                        location.reload();
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Failed to close this team.',
+                            'error'
+                        );
+                    }
+                },
+                error: function() {
+                    Swal.fire(
+                        'Error!',
+                        'An error occurred while processing your request.',
+                        'error'
+                    );
+                }
+            });
+        }
+    });
+});
+</script>
 <?= view('main/templates/closing')?>

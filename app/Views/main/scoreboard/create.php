@@ -172,7 +172,15 @@ $('#form').on('submit', function(e) {
                     }
                 });
             } else {
-                alert(response.errors);
+                //alert(response.errors);
+                var errors = response.errors;
+                for (var key in errors) {
+                    Swal.fire({
+                        title: "Error",
+                        text: errors[key],
+                        icon: 'error'
+                    });
+                }
             }
         }
     });

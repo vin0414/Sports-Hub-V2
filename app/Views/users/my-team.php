@@ -361,6 +361,54 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editStaffModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Staff</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" id="frmEditStaff">
+                    <?=csrf_field()?>
+                    <input type="hidden" name="staff_id" id="staff_id" />
+                    <div class="mb-3">
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <label class="form-label" for="name">Fullname</label>
+                                <input type="text" class="form-control" id="staff_name" name="staff_name" />
+                                <div id="staff_name-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="email" class="form-control" id="staff_email" name="staff_email" />
+                                <div id="staff_email-error" class="error-message text-danger text-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="position">Position/Role</label>
+                        <input type="text" class="form-control" id="staff_position" name="staff_position" />
+                        <div id="staff_position-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="status">Status</label>
+                        <select class="form-select" name="staff_status">
+                            <option value="">Choose</option>
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
+                        <div id="staff_status-error" class="error-message text-danger text-sm"></div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save Changes/button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= view('main/templates/footer')?>
 <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
 <script>
@@ -1067,6 +1115,76 @@ $(document).on('click', '.send', function() {
                     );
                 }
             });
+        }
+    });
+});
+
+$(document).on('click', '.edit', function() {
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: '<?=site_url('roster/staff/fetch')?>',
+        method: 'GET',
+        data: {
+            value: $(this).val()
+        },
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.staff) {
+                const staff = response.staff;
+                $('#frmEditStaff input[name="staff_id"]').val(staff.staff_id);
+                $('#frmEditStaff input[name="staff_name"]').val(staff.name);
+                $('#frmEditStaff input[name="staff_email"]').val(staff.email);
+                $('#frmEditStaff input[name="staff_position"]').val(staff.position);
+                $('#editStaffModal').modal('show');
+            } else {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to fetch staff details.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function() {
+            $('#modal-loading').modal('hide');
+            Swal.fire({
+                title: 'Error!',
+                text: 'An error occurred while fetching schedule details.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+});
+$('#frmEditStaff').submit(function(e) {
+    e.preventDefault();
+    let data = $(this).serialize();
+    $('#editStaffModal').modal('hide');
+    $('#modal-loading').modal('show');
+    $.ajax({
+        url: "<?=site_url('roster/staff/edit')?>",
+        method: "POST",
+        data: data,
+        success: function(response) {
+            $('#modal-loading').modal('hide');
+            if (response.success) {
+                Swal.fire(
+                    'Great!',
+                    'Successfully applied changes',
+                    'success'
+                );
+                location.reload();
+            } else {
+                $('#editStaffModal').modal('show');
+                var errors = response.error;
+                // Iterate over each error and display it under the corresponding input field
+                for (var field in errors) {
+                    $('#' + field + '-error').html('<p>' + errors[field] +
+                        '</p>'); // Show the first error message
+                    $('#' + field).addClass(
+                        'text-danger'); // Highlight the input field with an error
+                }
+            }
         }
     });
 });

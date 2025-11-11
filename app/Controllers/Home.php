@@ -682,7 +682,9 @@ class Home extends BaseController
             $data['team']=$team;
             //staff
             $staff = new \App\Models\staffModel();
-            $data['staff'] = $staff->where('team_id',$team['team_id'])->findAll();
+            $data['staff'] = $staff->where('team_id',$team['team_id'])
+                            ->where('status',1)
+                            ->findAll();
             //players
             $playerModel = new \App\Models\playerModel();
             $player = $playerModel->where('team_id',$id)->where('status',1)->findAll();
@@ -705,6 +707,16 @@ class Home extends BaseController
                         ->where('a.status',1)
                         ->orderBy('match_id','DESC')->limit(5);
             $data['matches'] = $builder->get()->getResult();
+            //achievement
+            $achievement = $this->db->table('team_achievements a')
+                        ->select('a.team_achievement_id,b.name,b.description')
+                        ->join('achievements b','b.achievement_id=a.achievement_id','LEFT')
+                        ->where('a.team_id',$id)
+                        ->groupBy('a.team_achievement_id')->get()->getResult();
+            $data['achievement']=$achievement;
+            //list of achievement
+            $achievementModel = new \App\Models\achievementModel();
+            $data['list'] = $achievementModel->findAll();
 
             return view('main/roster/teams/view', $data);
         }

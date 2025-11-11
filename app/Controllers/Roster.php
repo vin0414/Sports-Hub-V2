@@ -988,4 +988,80 @@ class Roster extends BaseController
             return $this->response->setJSON(['success'=>'Successfully submitted']);
         }
     }
+
+    public function addAchievement()
+    {
+        $achievement = new \App\Models\teamAchievementModel();
+        $validation = $this->validate([
+            'team'=>'required|numeric',
+            'achievement'=>'required'
+        ]);
+
+        if(!$validation)
+        {
+            return $this->response->setJSON(['errors'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'team_id'=>$this->request->getPost('team'),
+                'achievement_id'=>$this->request->getPost('achievement'),
+                'earned_at'=>date('Y-m-d'),
+                'status'=>1
+            ];
+            $achievement->save($data);
+            return $this->response->setJSON(['success'=>"Successfully added"]);
+        }
+    }
+
+    public function deleteAchievement()
+    {
+        $achievement = new \App\Models\teamAchievementModel();
+        $val = $this->request->getPost('value');
+        $data = ['team_id'=>0];
+        $achievement->update($val,$data);
+        return $this->response->setJSON(['success'=>'Successfully removed']);
+    }
+
+    public function fetchStaff()
+    {
+        $val = $this->request->getGet('value');
+        if(!is_numeric($val))
+        {
+            return response()->setJSON(['error'=>'Invalid request']);
+        }
+        else
+        {
+            $model = new \App\Models\staffModel();
+            $data = $model->where('staff_id',$val)->first();
+            return response()->setJSON(['staff'=>$data]);
+        }
+    }
+
+    public function editStaff()
+    {
+        $model = new \App\Models\staffModel();
+        $validation = $this->validate([
+            'staff_name'=>'required',
+            'staff_email'=>'required|valid_email',
+            'staff_position'=>'required',
+            'staff_status'=>'required'
+        ]);
+
+        if(!$validation)
+        {
+            return $this->response->setJSON(['error'=>$this->validator->getErrors()]);
+        }
+        else
+        {
+            $data = [
+                'name'=>$this->request->getPost('staff_name'),
+                'position'=>$this->request->getPost('staff_position'),
+                'email'=>$this->request->getPost('staff_email'),
+                'status'=>$this->request->getPost('staff_status')
+            ];
+            $model->update($this->request->getPost('staff_id'),$data);
+            return $this->response->setJSON(['success'=>'Successfully updated']);
+        }
+    }
 }
