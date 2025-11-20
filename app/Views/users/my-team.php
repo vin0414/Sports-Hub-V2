@@ -77,7 +77,12 @@
                 <div class="card-header">
                     <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
                         <li class="nav-item">
-                            <a href="#tabs-list-8" class="nav-link active" data-bs-toggle="tab">
+                            <a href="#tabs-tournament-8" class="nav-link active" data-bs-toggle="tab">
+                                <i class="ti ti-tournament"></i>&nbsp;Tournaments
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tabs-list-8" class="nav-link" data-bs-toggle="tab">
                                 <i class="ti ti-list"></i>&nbsp;List of Players
                             </a>
                         </li>
@@ -110,7 +115,29 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade active show" id="tabs-list-8">
+                        <div class="tab-pane fade active show" id="tabs-tournament-8">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="tbltournament">
+                                    <thead>
+                                        <th>Tournament</th>
+                                        <th>Sports</th>
+                                        <th>Date Range</th>
+                                        <th>Venue</th>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach($tournament as $row): ?>
+                                        <tr>
+                                            <td><?= $row->event_title ?></td>
+                                            <td><?= $row->Name ?></td>
+                                            <td><?= $row->start_date ?> to <?= $row->end_date ?></td>
+                                            <td><?= $row->event_location ?></td>
+                                        </tr>
+                                        <?php endforeach;?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tabs-list-8">
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped" id="table1">
                                     <thead>
@@ -418,6 +445,7 @@ let table2;
 let table4;
 let table5;
 let table6 = $('#table6').DataTable();
+$('#tbltournament').DataTable();
 
 function calculateAge(birthDateString) {
     const birthDate = new Date(birthDateString);

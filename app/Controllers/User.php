@@ -780,6 +780,13 @@ class User extends BaseController
         $data['sportsCategory']= $sportsModel->where('sportsID',$team['sportsID'])->first();
         $staff = new \App\Models\staffModel();
         $data['staff'] = $staff->where('team_id',$team['team_id'])->findAll();
+        //tournament
+        $data['tournament'] = $this->db->table('event_join a')
+                                ->select('b.event_title,b.start_date,b.end_date,b.event_location,c.Name')
+                                ->join('events b','b.event_id=a.event_id','LEFT')
+                                ->join('sports c','c.sportsID=b.sportsID','LEFT')
+                                ->where('a.team_id',$team['team_id'])
+                                ->groupBy('a.join_id')->get()->getResult();
         return view('users/my-team',$data);
     }
 
