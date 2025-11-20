@@ -25,6 +25,11 @@ $account = $accountModel->find($event['accountID']);
                 </div>
                 <div class="col-auto ms-auto d-print-none">
                     <div class="btn-list">
+                        <?php if($event['registration']==1):?>
+                        <button type="button" class="btn btn-default join" value="<?= $event['event_id'] ?></button>">
+                            <i class="ti ti-plus"></i>&nbsp;Join Now
+                        </button>
+                        <?php endif;?>
                         <a href="<?=site_url('latest-events')?>" class="btn btn-primary btn-5 d-none d-sm-inline-block">
                             <i class="ti ti-arrow-left"></i>&nbsp;Back
                         </a>
@@ -53,16 +58,18 @@ $account = $accountModel->find($event['accountID']);
                     <div class="card">
                         <div class="card-body">
                             <div class="card-title">Event Details</div>
-                            <div class="row g-3">
+                            <div class="row g-1">
                                 <div class="col-lg-12">
                                     <label class="form-label">Location : </label>
                                     <p><?=$event['event_location']?></p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <p><label>Start Date : </label>&nbsp;<?=$event['start_date']?></p>
+                                    <p><label>Start Date :
+                                        </label>&nbsp;<?=date('M d, Y',strtotime($event['start_date']))?></p>
                                 </div>
                                 <div class="col-lg-12">
-                                    <p><label>End Date : </label>&nbsp;<?=$event['end_date']?></p>
+                                    <p><label>End Date : </label>&nbsp;<?=date('M d, Y',strtotime($event['end_date']))?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -73,4 +80,46 @@ $account = $accountModel->find($event['accountID']);
     </div>
 </div>
 <?= view('main/templates/footer')?>
+<script>
+$(document).on('click', '.join', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to continue?",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Continue',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let value = $(this).val();
+            $.ajax({
+                url: "<?= site_url('event/registration/join') ?>",
+                method: "POST",
+                data: {
+                    value: value
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: "Great!",
+                            text: "Successfully submitted",
+                            icon: "success"
+                        });
+                    } else {
+                        if (response.errors === "login") {
+                            window.location.href = "/sign-in"
+                        } else {
+                            Swal.fire({
+                                title: "Error!",
+                                text: response.errors,
+                                icon: "warning"
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
 <?= view('main/templates/closing')?>

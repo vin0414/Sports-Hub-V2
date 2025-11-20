@@ -38,38 +38,75 @@
         <div class="page-body">
             <div class="container-xl">
                 <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs">
+                            <li class="nav-item">
+                                <a href="#tabs-home-8" class="nav-link active" data-bs-toggle="tab">
+                                    <i class="ti ti-calendar"></i>&nbsp;Manage Events
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tabs-tournament-8" class="nav-link" data-bs-toggle="tab">
+                                    <i class="ti ti-list"></i>&nbsp;Tournaments
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="card-body">
-                        <div class="card-title">
-                            <i class="ti ti-calendar"></i>&nbsp;Manage Events
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped" id="table">
-                                <thead>
-                                    <th>Event</th>
-                                    <th>Details</th>
-                                    <th>Location</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Action</th>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($events as $row): ?>
-                                    <tr>
-                                        <td><?=$row['event_title']?></td>
-                                        <td><?=substr($row['event_description'],0,200)?>...</td>
-                                        <td><?=$row['event_location']?></td>
-                                        <td><?=date('F d, Y',strtotime($row['start_date']))?></td>
-                                        <td><?=date('F d, Y',strtotime($row['end_date']))?></td>
-                                        <td>
-                                            <a href="<?=site_url('events/edit/')?><?=$row['event_id']?>"
-                                                class="btn btn-primary">
-                                                <i class="ti ti-edit"></i>&nbsp;Edit
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach;?>
-                                </tbody>
-                            </table>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="tabs-home-8">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="table">
+                                        <thead>
+                                            <th>Event</th>
+                                            <th>Details</th>
+                                            <th>Location</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Action</th>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($events as $row): ?>
+                                            <tr>
+                                                <td><?=$row['event_title']?></td>
+                                                <td><?=substr($row['event_description'],0,200)?>...</td>
+                                                <td><?=$row['event_location']?></td>
+                                                <td><?=date('F d, Y',strtotime($row['start_date']))?></td>
+                                                <td><?=date('F d, Y',strtotime($row['end_date']))?></td>
+                                                <td>
+                                                    <a href="<?=site_url('events/edit/')?><?=$row['event_id']?>"
+                                                        class="btn btn-primary">
+                                                        <i class="ti ti-edit"></i>&nbsp;Edit
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach;?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="tabs-tournament-8">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped" id="tournament">
+                                        <thead>
+                                            <th>Tournament</th>
+                                            <th>Sports</th>
+                                            <th>Teams</th>
+                                            <th>Universities/Barangay</th>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach($tournament as $row): ?>
+                                            <tr>
+                                                <td><?= $row->event_title ?></td>
+                                                <td><?= $row->Name ?></td>
+                                                <td><?= $row->team_name ?></td>
+                                                <td><?= $row->school_barangay ?></td>
+                                            </tr>
+                                            <?php endforeach;?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -80,5 +117,6 @@
 <?= view('main/templates/footer')?>
 <script>
 $('#table').DataTable();
+$('#tournament').DataTable();
 </script>
 <?= view('main/templates/closing')?>

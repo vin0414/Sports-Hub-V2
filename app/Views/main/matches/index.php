@@ -43,6 +43,7 @@
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Tournament</th>
+                                    <th>Bracket</th>
                                     <th>Home</th>
                                     <th>Away</th>
                                     <th>Venue</th>
@@ -56,6 +57,7 @@
                                         <td><?=$row->date ?? 'TBD' ?></td>
                                         <td><?=$row->time ?? 'TBD' ?></td>
                                         <td><?=$row->tournament?></td>
+                                        <td><?=$row->match?></td>
                                         <td><?=$row->home?></td>
                                         <td><?=$row->away?></td>
                                         <td><?=$row->location?></td>

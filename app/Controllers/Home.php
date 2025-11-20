@@ -386,6 +386,13 @@ class Home extends BaseController
             $data['title'] = 'Manage Event';
             $eventModel = new \App\Models\eventModel();
             $data['events'] = $eventModel->findAll();
+            //tournament
+            $data['tournament'] = $this->db->table('event_join a')
+                                ->select('b.event_title,c.Name,d.team_name,d.school_barangay')
+                                ->join('events b','b.event_id=a.event_id','LEFT')
+                                ->join('sports c','c.sportsID=b.sportsID','LEFT')
+                                ->join('teams d','d.team_id=a.team_id','LEFT')
+                                ->groupBy('a.join_id')->get()->getResult();
             return view('main/events/manage', $data);
         }
         return redirect()->back();
@@ -420,6 +427,7 @@ class Home extends BaseController
             'details'=>'required',
             'event_location'=>'required',
             'event_type'=>'required',
+            'event_status'=>'required',
             'sports'=>'required',
             'from_date'=>'required',
             'to_date'=>'required'
@@ -449,7 +457,7 @@ class Home extends BaseController
                     'start_date'=>$this->request->getPost('from_date'),
                     'end_date'=>$this->request->getPost('to_date'),
                     'status'=>1,
-                    'registration'=>0,
+                    'registration'=>$this->request->getPost('event_status'),
                     'date'=>date('Y-m-d')
                 ];
                 $eventModel->save($data);
@@ -467,6 +475,7 @@ class Home extends BaseController
             'details'=>'required',
             'event_location'=>'required',
             'event_type'=>'required',
+            'event_status'=>'required',
             'sports'=>'required',
             'from_date'=>'required',
             'to_date'=>'required'
@@ -495,9 +504,46 @@ class Home extends BaseController
                     'sportsID'=>$this->request->getPost('sports'),
                     'start_date'=>$this->request->getPost('from_date'),
                     'end_date'=>$this->request->getPost('to_date'),
+                    'registration'=>$this->request->getPost('event_status')
                 ];
                 $eventModel->update($this->request->getPost('id'),$data);
                 return $this->response->setJSON(['success'=>'Successfully applied changes']);
+            }
+        }
+    }
+
+    public function joinEvent()
+    {
+        $joinModel = new \App\Models\joinModel();
+        $teamModel = new \App\Models\teamModel();
+        $eventModel = new \App\Models\eventModel();
+        //check the session
+        $user = session()->get('User');
+        if(empty($user))
+        {
+            return $this->response->setJSON(['errors'=>'login']);
+        }
+        else
+        {
+            $val = $this->request->getPost('value');
+            //validate if the user has a team in same category
+            $event = $eventModel->where('event_id',$val)->first();
+            $team = $teamModel->where('user_id',$user)
+                              ->where('sportsID',$event['sportsID'])
+                              ->where('status',1)
+                              ->first();
+            if(empty($team))
+            {
+                return $this->response->setJSON(['errors'=>'Please create a team to join this event']);
+            }
+            else
+            {
+                $data = [
+                    'event_id'=>$val,
+                    'team_id'=>$team['team_id']
+                ];
+                $joinModel->save($data);
+                return $this->response->setJSON(['success'=>'Successfully saved']);
             }
         }
     }

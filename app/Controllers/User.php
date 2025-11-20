@@ -480,7 +480,7 @@ class User extends BaseController
         //team
         $cat = $this->request->getGet('category');
         $org= $this->request->getGet('organization');
-        $team = new \App\Models\teamModel();
+        $team = new teamModel();
         $page = (int) ($this->request->getGet('page') ?? 1);
         $perPage = 9;
 
@@ -513,7 +513,7 @@ class User extends BaseController
         }
         else
         {
-            $teamModel = new \App\Models\teamModel();
+            $teamModel = new teamModel();
             $team = $teamModel->where('team_id',$val)->first();
             //get the total stats
             $statModel = $this->db->table('team_stats')
@@ -594,7 +594,7 @@ class User extends BaseController
     {
         $data['title']="Personal Information";
         //team
-        $teamModel = new \App\Models\teamModel();
+        $teamModel = new teamModel();
         $team = $teamModel->where('team_name',$id)->first();
         $data['team']=$team;
         //team stats
@@ -643,7 +643,7 @@ class User extends BaseController
 
     public function teamRegistration()
     {
-        $model = new \App\Models\teamModel();
+        $model = new teamModel();
         $staff = new \App\Models\staffModel();
         $validation = $this->validate([
             'team_name'=>[
@@ -772,7 +772,7 @@ class User extends BaseController
     {
         $data['title']="My Team";
         //load the team data
-        $model = new \App\Models\teamModel();
+        $model = new teamModel();
         $team=$model->where('team_name',$id)->first();
         $data['team'] = $team;
         //get sports
@@ -785,7 +785,7 @@ class User extends BaseController
 
     public function addPlayers($id)
     {
-        $model = new \App\Models\teamModel();
+        $model = new teamModel();
         $team=$model->where('team_id',$id)->first();
         if(empty($team))
         {

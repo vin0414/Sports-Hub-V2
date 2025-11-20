@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-lg-12">
                                 <div class="row g-3">
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <label class="form-label">Event Type</label>
                                         <select name="event_type" class="form-select">
                                             <option value="">Choose</option>
@@ -70,12 +70,22 @@
                                                 Competition</option>
                                             <option <?=($event['event_type']=='Practice Game') ? 'selected': '' ?>>
                                                 Practice Game</option>
-                                            <option <?=($event['event_type']=='Try-outs') ? 'selected': '' ?>>Try-outs
+                                            <option <?=($event['event_type']=='Friendly Match') ? 'selected': '' ?>>
+                                                Friendly Match
                                             </option>
                                         </select>
                                         <div id="event_type-error" class="error-message text-danger text-sm"></div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
+                                        <label class="form-label">Registration</label>
+                                        <select name="event_status" class="form-select">
+                                            <option value="">Choose</option>
+                                            <option value="1">OPEN</option>
+                                            <option value="0">CLOSE</option>
+                                        </select>
+                                        <div id="event_status-error" class="error-message text-danger text-sm"></div>
+                                    </div>
+                                    <div class="col-lg-2">
                                         <label class="form-label">Sports</label>
                                         <select name="sports" class="form-select">
                                             <option value="">Choose</option>

@@ -94,6 +94,7 @@ $routes->post('roster/score/save','Roster::saveScore');
 //events
 $routes->post('save-event','Home::saveEvent');
 $routes->post('edit-event','Home::modifyEvent');
+$routes->post('event/registration/join','Home::joinEvent');
 //news
 $routes->post('save-post','Home::savePost');
 $routes->post('modify-post','Home::modifyPost');

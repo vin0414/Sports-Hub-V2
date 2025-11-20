@@ -726,6 +726,7 @@ class Roster extends BaseController
         $validation = $this->validate([
             'tournament'=>'required',
             'sports'=>'required',
+            'match'=>'required',
             'location'=>'required'
         ]);
         if(!$validation)
@@ -734,25 +735,74 @@ class Roster extends BaseController
         }
         else
         {
-            $allTeam = $this->request->getPost('teams');
-            $teams = [];
-            foreach ($allTeam as $teamId) {
-                $team = $teamModel->where('team_id', $teamId)->first();
-                if ($team) {
-                    $teams[] = $team;
-                }
-            }
+            $match = $this->request->getPost('match');
+            if($match==="Group")
+            {
+                $allTeam = $this->request->getPost('teams');
+                $teams = [];
             
-            // Generate all unique matchups (round-robin style)
-            for ($i = 0; $i < count($teams); $i++) {
-                for ($j = $i + 1; $j < count($teams); $j++) {
-                    $matchModel->insert([
-                        'tournament' => $this->request->getPost('tournament'),
-                        'team1_id'   => $teams[$i]['team_id'],
-                        'team2_id'   => $teams[$j]['team_id'],
-                        'location'   => $this->request->getPost('location'),
-                        'status'     => 1
-                    ]);
+                foreach ($allTeam as $teamId) {
+                    $team = $teamModel->where('team_id', $teamId)->first();
+                    if ($team) {
+                        $teams[] = $team;
+                    }
+                }
+
+                // Ensure minimum of 8 teams total (4 per group)
+                if (count($teams) < 8) {
+                    $errors = ['tournament'=>'At least 8 teams are required (4 per group).'];
+                    return $this->response->setJSON(['errors'=>$errors]);
+                }
+
+                // Split into two groups
+                $groupA = array_slice($teams, 0, ceil(count($teams) / 2));
+                $groupB = array_slice($teams, ceil(count($teams) / 2));
+
+                // Function to generate round-robin matches within a group
+                function generateGroupMatches($group, $matchModel, $tournament, $location, $groupName) {
+                    for ($i = 0; $i < count($group); $i++) {
+                        for ($j = $i + 1; $j < count($group); $j++) {
+                            $matchModel->insert([
+                                'tournament' => $tournament,
+                                'match'      => $groupName,
+                                'team1_id'   => $group[$i]['team_id'],
+                                'team2_id'   => $group[$j]['team_id'],
+                                'location'   => $location,
+                                'status'     => 1
+                            ]);
+                        }
+                    }
+                }
+                // Generate matches for each group
+                $tournament = $this->request->getPost('tournament');
+                $location = $this->request->getPost('location');
+
+                generateGroupMatches($groupA, $matchModel, $tournament, $location,'Group A');
+                generateGroupMatches($groupB, $matchModel, $tournament, $location,'Group B');
+            }
+            else
+            {
+                $allTeam = $this->request->getPost('teams');
+                $teams = [];
+                foreach ($allTeam as $teamId) {
+                    $team = $teamModel->where('team_id', $teamId)->first();
+                    if ($team) {
+                        $teams[] = $team;
+                    }
+                }
+                
+                // Generate all unique matchups (round-robin style)
+                for ($i = 0; $i < count($teams); $i++) {
+                    for ($j = $i + 1; $j < count($teams); $j++) {
+                        $matchModel->insert([
+                            'tournament' => $this->request->getPost('tournament'),
+                            'match'=>'Default',
+                            'team1_id'   => $teams[$i]['team_id'],
+                            'team2_id'   => $teams[$j]['team_id'],
+                            'location'   => $this->request->getPost('location'),
+                            'status'     => 1
+                        ]);
+                    }
                 }
             }
             return $this->response->setJSON(['success'=>'Success']);

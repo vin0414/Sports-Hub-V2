@@ -70,7 +70,7 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <div class="row g-3">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label class="form-label">Type of Sports</label>
                                                 <select name="sports" class="form-select" id="sports">
                                                     <option value="">Choose</option>
@@ -80,7 +80,7 @@
                                                 </select>
                                                 <div id="sports-error" class="error-message text-danger text-sm"></div>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-4">
                                                 <label class="form-label">Category</label>
                                                 <select name="category" class="form-select" id="category">
                                                     <option value="">Choose</option>
@@ -88,6 +88,16 @@
                                                     <option value="Barangay">Barangay/Village</option>
                                                 </select>
                                                 <div id="category-error" class="error-message text-danger text-sm">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <label class="form-label">Type of Match</label>
+                                                <select name="match" class="form-select">
+                                                    <option value="">Choose</option>
+                                                    <option value="Default">Default</option>
+                                                    <option value="Group">By Group</option>
+                                                </select>
+                                                <div id="match-error" class="error-message text-danger text-sm">
                                                 </div>
                                             </div>
                                         </div>
